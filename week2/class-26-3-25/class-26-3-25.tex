@@ -1,0 +1,394 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{amsfonts} % For \mathbb
+
+% Theorem Environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Custom command for boxed announcements
+\newcommand{\announcement}[1]{%
+ \par\medskip\noindent
+ \fbox{%
+ \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+ \textbf{Announcement:} #1
+ }%
+ }%
+ \par\medskip
+}
+
+\title{Calculus II Lecture Notes: Integration Techniques}
+\author{Lecture Transcription and Elaboration}
+\date{Based on Lecture from March 26} % Placeholder date
+
+\begin{document}
+\maketitle
+
+\announcement{
+ \textbf{Grading Appeals:} Regarding exam grading, please note that appeals for very small point adjustments (e.g., half a point or one point) are generally not successful. To save everyone's time, please focus appeals on potential errors that could genuinely impact your grade significantly. Submit appeals if you believe there is a substantive issue. \\
+ \textbf{Current Courses:} As a reminder, many of you are concurrently taking Linear Algebra II and Foundations of Probability. This semester is mathematically intensive, which is excellent for building a strong foundation!
+}
+
+\section{Introduction and Review}
+
+Welcome back! Today, we'll continue our exploration of integration techniques. Before diving into new material, let's briefly recap some fundamental concepts and address the homework exercise on integrating $e^x \sin(x)$.
+
+\subsection{Historical Context (A Glimpse)}
+This semester, our focus shifts significantly towards the concept of the **integral**. In Calculus I, the **derivative** was paramount. These two ideas, the derivative (measuring instantaneous rate of change, slope of a tangent) and the integral (which we will later connect firmly to the idea of area under a curve), might seem unrelated at first glance. A cornerstone of calculus, the Fundamental Theorem of Calculus (which we will reach soon!), establishes a profound connection between them. While we define the antiderivative using the derivative, the full geometric and conceptual link is something we are still building towards.
+
+\subsection{Review: Antiderivatives and Indefinite Integrals}
+
+\begin{definition}[Antiderivative]
+A function $F(x)$ is called an \textbf{antiderivative} of a function $f(x)$ on an interval $I$ if $F'(x) = f(x)$ for all $x \in I$.
+\end{definition}
+
+\begin{definition}[Indefinite Integral]
+The \textbf{indefinite integral} of $f(x)$, denoted by $\int f(x) \, dx$, represents the family of all antiderivatives of $f(x)$. If $F(x)$ is any particular antiderivative of $f(x)$, then
+\[ \int f(x) \, dx = F(x) + C \]
+where $C$ is an arbitrary constant, called the constant of integration. This constant $C$ reflects the fact that the derivative of any constant is zero, so antiderivatives are unique only up to an additive constant.
+\end{definition}
+
+\subsection{Review: Integration by Parts}
+One of our key techniques for integration is Integration by Parts, which arises from reversing the product rule for differentiation.
+
+\begin{theorem}[Integration by Parts]
+If $u(x)$ and $v(x)$ are differentiable functions, then
+\[ \int u \, dv = uv - \int v \, du \]
+or, written more explicitly,
+\[ \int u(x) v'(x) \, dx = u(x) v(x) - \int v(x) u'(x) \, dx \]
+\end{theorem}
+
+The main challenge in applying this technique often lies in choosing the functions $u$ and $dv$ appropriately.
+
+\section{Homework Review: The Integral \texorpdfstring{$\int e^x \sin(x) \, dx$}{Integral of e\^{}x sin(x) dx}}
+
+You were asked to compute $\int e^x \sin(x) \, dx$. This integral presents a unique challenge: both $e^x$ and $\sin(x)$ (and its derivatives) seem to persist indefinitely under differentiation or integration. Let's see how to resolve this using integration by parts, potentially applied more than once.
+
+\begin{example}[Computing $\int e^x \sin(x) \, dx$]
+Let $I = \int e^x \sin(x) \, dx$. We apply integration by parts. There isn't a single "correct" choice, but let's try:
+Let $u = e^x$ and $dv = \sin(x) \, dx$.
+Then $du = e^x \, dx$ and $v = \int \sin(x) \, dx = -\cos(x)$.
+
+Applying the formula $\int u \, dv = uv - \int v \, du$:
+\[ I = e^x (-\cos(x)) - \int (-\cos(x)) (e^x \, dx) \]
+\[ I = -e^x \cos(x) + \int e^x \cos(x) \, dx \]
+
+Now we have a new integral, $\int e^x \cos(x) \, dx$, which seems no simpler. However, let's apply integration by parts *again* to this new integral. We should be consistent with our choices if possible.
+Let $u = e^x$ and $dv = \cos(x) \, dx$.
+Then $du = e^x \, dx$ and $v = \int \cos(x) \, dx = \sin(x)$.
+
+Substituting this into our expression for $I$:
+\[ I = -e^x \cos(x) + \left[ e^x \sin(x) - \int \sin(x) (e^x \, dx) \right] \]
+\[ I = -e^x \cos(x) + e^x \sin(x) - \int e^x \sin(x) \, dx \]
+
+Notice something remarkable! The original integral $I = \int e^x \sin(x) \, dx$ has reappeared on the right-hand side.
+\[ I = -e^x \cos(x) + e^x \sin(x) - I \]
+This is an algebraic equation for $I$. We can solve for it:
+\[ 2I = e^x \sin(x) - e^x \cos(x) \]
+\[ I = \frac{e^x (\sin(x) - \cos(x))}{2} \]
+Since this is an indefinite integral, we must add the constant of integration:
+\[ \int e^x \sin(x) \, dx = \frac{e^x (\sin(x) - \cos(x))}{2} + C \]
+\end{example}
+
+\begin{remark}
+The strategy here was to apply integration by parts twice, leading to an equation where the original integral could be solved for algebraically. This "boomerang" technique is useful for integrals involving products of exponential and trigonometric functions. The final $+C$ is essential; while intermediate steps might temporarily omit it for clarity, the final family of antiderivatives must include it.
+\end{remark}
+
+\section{Integration by Substitution (Method 1: \texorpdfstring{$u$}{u}-Substitution)}
+
+Now, let's delve into one of the most powerful integration techniques: Integration by Substitution. This technique essentially reverses the chain rule for differentiation.
+
+\subsection{Motivation: Reversing the Chain Rule}
+Recall the chain rule for differentiation: If $y = G(u)$ and $u = \phi(x)$, then
+\[ \frac{dy}{dx} = \frac{dG}{du} \cdot \frac{du}{dx} \]
+If we let $g = G'$, then $g$ is the derivative of $G$. The chain rule becomes:
+\[ \frac{d}{dx} [G(\phi(x))] = G'(\phi(x)) \phi'(x) = g(\phi(x)) \phi'(x) \]
+Integrating both sides with respect to $x$ gives:
+\[ \int \frac{d}{dx} [G(\phi(x))] \, dx = \int g(\phi(x)) \phi'(x) \, dx \]
+The left side is just $G(\phi(x)) + C$. Therefore,
+\[ \int g(\phi(x)) \phi'(x) \, dx = G(\phi(x)) + C \]
+where $G$ is an antiderivative of $g$.
+
+This formula tells us that if the integrand has the specific form of a composite function $g(\phi(x))$ multiplied by the derivative of the inner function $\phi'(x)$, we can find the integral by finding the antiderivative $G$ of the outer function $g$ and evaluating it at the inner function $\phi(x)$.
+
+\subsection{The Substitution Procedure (\texorpdfstring{$u$}{u}-Substitution)}
+The formula above motivates a practical procedure. To evaluate $\int g(\phi(x)) \phi'(x) \, dx$:
+
+1.  **Identify the inner function:** Let $u = \phi(x)$. The hope is that the derivative $\phi'(x)$ also appears (up to a constant factor) in the integrand.
+2.  **Compute the differential:** Differentiate $u$ with respect to $x$: $\frac{du}{dx} = \phi'(x)$.
+3.  **Transform the differential:** Rewrite this as $du = \phi'(x) \, dx$.
+4.  **Substitute:** Replace $\phi(x)$ with $u$ and $\phi'(x) \, dx$ with $du$ in the integral. The integral should now be entirely in terms of $u$:
+    \[ \int g(\phi(x)) \underbrace{\phi'(x) \, dx}_{du} = \int g(u) \, du \]
+5.  **Integrate with respect to \texorpdfstring{$u$}{u}:** Find the antiderivative $G(u)$ of $g(u)$:
+    \[ \int g(u) \, du = G(u) + C \]
+6.  **Back-substitute:** Replace $u$ with $\phi(x)$ to get the result in terms of the original variable $x$:
+    \[ G(\phi(x)) + C \]
+
+\begin{remark}[Justification of $du = \phi'(x) \, dx$]
+The step $du = \phi'(x) \, dx$ might seem like we are treating $\frac{du}{dx}$ as a fraction and "multiplying by $dx$". While this manipulation is suggestive and helpful mnemonically, it's important to understand that $du$ and $dx$ here are differentials. The rigorous justification lies in the chain rule reversal shown above. This procedural notation ($du = \dots dx$) is a standard and effective way to perform the substitution correctly, ensuring the integral transforms properly according to the underlying theorem.
+\end{remark}
+
+\subsection{Examples of \texorpdfstring{$u$}{u}-Substitution}
+
+Let's apply this procedure to several examples. The key is always to identify a suitable substitution $u = \phi(x)$ such that $du = \phi'(x) dx$ is also present.
+
+\begin{example}
+Compute $\int \sin^2(x) \cos(x) \, dx$.
+\begin{proof}
+We notice the structure $g(\phi(x)) \phi'(x)$. Let the inner function be $u = \sin(x)$.
+Then $\frac{du}{dx} = \cos(x)$, so $du = \cos(x) \, dx$.
+This matches perfectly! The integral becomes:
+\[ \int \underbrace{\sin^2(x)}_{u^2} \underbrace{\cos(x) \, dx}_{du} = \int u^2 \, du \]
+Integrating with respect to $u$:
+\[ \int u^2 \, du = \frac{u^3}{3} + C \]
+Back-substituting $u = \sin(x)$:
+\[ \frac{\sin^3(x)}{3} + C \]
+To verify, differentiate the result: $\frac{d}{dx} \left( \frac{\sin^3(x)}{3} + C \right) = \frac{1}{3} \cdot 3 \sin^2(x) \cdot \cos(x) = \sin^2(x) \cos(x)$, which is the original integrand.
+\end{proof}
+\end{example}
+
+\begin{example}
+Compute $\int \frac{e^x}{e^{2x}+1} \, dx$.
+\begin{proof}
+Rewrite the denominator: $e^{2x} = (e^x)^2$. The integral is $\int \frac{e^x}{(e^x)^2+1} \, dx$.
+This suggests letting $u = e^x$.
+Then $\frac{du}{dx} = e^x$, so $du = e^x \, dx$.
+The integral transforms beautifully:
+\[ \int \frac{1}{\underbrace{(e^x)^2}_{u^2}+1} \underbrace{e^x \, dx}_{du} = \int \frac{1}{u^2+1} \, du \]
+This is a standard integral:
+\[ \int \frac{1}{u^2+1} \, du = \arctan(u) + C \]
+Back-substituting $u = e^x$:
+\[ \arctan(e^x) + C \]
+\end{proof}
+\end{example}
+
+\begin{example}
+Compute $\int \frac{dx}{x\sqrt{1-\ln^2(x)}}$.
+\begin{proof}
+Rewrite as $\int \frac{1}{\sqrt{1-(\ln x)^2}} \cdot \frac{1}{x} \, dx$.
+Let $u = \ln x$.
+Then $\frac{du}{dx} = \frac{1}{x}$, so $du = \frac{1}{x} \, dx$.
+The integral becomes:
+\[ \int \frac{1}{\sqrt{1-\underbrace{(\ln x)^2}_{u^2}}} \underbrace{\frac{1}{x} \, dx}_{du} = \int \frac{1}{\sqrt{1-u^2}} \, du \]
+This is the standard integral for arcsine:
+\[ \int \frac{1}{\sqrt{1-u^2}} \, du = \arcsin(u) + C \]
+Back-substituting $u = \ln x$:
+\[ \arcsin(\ln x) + C \]
+(Note: We must consider the domain where $\ln x$ is defined and where $1-u^2 > 0$, i.e., $|u|<1$, so $|\ln x| < 1$, or $1/e < x < e$.)
+\end{proof}
+\end{example}
+
+\begin{example}
+Compute $\int \frac{e^{\tan(x)}}{\cos^2(x)} \, dx$.
+\begin{proof}
+Recall that $\frac{d}{dx}(\tan x) = \sec^2(x) = \frac{1}{\cos^2(x)}$.
+Let $u = \tan(x)$.
+Then $\frac{du}{dx} = \frac{1}{\cos^2(x)}$, so $du = \frac{1}{\cos^2(x)} \, dx$.
+The integral is:
+\[ \int e^{\overbrace{\tan(x)}^{u}} \underbrace{\frac{1}{\cos^2(x)} \, dx}_{du} = \int e^u \, du \]
+Integrating is straightforward:
+\[ \int e^u \, du = e^u + C \]
+Back-substituting $u = \tan(x)$:
+\[ e^{\tan(x)} + C \]
+\end{proof}
+\end{example}
+
+\begin{example}
+Compute $\int 2x \sin(x^2+1) \, dx$.
+\begin{proof}
+Let $u = x^2+1$. (Including the $+1$ is convenient as its derivative is 0).
+Then $\frac{du}{dx} = 2x$, so $du = 2x \, dx$.
+The integral becomes:
+\[ \int \sin(\underbrace{x^2+1}_{u}) \underbrace{2x \, dx}_{du} = \int \sin(u) \, du \]
+Integrating:
+\[ \int \sin(u) \, du = -\cos(u) + C \]
+Back-substituting $u = x^2+1$:
+\[ -\cos(x^2+1) + C \]
+\end{proof}
+\end{example}
+
+\begin{example}[Adjusting Constants]
+Compute $\int x e^{x^2} \, dx$.
+\begin{proof}
+Let $u = x^2$.
+Then $\frac{du}{dx} = 2x$, so $du = 2x \, dx$.
+Our integral has $x \, dx$, but we need $2x \, dx$ for $du$. We can introduce a factor of 2 inside, provided we compensate with a factor of $\frac{1}{2}$ outside:
+\[ \int x e^{x^2} \, dx = \frac{1}{2} \int 2x e^{x^2} \, dx \]
+Now we can substitute:
+\[ \frac{1}{2} \int e^{\overbrace{x^2}^{u}} \underbrace{2x \, dx}_{du} = \frac{1}{2} \int e^u \, du \]
+Integrating:
+\[ \frac{1}{2} e^u + C \]
+Back-substituting $u = x^2$:
+\[ \frac{1}{2} e^{x^2} + C \]
+Alternatively, from $du = 2x dx$, we can write $x dx = \frac{1}{2} du$ and substitute directly:
+\[ \int e^{x^2} (x dx) = \int e^u (\frac{1}{2} du) = \frac{1}{2} \int e^u du = \frac{1}{2} e^u + C = \frac{1}{2} e^{x^2} + C \]
+\end{proof}
+\end{example}
+
+\subsection{Special Cases of Substitution}
+
+Two common patterns emerge as direct consequences of the substitution rule.
+
+\begin{lemma}[Linear Substitution]
+If $\int f(x) \, dx = F(x) + C$, then for constants $\alpha \neq 0$ and $\beta$,
+\[ \int f(\alpha x + \beta) \, dx = \frac{1}{\alpha} F(\alpha x + \beta) + C \]
+\begin{proof}
+Let $u = \alpha x + \beta$. Then $\frac{du}{dx} = \alpha$, so $du = \alpha \, dx$, or $dx = \frac{1}{\alpha} du$.
+Substituting:
+\[ \int f(\underbrace{\alpha x + \beta}_{u}) \underbrace{dx}_{\frac{1}{\alpha} du} = \int f(u) \frac{1}{\alpha} \, du = \frac{1}{\alpha} \int f(u) \, du \]
+Since $\int f(u) \, du = F(u) + C'$, we get:
+\[ \frac{1}{\alpha} (F(u) + C') = \frac{1}{\alpha} F(u) + \frac{C'}{\alpha} \]
+Back-substituting $u = \alpha x + \beta$ and letting $C = C'/\alpha$ (still an arbitrary constant):
+\[ \frac{1}{\alpha} F(\alpha x + \beta) + C \]
+\end{proof}
+\end{lemma}
+
+\begin{lemma}[Logarithmic Derivative Rule]
+For a differentiable function $f(x)$ where $f(x) \neq 0$,
+\[ \int \frac{f'(x)}{f(x)} \, dx = \ln|f(x)| + C \]
+\begin{proof}
+Let $u = f(x)$. Then $\frac{du}{dx} = f'(x)$, so $du = f'(x) \, dx$.
+Substituting:
+\[ \int \frac{1}{\underbrace{f(x)}_{u}} \underbrace{f'(x) \, dx}_{du} = \int \frac{1}{u} \, du \]
+Integrating:
+\[ \int \frac{1}{u} \, du = \ln|u| + C \]
+Back-substituting $u = f(x)$:
+\[ \ln|f(x)| + C \]
+\end{proof}
+\begin{remark}
+The absolute value $|f(x)|$ is crucial because the logarithm is only defined for positive arguments, while $f(x)$ itself might be negative. This formula elegantly combines the chain rule with the derivative of the natural logarithm.
+\end{remark}
+\end{lemma}
+
+\begin{example}[Using the Logarithmic Rule]
+Compute $\int \tan(x) \, dx$.
+\begin{proof}
+Rewrite $\tan(x) = \frac{\sin(x)}{\cos(x)}$.
+Let $f(x) = \cos(x)$. Then $f'(x) = -\sin(x)$.
+The integral is $\int \frac{\sin(x)}{\cos(x)} \, dx$. This is almost $\int \frac{f'(x)}{f(x)} dx$, but we have $\sin(x)$ instead of $-\sin(x)$ in the numerator. We adjust by introducing a minus sign:
+\[ \int \tan(x) \, dx = -\int \frac{-\sin(x)}{\cos(x)} \, dx \]
+Now the integrand is exactly $\frac{f'(x)}{f(x)}$ with $f(x)=\cos(x)$. Applying the lemma:
+\[ -\ln|\cos(x)| + C \]
+This can also be written using logarithm properties as $\ln|\sec(x)| + C$.
+Alternatively, use the direct substitution $u = \cos(x)$, $du = -\sin(x) dx \implies \sin(x) dx = -du$.
+\[ \int \frac{\sin(x) dx}{\cos(x)} = \int \frac{-du}{u} = -\int \frac{du}{u} = -\ln|u| + C = -\ln|\cos(x)| + C \]
+\end{proof}
+\end{example}
+
+\begin{example}[Using the Logarithmic Rule with Adjustment]
+Compute $\int \frac{x^4}{x^5-9} \, dx$.
+\begin{proof}
+Let $f(x) = x^5-9$. Then $f'(x) = 5x^4$.
+Our numerator is $x^4$. We need $5x^4$. Adjust constants:
+\[ \int \frac{x^4}{x^5-9} \, dx = \frac{1}{5} \int \frac{5x^4}{x^5-9} \, dx \]
+Now the integrand is $\frac{f'(x)}{f(x)}$. Applying the lemma:
+\[ \frac{1}{5} \ln|x^5-9| + C \]
+\end{proof}
+\end{example}
+
+
+\section{Integration by Substitution (Method 2: Inverse Substitution)}
+
+Sometimes, the structure $g(\phi(x))\phi'(x)$ is not apparent, or the integrand involves complicated expressions (like roots) that are hard to eliminate by setting $u = \phi(x)$. In such cases, it can be more effective to define the *original* variable $x$ as a function of a *new* variable $t$, i.e., $x = g(t)$. This is sometimes called inverse substitution.
+
+\subsection{Motivation and Procedure}
+The goal is to choose a substitution $x=g(t)$ such that when $x$ and $dx$ are replaced by expressions involving $t$ and $dt$, the new integral in $t$ becomes simpler.
+
+1.  **Choose the substitution:** Select a function $x = g(t)$ designed to simplify the troublesome parts of the integrand.
+2.  **Compute the differential:** Find $dx$ by differentiating $x$ with respect to $t$: $\frac{dx}{dt} = g'(t)$, so $dx = g'(t) \, dt$.
+3.  **Substitute:** Replace all occurrences of $x$ with $g(t)$ and replace $dx$ with $g'(t) \, dt$. The integral must now be entirely in terms of $t$.
+    \[ \int f(x) \, dx = \int f(g(t)) g'(t) \, dt \]
+4.  **Integrate with respect to \texorpdfstring{$t$}{t}:** Evaluate the new integral in $t$. Let the result be $H(t) + C$.
+5.  **Back-substitute:** Express the result back in terms of $x$. This requires finding the inverse relationship $t = g^{-1}(x)$ (if possible and well-defined) and substituting $t$ in $H(t)$.
+
+\subsection{Example of Inverse Substitution}
+
+\begin{example}
+Compute $\int \frac{dx}{\sqrt{x}(1+\sqrt[3]{x})}$.
+\begin{proof}
+The terms $\sqrt{x} = x^{1/2}$ and $\sqrt[3]{x} = x^{1/3}$ are problematic. To eliminate both fractional powers simultaneously, we need a substitution $x = t^k$ where $k$ is a common multiple of the denominators 2 and 3. The least common multiple is 6.
+Let $x = t^6$. We assume $x \ge 0$, so we can take $t \ge 0$.
+Then $\frac{dx}{dt} = 6t^5$, so $dx = 6t^5 \, dt$.
+Also, $\sqrt{x} = \sqrt{t^6} = (t^6)^{1/2} = t^3$ (since $t \ge 0$).
+And $\sqrt[3]{x} = \sqrt[3]{t^6} = (t^6)^{1/3} = t^2$.
+
+Substitute everything into the integral:
+\[ \int \frac{\overbrace{dx}^{6t^5 dt}}{\underbrace{\sqrt{x}}_{t^3}(1+\underbrace{\sqrt[3]{x}}_{t^2})} = \int \frac{6t^5 dt}{t^3(1+t^2)} = \int \frac{6t^2}{1+t^2} \, dt \]
+This is an integral of a rational function. Since the degree of the numerator equals the degree of the denominator, we can perform polynomial division or use an algebraic trick. Let's use the trick: add and subtract 1 in the numerator.
+\[ 6 \int \frac{t^2}{1+t^2} \, dt = 6 \int \frac{(t^2+1) - 1}{1+t^2} \, dt = 6 \int \left( \frac{t^2+1}{1+t^2} - \frac{1}{1+t^2} \right) \, dt \]
+\[ = 6 \int \left( 1 - \frac{1}{1+t^2} \right) \, dt \]
+Now integrate term by term with respect to $t$:
+\[ = 6 \left( \int 1 \, dt - \int \frac{1}{1+t^2} \, dt \right) = 6 (t - \arctan(t)) + C \]
+Finally, back-substitute. Since $x = t^6$ (and $t \ge 0$), we have $t = x^{1/6} = \sqrt[6]{x}$.
+\[ 6 (\sqrt[6]{x} - \arctan(\sqrt[6]{x})) + C \]
+\end{proof}
+\end{example}
+
+\section{Trigonometric Substitution}
+
+Trigonometric substitution is a specific, powerful type of inverse substitution ($x=g(t)$) used to handle integrals containing expressions like $\sqrt{a^2-x^2}$, $\sqrt{a^2+x^2}$, or $\sqrt{x^2-a^2}$. The idea is to use trigonometric identities to eliminate the square root.
+
+\subsection{Motivation and Common Substitutions}
+\begin{itemize}
+    \item For $\sqrt{a^2-x^2}$: Use $x = a\sin(\theta)$ with $\theta \in [-\pi/2, \pi/2]$. Then $\sqrt{a^2-x^2} = \sqrt{a^2-a^2\sin^2(\theta)} = \sqrt{a^2\cos^2(\theta)} = a|\cos(\theta)| = a\cos(\theta)$ (since $\cos(\theta) \ge 0$ on $[-\pi/2, \pi/2]$).
+    \item For $\sqrt{a^2+x^2}$: Use $x = a\tan(\theta)$ with $\theta \in (-\pi/2, \pi/2)$. Then $\sqrt{a^2+x^2} = \sqrt{a^2+a^2\tan^2(\theta)} = \sqrt{a^2\sec^2(\theta)} = a|\sec(\theta)| = a\sec(\theta)$ (since $\sec(\theta) > 0$ on $(-\pi/2, \pi/2)$).
+    \item For $\sqrt{x^2-a^2}$: Use $x = a\sec(\theta)$ with $\theta \in [0, \pi/2) \cup [\pi, 3\pi/2)$. Then $\sqrt{x^2-a^2} = \sqrt{a^2\sec^2(\theta)-a^2} = \sqrt{a^2\tan^2(\theta)} = a|\tan(\theta)|$. The choice of domain ensures $\tan(\theta)$ relates appropriately back to $x$.
+\end{itemize}
+
+\subsection{Example: \texorpdfstring{$\int \sqrt{1-x^2} \, dx$}{Integral of sqrt(1-x\^{}2) dx}}
+
+This integral represents the area of a semicircle, but let's compute it using trigonometric substitution.
+
+\begin{example}
+Compute $\int \sqrt{1-x^2} \, dx$.
+\begin{proof}
+This involves the form $\sqrt{a^2-x^2}$ with $a=1$. We use the substitution $x = \sin(\theta)$.
+To ensure the substitution is invertible and simplifies the square root nicely, we restrict $\theta \in [-\pi/2, \pi/2]$.
+If $x = \sin(\theta)$, then $\frac{dx}{d\theta} = \cos(\theta)$, so $dx = \cos(\theta) \, d\theta$.
+Also, $\sqrt{1-x^2} = \sqrt{1-\sin^2(\theta)} = \sqrt{\cos^2(\theta)} = |\cos(\theta)|$. Since $\theta \in [-\pi/2, \pi/2]$, $\cos(\theta) \ge 0$, so $\sqrt{1-x^2} = \cos(\theta)$.
+
+Substitute into the integral:
+\[ \int \underbrace{\sqrt{1-x^2}}_{\cos(\theta)} \underbrace{dx}_{\cos(\theta) \, d\theta} = \int \cos^2(\theta) \, d\theta \]
+To integrate $\cos^2(\theta)$, we use the half-angle (or power-reducing) identity: $\cos^2(\theta) = \frac{1+\cos(2\theta)}{2}$.
+\[ \int \frac{1+\cos(2\theta)}{2} \, d\theta = \frac{1}{2} \int (1+\cos(2\theta)) \, d\theta \]
+\[ = \frac{1}{2} \left( \int 1 \, d\theta + \int \cos(2\theta) \, d\theta \right) \]
+The first integral is $\theta$. For the second, we can use a mini-substitution $u=2\theta$, $du=2d\theta$, or the linear substitution rule:
+\[ \int \cos(2\theta) \, d\theta = \frac{1}{2} \sin(2\theta) \]
+So the integral becomes:
+\[ = \frac{1}{2} \left( \theta + \frac{1}{2} \sin(2\theta) \right) + C = \frac{1}{2}\theta + \frac{1}{4}\sin(2\theta) + C \]
+
+Now we must back-substitute to get the result in terms of $x$.
+We have $x = \sin(\theta)$. Since $\theta \in [-\pi/2, \pi/2]$, we can write $\theta = \arcsin(x)$.
+For the $\sin(2\theta)$ term, use the double-angle identity: $\sin(2\theta) = 2\sin(\theta)\cos(\theta)$.
+We know $\sin(\theta) = x$.
+What is $\cos(\theta)$? Since $\cos^2(\theta) + \sin^2(\theta) = 1$, we have $\cos^2(\theta) = 1 - \sin^2(\theta) = 1 - x^2$. Since $\theta \in [-\pi/2, \pi/2]$, $\cos(\theta) \ge 0$, so $\cos(\theta) = \sqrt{1-x^2}$.
+Therefore, $\sin(2\theta) = 2 \sin(\theta) \cos(\theta) = 2x\sqrt{1-x^2}$.
+
+Substituting $\theta$ and $\sin(2\theta)$ back into our integrated expression:
+\[ \frac{1}{2}\theta + \frac{1}{4}\sin(2\theta) + C = \frac{1}{2} \arcsin(x) + \frac{1}{4} (2x\sqrt{1-x^2}) + C \]
+\[ = \frac{1}{2} \arcsin(x) + \frac{1}{2} x\sqrt{1-x^2} + C \]
+So,
+\[ \int \sqrt{1-x^2} \, dx = \frac{1}{2} \arcsin(x) + \frac{1}{2} x\sqrt{1-x^2} + C \]
+\end{proof}
+\end{example}
+
+\begin{remark}
+Trigonometric substitution often requires careful back-substitution using trigonometric identities and potentially drawing a right triangle to relate the trigonometric functions of $\theta$ back to expressions involving $x$.
+\end{remark}
+
+\section{Concluding Thoughts}
+We have significantly expanded our integration toolkit today, particularly with the powerful method of substitution in its various forms. Mastering these techniques requires practice to recognize the appropriate patterns and apply the procedures correctly. Keep working through examples!
+
+\announcement{
+ Please review these techniques and the examples provided. Ensure you are comfortable with both $u$-substitution and inverse/trigonometric substitution. The next homework assignment will provide more practice.
+}
+
+\end{document}

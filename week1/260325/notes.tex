@@ -1,0 +1,277 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsfonts} % Essential math packages
+\usepackage[margin=1in]{geometry} % Sensible margins
+\usepackage{hyperref} % Optional: for clickable links if needed later
+\usepackage{palatino} % Using a slightly more elegant font
+\usepackage{parskip} % Use space between paragraphs instead of indentation
+
+% --- Custom Commands (Optional but helpful) ---
+\newcommand{\dx}{\,\mathrm{d}x} % Differential dx
+\newcommand{\dt}{\,\mathrm{d}t} % Differential dt
+\newcommand{\du}{\,\mathrm{d}u} % Differential du (FIXED)
+\newcommand{\dv}{\,\mathrm{d}v} % Differential dv (FIXED)
+\newcommand{\ddt}[1]{\frac{\mathrm{d}#1}{\mathrm{d}t}} % Derivative wrt t
+\newcommand{\ddx}[1]{\frac{\mathrm{d}#1}{\mathrm{d}x}} % Derivative wrt x
+% Removed already defined commands: \arcsin, \arctan (FIXED)
+
+% --- Document Start ---
+\begin{document}
+
+% --- Title ---
+\title{Calculus II Lecture Notes \\ \Large Techniques of Integration: Part I}
+\author{Your Friendly Math Teacher} % You can replace this
+\date{April 2025} % Or use \today
+\maketitle
+
+% --- Introduction ---
+\section*{Welcome Back, Integrators!}
+
+It's wonderful to see you all diving into the depths of Calculus II! This semester is indeed a mathematical feast, juggling Linear Algebra 2, Probability, and our beloved Calculus II. Let's sharpen our tools and continue our exploration of the fascinating world of integrals.
+
+First, a couple of quick housekeeping items:
+
+\begin{itemize}
+    \item \textbf{Exam Appeals:} While I appreciate diligence, please only submit exam appeals if you suspect a genuine, significant error in grading. Minor point-chasing rarely succeeds and consumes valuable time for everyone. Focus your energy on mastering the material moving forward!
+    \item \textbf{Homework Reminder:} Don't forget, the integration by parts homework assignment we discussed is due this coming \textbf{Sunday}. Please make sure to submit it on time.
+\end{itemize}
+
+Now, let's embark on today's mathematical adventure!
+
+\section{Setting the Stage: Revisiting the Fundamentals}
+
+Before we learn new tricks, let's ensure our foundations are solid. Remember, integration is fundamentally about reversing differentiation.
+
+\subsection{The Antiderivative (Our Hero!)}
+A function $F(x)$ earns the title of an \textbf{antiderivative} (or \textit{primitive function}) of $f(x)$ on an interval $I$ if its derivative brings us back to $f(x)$. Formally:
+\[ F'(x) = f(x) \quad \text{for all } x \in I \]
+
+\subsection{The Indefinite Integral (The Family of Heroes)}
+The \textbf{indefinite integral}, symbolized by $\int f(x) \dx$, represents the \textit{entire family} of antiderivatives for $f(x)$. Since the derivative of a constant is zero, any two antiderivatives of the same function can only differ by a constant. We capture this idea with the constant of integration, $C$:
+\[ \int f(x) \dx = F(x) + C, \quad \text{where } F'(x) = f(x) \]
+
+\subsection{Integration by Parts (The Product Rule's Inverse)}
+This powerful technique comes directly from the product rule for derivatives. It allows us to tackle integrals of products. The magic formula is:
+\[ \int u \dv = uv - \int v \du \]
+Or, more explicitly using function notation:
+\[ \int u(x)v'(x) \dx = u(x)v(x) - \int u'(x)v(x) \dx \]
+The art here lies in choosing $u$ (the part you'll differentiate) and $v'$ (the part you'll integrate) wisely to make the \textit{new} integral, $\int v \du$, simpler than the original.
+
+\section{Mastering a Classic: The Homework Problem $\int e^x \sin(x) \dx$}
+
+This integral is a beautiful illustration of integration by parts, requiring a clever "boomerang" approach. Both $e^x$ and $\sin(x)$ (or $\cos(x)$) seem reluctant to disappear under differentiation or integration.
+
+\textbf{The Strategy:} Apply integration by parts twice, consistently choosing the types of functions for $u$ and $v'$, aiming to recover the original integral on the right-hand side, allowing us to solve algebraically.
+
+\begin{enumerate}
+    \item \textbf{First Pass:}
+        Let $u = e^x \implies \du = e^x \dx$.
+        Let $\dv = \sin(x) \dx \implies v = -\cos(x)$.
+        \[ \int e^x \sin(x) \dx = e^x(-\cos(x)) - \int (-\cos(x))(e^x \dx) = -e^x \cos(x) + \int e^x \cos(x) \dx \]
+
+    \item \textbf{Second Pass (on the new integral):}
+        Let $u = e^x \implies \du = e^x \dx$. (Consistency is key!)
+        Let $\dv = \cos(x) \dx \implies v = \sin(x)$.
+        \[ \int e^x \cos(x) \dx = e^x \sin(x) - \int \sin(x)(e^x \dx) = e^x \sin(x) - \int e^x \sin(x) \dx \]
+
+    \item \textbf{Putting it Together and Solving:}
+        Substitute the result from Pass 2 back into the equation from Pass 1:
+        \[ \int e^x \sin(x) \dx = -e^x \cos(x) + \left( e^x \sin(x) - \int e^x \sin(x) \dx \right) \]
+        Let $I = \int e^x \sin(x) \dx$. Our equation becomes:
+        \[ I = -e^x \cos(x) + e^x \sin(x) - I \]
+        Now, solve for $I$:
+        \[ 2I = e^x (\sin(x) - \cos(x)) \]
+        \[ I = \frac{e^x (\sin(x) - \cos(x))}{2} \]
+        Finally, don't forget our constant companion:
+        \[ \boxed{\int e^x \sin(x) \dx = \frac{e^x (\sin(x) - \cos(x))}{2} + C} \]
+\end{enumerate}
+\textit{Teacher's Note:} Why add $+C$ only at the end? It's pure convenience! Any constants generated during intermediate steps would just combine into one final arbitrary constant.
+
+\section{The Power of Substitution: Undoing the Chain Rule}
+
+Integration by parts helps with products; substitution helps with compositions! It's the integration analogue of the chain rule.
+
+\subsection{The Substitution Rule (First Kind: $t = \phi(x)$)}
+
+\textbf{The Core Idea:} If you recognize an integrand as a composite function $g(\phi(x))$ multiplied by the derivative of the inner function $\phi'(x)$, integration becomes much simpler.
+
+\textbf{The Formal Rule:} If $G$ is an antiderivative of $g$ (i.e., $G'=g$), then:
+\[ \int g(\phi(x)) \phi'(x) \dx = G(\phi(x)) + C \]
+
+\textbf{Intuition:} The $\phi'(x) \dx$ part effectively "cancels out" the effect of the inner function $\phi(x)$ during integration, allowing us to integrate the outer function $g$ directly (resulting in $G$) and then evaluate it at the inner function $\phi(x)$.
+
+\subsection{The Practical Workflow (Making it Easier!)}
+
+While the formal rule is the foundation, we usually use a more hands-on approach with a temporary variable, typically $t$ (or $u$).
+
+\begin{enumerate}
+    \item \textbf{Choose Substitution:} Identify an "inner function" $\phi(x)$ whose derivative $\phi'(x)$ (or a constant multiple of it) is also present as a factor in the integrand. Let $t = \phi(x)$.
+    \item \textbf{Find Differential $dt$:} Differentiate $t$ with respect to $x$: $\ddx{t} = \phi'(x)$. Now, think of this notationally (it's mathematically justified!) as $dt = \phi'(x) \dx$.
+    \item \textbf{Substitute:} Replace $\phi(x)$ with $t$ and $\phi'(x) \dx$ with $dt$. The entire integral should now be in terms of $t$.
+    \item \textbf{Integrate:} Compute the (hopefully simpler) integral with respect to $t$. Let's say $\int g(t) \dt = G(t) + C$.
+    \item \textbf{Substitute Back:} Replace $t$ with its original expression in $x$, i.e., $\phi(x)$. The final answer is $G(\phi(x)) + C$.
+\end{enumerate}
+
+\textit{A Note on Notation:} The Leibniz notation $\ddx{f}$ is incredibly useful here, allowing the seemingly magical step $dt = \phi'(x) \dx$. Though it looks like algebraic manipulation of symbols, the notation is designed precisely so this process yields mathematically correct results for substitution.
+
+\subsection{Examples in Action (First Kind)}
+
+Let's see this practical workflow shine!
+
+\begin{itemize}
+    \item \textbf{Example 1:} $\int \sin^2(x) \cos(x) \dx$
+        \begin{itemize}
+            \item Let $t = \sin(x)$. (Inner function of the square, derivative $\cos(x)$ is present).
+            \item $dt = \cos(x) \dx$.
+            \item Substitute: $\int t^2 \dt$.
+            \item Integrate: $\frac{t^3}{3} + C$.
+            \item Substitute back: $\boxed{\frac{\sin^3(x)}{3} + C}$.
+        \end{itemize}
+
+    \item \textbf{Example 2:} $\int e^x(e^{2x}+1) \dx$
+        \begin{itemize}
+            \item Let $t = e^x$. Note $e^{2x} = (e^x)^2 = t^2$.
+            \item $dt = e^x \dx$.
+            \item Substitute: $\int (t^2+1) \dt$.
+            \item Integrate: $\frac{t^3}{3} + t + C$.
+            \item Substitute back: $\boxed{\frac{e^{3x}}{3} + e^x + C}$.
+         \end{itemize}
+         
+    \item \textbf{Example 3:} $\int \frac{\dx}{x\sqrt{1-\ln^2(x)}} = \int \frac{1}{\sqrt{1-(\ln x)^2}} \cdot \frac{1}{x} \dx$
+        \begin{itemize}
+            \item Let $t = \ln(x)$. (Inner function, derivative $1/x$ is present).
+            \item $dt = \frac{1}{x} \dx$.
+            \item Substitute: $\int \frac{1}{\sqrt{1-t^2}} \dt$.
+            \item Integrate (Recognize Arcsine!): $\arcsin(t) + C$.
+            \item Substitute back: $\boxed{\arcsin(\ln x) + C}$.
+        \end{itemize}
+
+    \item \textbf{Example 4:} $\int \frac{e^{\tan(x)}}{\cos^2(x)} \dx = \int e^{\tan(x)} \cdot \sec^2(x) \dx$
+        \begin{itemize}
+            \item Let $t = \tan(x)$. (Inner function, derivative $\sec^2(x)$ is present).
+            \item $dt = \sec^2(x) \dx = \frac{1}{\cos^2(x)} \dx$.
+            \item Substitute: $\int e^t \dt$.
+            \item Integrate: $e^t + C$.
+            \item Substitute back: $\boxed{e^{\tan(x)} + C}$.
+        \end{itemize}
+\end{itemize}
+
+\subsection{Recognizing Special Patterns}
+
+Sometimes, substitution reveals common, useful patterns.
+
+\begin{itemize}
+    \item \textbf{Example 5:} $\int 2x \sin(x^2+1) \dx$
+        \begin{itemize}
+            \item Let $t = x^2+1$. (Including the $+1$ is convenient, its derivative is 0).
+            \item $dt = 2x \dx$. (Perfect match!)
+            \item Substitute: $\int \sin(t) \dt$.
+            \item Integrate: $-\cos(t) + C$.
+            \item Substitute back: $\boxed{-\cos(x^2+1) + C}$.
+        \end{itemize}
+
+    \item \textbf{Example 6:} $\int x e^{x^2} \dx$
+        \begin{itemize}
+            \item Let $t = x^2$.
+            \item $dt = 2x \dx$. We only have $x \dx$. We need a 2!
+            \item \textit{Method 1: Manipulate dt.} $x \dx = \frac{1}{2} dt$. Substitute: $\int e^t \left(\frac{1}{2} \dt\right) = \frac{1}{2} \int e^t \dt = \frac{1}{2} e^t + C$.
+            \item \textit{Method 2: Adjust the Integral.} $\int x e^{x^2} \dx = \frac{1}{2} \int 2x e^{x^2} \dx$. Now substitute: $\frac{1}{2} \int e^t \dt = \frac{1}{2} e^t + C$.
+            \item Substitute back (either method): $\boxed{\frac{1}{2}e^{x^2} + C}$.
+        \end{itemize}
+
+    \item \textbf{Pattern 1: Linear Argument} $\int f(\alpha x + \beta) \dx$
+        Using $t = \alpha x + \beta$, we find $dt = \alpha \dx \implies \dx = \frac{1}{\alpha} dt$.
+        The integral becomes $\int f(t) \frac{1}{\alpha} dt = \frac{1}{\alpha} \int f(t) dt = \frac{1}{\alpha} F(t) + C$.
+        \[ \boxed{\int f(\alpha x + \beta) \dx = \frac{1}{\alpha} F(\alpha x + \beta) + C} \quad (\alpha \neq 0) \]
+        Where $F$ is the antiderivative of $f$.
+
+    \item \textbf{Pattern 2: Derivative over Function} $\int \frac{f'(x)}{f(x)} \dx$
+        Let $t = f(x)$. Then $dt = f'(x) \dx$.
+        The integral becomes $\int \frac{dt}{t}$.
+        \[ \boxed{\int \frac{f'(x)}{f(x)} \dx = \ln|f(x)| + C} \]
+        The absolute value is crucial for the logarithm's domain! If $f(x)>0$, it can be omitted.
+        \begin{itemize}
+            \item $\int \frac{e^x}{e^x+5} \dx = \ln|e^x+5| + C = \ln(e^x+5) + C$ (since $e^x+5 > 0$)
+            \item $\int \frac{x^4}{x^5-9} \dx = \frac{1}{5} \int \frac{5x^4}{x^5-9} \dx = \frac{1}{5} \ln|x^5-9| + C$
+            \item $\int \tan(x) \dx = \int \frac{\sin(x)}{\cos(x)} \dx = -\int \frac{-\sin(x)}{\cos(x)} \dx = -\ln|\cos(x)| + C = \ln|\sec(x)| + C$
+        \end{itemize}
+\end{itemize}
+
+\section{Changing Perspective: Substitution (Second Kind: $x = \phi(t)$)}
+
+Sometimes, it's more effective to define the \textit{original} variable $x$ in terms of a \textit{new} variable $t$. This is useful when the integrand has awkward expressions in $x$ (like complicated roots) that simplify if $x$ is replaced by a suitable function $\phi(t)$.
+
+\textbf{The Workflow:}
+\begin{enumerate}
+    \item \textbf{Choose Substitution:} Select $x = \phi(t)$ to simplify the integrand.
+    \item \textbf{Find Differential $dx$:} Differentiate $x$ with respect to $t$: $\ddt{x} = \phi'(t)$. Then $dx = \phi'(t) \dt$.
+    \item \textbf{Substitute:} Replace every $x$ with $\phi(t)$ and $dx$ with $\phi'(t) \dt$.
+    \item \textbf{Integrate:} Compute the integral with respect to $t$.
+    \item \textbf{Substitute Back:} Express $t$ back in terms of $x$ using the inverse function $t = \phi^{-1}(x)$ and substitute into the result.
+\end{enumerate}
+
+\textbf{Example 7:} $\int \frac{\dx}{\sqrt{x}(1 + \sqrt[3]{x})}$
+\begin{itemize}
+    \item The terms $x^{1/2}$ and $x^{1/3}$ are the issue. To clear both fractional powers, we need an exponent divisible by both 2 and 3. Let $x = t^6$.
+    \item Find $dx$: $\ddt{x} = 6t^5 \implies dx = 6t^5 \dt$.
+    \item Substitute:
+    \[ \int \frac{6t^5 \dt}{\sqrt{t^6}(1 + \sqrt[3]{t^6})} = \int \frac{6t^5 \dt}{t^3(1 + t^2)} = \int \frac{6t^2}{1+t^2} \dt \]
+    \item Integrate: Use the add/subtract trick:
+    \[ 6 \int \frac{t^2+1-1}{1+t^2} \dt = 6 \int \left( \frac{t^2+1}{1+t^2} - \frac{1}{1+t^2} \right) \dt = 6 \int \left( 1 - \frac{1}{1+t^2} \right) \dt \]
+    \[ = 6 (t - \arctan(t)) + C \]
+    \item Substitute back: Since $x = t^6$, we have $t = x^{1/6} = \sqrt[6]{x}$.
+    \[ \boxed{6(\sqrt[6]{x} - \arctan(\sqrt[6]{x})) + C} \]
+\end{itemize}
+
+\section{A Touch of Elegance: Trigonometric Substitution}
+
+This is a special, powerful case of the second kind of substitution, designed for integrands containing expressions involving sums or differences of squares, especially under square roots. The key is using Pythagorean identities.
+
+\textbf{Common Scenarios:}
+\begin{itemize}
+    \item For $\sqrt{a^2 - x^2}$: Try $x = a \sin(t)$ (with $t \in [-\pi/2, \pi/2]$)
+    \item For $\sqrt{a^2 + x^2}$: Try $x = a \tan(t)$ (with $t \in (-\pi/2, \pi/2)$)
+    \item For $\sqrt{x^2 - a^2}$: Try $x = a \sec(t)$ (with appropriate $t$ range)
+\end{itemize}
+
+\textbf{Example 8:} $\int \sqrt{1-x^2} \dx$ (This integral represents the area of a semicircle!)
+\begin{itemize}
+    \item Matches $\sqrt{a^2 - x^2}$ with $a=1$. Let $x = \sin(t)$.
+    \item \textbf{Restrict Domain:} Choose $t \in [-\pi/2, \pi/2]$. This ensures $\sin(t)$ is one-to-one and, importantly, $\cos(t) \ge 0$.
+    \item Find $dx$: $\ddt{x} = \cos(t) \implies dx = \cos(t) \dt$.
+    \item Substitute: $\int \sqrt{1-\sin^2(t)} \cdot (\cos(t) \dt)$.
+    \item Simplify: $\int \sqrt{\cos^2(t)} \cdot \cos(t) \dt = \int |\cos(t)| \cos(t) \dt$. Since $t \in [-\pi/2, \pi/2]$, $|\cos(t)| = \cos(t)$. So we have $\int \cos^2(t) \dt$.
+    \item Integrate: Use the identity $\cos^2(t) = \frac{1+\cos(2t)}{2}$.
+    \[ \int \frac{1+\cos(2t)}{2} \dt = \frac{1}{2} \int (1+\cos(2t)) \dt = \frac{1}{2} \left( t + \frac{\sin(2t)}{2} \right) + C = \frac{t}{2} + \frac{\sin(2t)}{4} + C \]
+    \item Substitute back to $x$:
+        \begin{itemize}
+            \item $x = \sin(t) \implies t = \arcsin(x)$.
+            \item Use $\sin(2t) = 2\sin(t)\cos(t)$. We know $\sin(t)=x$. We also know $\cos(t) = \sqrt{1-\sin^2(t)} = \sqrt{1-x^2}$ (positive because of $t$'s range). So, $\sin(2t) = 2x\sqrt{1-x^2}$.
+        \end{itemize}
+        Substitute these into the result:
+        \[ \frac{\arcsin(x)}{2} + \frac{2x\sqrt{1-x^2}}{4} + C = \frac{\arcsin(x)}{2} + \frac{x\sqrt{1-x^2}}{2} + C \]
+        \[ \boxed{\int \sqrt{1-x^2} \dx = \frac{1}{2} \left( \arcsin(x) + x\sqrt{1-x^2} \right) + C} \]
+        (Doesn't this look geometrically satisfying? It relates the area to an angle (arcsin) and a triangle's area!)
+\end{itemize}
+
+\section{Looking Ahead: Practice Makes Perfect!}
+
+We've explored several powerful techniques today:
+\begin{itemize}
+    \item Integration by Parts (especially the "boomerang" trick)
+    \item Substitution (Type 1: $t=\phi(x)$ and Type 2: $x=\phi(t)$)
+    \item Trigonometric Substitution
+\end{itemize}
+Mastery comes from practice! Recognizing which technique to apply, and executing it correctly, is an art form developed by working through many examples.
+
+\section{Action Items \& Reminders}
+\begin{itemize}
+    \item[\checkmark] \textbf{Submit Homework:} Due Sunday (covering Integration by Parts).
+    \item[\checkmark] \textbf{Practice Integrals:} Work through problems applying all the techniques discussed today. Focus on identifying the best approach.
+    \item[\checkmark] \textbf{Review Trig Identities:} Especially Pythagorean and double-angle formulas – they are essential!
+    \item[\checkmark] \textbf{Review Class Examples:} Make sure you can reproduce the solutions and understand the reasoning behind each step.
+\end{itemize}
+
+Keep up the fantastic work, everyone! Happy integrating!
+
+% --- Document End ---
+\end{document}

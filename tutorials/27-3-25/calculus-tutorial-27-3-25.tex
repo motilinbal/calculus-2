@@ -1,0 +1,50 @@
+The quotient is $S(x) = 3x+5$ and the remainder is $R(x) = -5x-1$.
+Therefore,
+\[ \frac{3x^3+5x^2-2x+4}{x^2+1} = (3x+5) + \frac{-5x-1}{x^2+1} \]
+Now we integrate:
+\[ \int \frac{3x^3+5x^2-2x+4}{x^2+1} \dx = \int (3x+5) \dx + \int \frac{-5x-1}{x^2+1} \dx \]
+Split the second integral:
+\[ = \int (3x+5) \dx + \int \frac{-5x}{x^2+1} \dx + \int \frac{-1}{x^2+1} \dx \]
+Evaluate each part:
+\begin{itemize}
+    \item $\int (3x+5) \dx = \frac{3x^2}{2} + 5x + C_1$
+    \item $\int \frac{-1}{x^2+1} \dx = -\arctan(x) + C_2$
+    \item For $\int \frac{-5x}{x^2+1} \dx$, use substitution $t = x^2+1$. Then $dt = 2x \dx$, so $x \dx = \frac{1}{2} dt$.
+    \[ \int \frac{-5x}{x^2+1} \dx = \int \frac{-5}{t} \left(\frac{1}{2} dt\right) = -\frac{5}{2} \int \frac{1}{t} dt = -\frac{5}{2} \ln|t| + C_3 \]
+    Substitute back $t = x^2+1$. Since $x^2+1$ is always positive, we don't need the absolute value:
+    \[ = -\frac{5}{2} \ln(x^2+1) + C_3 \]
+\end{itemize}
+Combining all parts and merging the constants into a single $C$:
+\[ \int \frac{3x^3+5x^2-2x+4}{x^2+1} \dx = \frac{3x^2}{2} + 5x - \arctan(x) - \frac{5}{2} \ln(x^2+1) + C \]
+\end{example}
+
+\begin{example}[Revisiting $x \arctan x$] \label{ex:x_arctan_x}
+Calculate $\int x \arctan(x) \dx$. (This example was discussed in the context of a past quiz).
+
+\textit{Solution:} This requires Integration by Parts. We choose $u = \arctan(x)$ because its derivative is simpler, and $dv = x \dx$ because it's easy to integrate.
+Let $u = \arctan(x)$ and $dv = x \dx$.
+\begin{itemize}
+    \item $u = \arctan(x) \implies du = \frac{1}{1+x^2} \dx$
+    \item $dv = x \dx \implies v = \int x \dx = \frac{x^2}{2}$
+\end{itemize}
+Using the formula $\int u \, dv = uv - \int v \, du$:
+\[ \int x \arctan(x) \dx = \arctan(x) \left(\frac{x^2}{2}\right) - \int \left(\frac{x^2}{2}\right) \left(\frac{1}{1+x^2}\right) \dx \]
+\[ = \frac{x^2}{2} \arctan(x) - \frac{1}{2} \int \frac{x^2}{1+x^2} \dx \]
+To evaluate the remaining integral, use algebraic manipulation similar to Example \ref{ex:ln_x2_plus_2}:
+\[ \int \frac{x^2}{1+x^2} \dx = \int \frac{(x^2+1)-1}{1+x^2} \dx = \int \left( 1 - \frac{1}{1+x^2} \right) \dx \]
+\[ = \int 1 \dx - \int \frac{1}{1+x^2} \dx = x - \arctan(x) + C' \]
+Substituting this back:
+\[ \int x \arctan(x) \dx = \frac{x^2}{2} \arctan(x) - \frac{1}{2} (x - \arctan(x)) + C \]
+\[ = \frac{x^2}{2} \arctan(x) - \frac{1}{2}x + \frac{1}{2}\arctan(x) + C \]
+\[ = \frac{x^2+1}{2} \arctan(x) - \frac{x}{2} + C \]
+\end{example}
+
+\begin{administrative}
+    \item \textbf{Homework:** Example \ref{ex:ln_1_plus_sqrt_x} ($\int \ln(1+\sqrt{x}) \dx$) appeared as a non-graded homework problem (Section Vav in a previous assignment list). Example \ref{ex:x_arctan_x} ($\int x \arctan x \dx$) was mentioned as similar to a past quiz question. An example involving $e^{ax}\sin(bx)$ was mentioned as homework, to be discussed next week (related to periodic integrals).
+    \item \textbf{Quiz/Exam Info:** A quiz date was mentioned but not specified. Be aware that forgetting the constant of integration ($+C$) can result in a point deduction (e.g., 5 points mentioned). Example \ref{ex:x_arctan_x} is indicative of quiz/exam level questions.
+    \item \textbf{Next Week's Topics:** We will cover definite integrals, the concept of area under a curve, techniques for periodic integrals (like those involving $e^{ax}\sin(bx)$ or $e^{ax}\cos(bx)$), and partial fraction decomposition for integrating rational functions.
+    \item \textbf{Learning Resources:** Review sessions are available. External resources like specific YouTube channels or book series (e.g., Stewart's Calculus, mentioned as "Kalkulus") can be helpful for additional practice and explanation. Start with simpler problems (like polynomial integration) if you feel the basics are shaky.
+    \item \textbf{Notation:** Remember that $\dx$ indicates the variable of integration and will become more significant when we discuss definite integrals and multivariable calculus later.
+\end{administrative}
+
+\end{document}

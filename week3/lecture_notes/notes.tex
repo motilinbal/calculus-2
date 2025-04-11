@@ -1,0 +1,87 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage[utf8]{inputenc} % For broader character support if needed
+\usepackage{lmodern} % Use a modern font
+\usepackage{hyperref} % For potential links later
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=magenta}
+
+\title{Exploring the Foundations of Calculus: Limits and Beyond}
+\author{A Friendly Guide}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction: The Essence of Limits}
+
+Welcome! Calculus is often described as the mathematics of change, and the concept that unlocks this dynamic world is the \textbf{limit}. Intuitively, a limit describes the value a function *approaches* as its input gets closer and closer to a certain point. It's about the journey, not necessarily the destination itself. Sometimes a function might not be defined \emph{at} a point, but we can still understand its behavior \emph{near} that point using limits. Let's delve into some examples that illustrate this powerful idea.
+
+\section{Calculating Limits: Techniques and Examples}
+
+Based on the notes[cite: 1], several common limit scenarios were explored. Let's examine them with a bit more structure and explanation.
+
+\subsection{Limits Involving Trigonometric Functions}
+
+Trigonometric limits often require clever use of identities and known fundamental limits.
+
+\subsubsection{A Classic Example: The Limit of \texorpdfstring{$\frac{1 - \cos x}{x^2}$}{ (1-cos x)/x\textasciicircum 2}}
+
+Consider the limit:
+\[ L = \lim_{x \to 0} \frac{1 - \cos x}{x^2} \]
+Direct substitution ($x=0$) gives $\frac{1-\cos 0}{0^2} = \frac{1-1}{0} = \frac{0}{0}$, an indeterminate form. This tells us we need to do more work! A key trigonometric identity here is the half-angle formula for sine: $1 - \cos x = 2 \sin^2\left(\frac{x}{2}\right)$[cite: 1]. Substituting this in:
+\[ L = \lim_{x \to 0} \frac{2 \sin^2\left(\frac{x}{2}\right)}{x^2} \]
+Now, we want to relate this to the fundamental limit $\lim_{y \to 0} \frac{\sin y}{y} = 1$. We can rewrite the expression:
+\[ L = \lim_{x \to 0} 2 \left( \frac{\sin\left(\frac{x}{2}\right)}{x} \right)^2 \]
+To make the denominator match the argument of the sine function, we multiply and divide by 2 inside the parenthesis:
+\[ L = \lim_{x \to 0} 2 \left( \frac{\sin\left(\frac{x}{2}\right)}{\frac{x}{2}} \cdot \frac{1}{2} \right)^2 \]
+As $x \to 0$, we also have $\frac{x}{2} \to 0$. Therefore, we can apply the fundamental limit:
+\[ L = 2 \left( \lim_{x \to 0} \frac{\sin\left(\frac{x}{2}\right)}{\frac{x}{2}} \cdot \frac{1}{2} \right)^2 = 2 \left( 1 \cdot \frac{1}{2} \right)^2 = 2 \left(\frac{1}{4}\right) = \frac{1}{2} \]
+So, the function approaches $\frac{1}{2}$ as $x$ gets arbitrarily close to 0.
+
+\subsubsection{Another Trigonometric Limit: Involving Logarithm}
+The notes also mention the limit[cite: 1]:
+\[ \lim_{x \to 0} \frac{\ln(\cos x)}{\sin^2 x} \]
+This is another $\frac{0}{0}$ form ($\ln(\cos 0) = \ln(1) = 0$ and $\sin^2 0 = 0$). Techniques like L'Hôpital's Rule or using series expansions are often employed for such limits. (The detailed calculation wasn't fully clear in the notes, but identifying the indeterminate form is the first crucial step.)
+
+\subsection{Limits of Rational Functions}
+
+Rational functions (ratios of polynomials) are often simplified by factoring.
+
+\subsubsection{Example: Simplifying by Factoring}
+Consider the limit[cite: 1]:
+\[ L = \lim_{x \to 1} \frac{x^4 - 1}{(x-1)(1+x)(1+x^2)} \]
+Substitution yields $\frac{1-1}{(1-1)(1+1)(1+1)} = \frac{0}{0}$. We need to simplify. Recall the difference of squares: $a^2 - b^2 = (a-b)(a+b)$. Applying this twice to the numerator:
+\[ x^4 - 1 = (x^2 - 1)(x^2 + 1) = (x-1)(x+1)(x^2+1) \]
+Substituting this back into the limit expression:
+\[ L = \lim_{x \to 1} \frac{(x-1)(x+1)(x^2+1)}{(x-1)(1+x)(1+x^2)} \]
+For $x \neq 1$, the term $(x-1)$ is non-zero, and we can cancel the common factors:
+\[ L = \lim_{x \to 1} \frac{(x-1)(x+1)(x^2+1)}{(x-1)(1+x)(1+x^2)} = \lim_{x \to 1} 1 = 1 \]
+After simplification, the limit is clearly 1.
+
+\subsection{Other Interesting Limit Forms}
+The notes hinted at other important limit types[cite: 1]:
+\begin{itemize}
+    \item \textbf{Limits involving radicals and rational functions:} Like $\lim_{x \to 2} \frac{\sqrt{2-x}}{x^2 - 5x + 6}$. Here, factoring the denominator $x^2 - 5x + 6 = (x-2)(x-3)$ is key. Notice the domain restriction $x<2$ due to the square root.
+    \item \textbf{Exponential limits (indeterminate power):} Such as $\lim_{x \to \infty} \left( \frac{x+2}{x-1} \right)^x$. This often relates to the definition of $e$. One common technique is to analyze the limit of the logarithm of the expression.
+    \item \textbf{Squeeze Theorem application:} The limit $\lim_{x \to 0} x \sin\left(\frac{1}{x}\right)$ is a classic example where the Squeeze Theorem is used. Since $-1 \le \sin(\frac{1}{x}) \le 1$, we have $-|x| \le x \sin(\frac{1}{x}) \le |x|$. As $x \to 0$, both $-|x|$ and $|x|$ approach 0, squeezing the function $x \sin(\frac{1}{x})$ to 0 as well.
+\end{itemize}
+
+\section{Glimpses Beyond Limits: Derivatives and Integrals}
+
+While the focus seemed to be on limits, the notes also contained hints of the next steps in calculus[cite: 1]:
+
+\begin{itemize}
+    \item \textbf{Derivatives:} The mention of $f(x) = xe^x$ and the notation $f'(x)$ points towards differentiation – the study of rates of change and slopes of curves.
+    \item \textbf{Integrals:} The appearance of $\int f(x) \, dx$ (indefinite integral) and $\int_a^b f(x) \, dx$ (definite integral), along with specific examples like $\int \sin x \, dx$ and $\int \frac{1}{x} \, dx$, suggests an introduction to integration – the process of accumulation or finding areas under curves. The use of $F(x)$ likely denotes an antiderivative, linking integration back to differentiation via the Fundamental Theorem of Calculus, often stated as $\int_a^b f(x) dx = F(b) - F(a)$ where $F'(x) = f(x)$.
+\end{itemize}
+
+These concepts build directly upon the foundation of limits. Understanding limits is paramount before diving deeper into the fascinating worlds of derivatives and integrals.
+
+\section{Conclusion}
+
+These notes, though initially scattered[cite: 1], touch upon fundamental techniques for evaluating limits – a cornerstone of calculus. By applying algebraic manipulation, trigonometric identities, and recognizing standard limit forms, we can unravel the behavior of functions near points of interest. The hints of derivatives and integrals show the path forward, promising further exploration into the mathematics of change and accumulation. Keep exploring!
+
+\end{document}

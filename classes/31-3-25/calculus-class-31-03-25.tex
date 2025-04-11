@@ -1,0 +1,400 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+% Theorem-like environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{method}[theorem]{Method}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Custom command for absolute value
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\title{Lecture Notes: Integration of Rational Functions and Introduction to Definite Integrals}
+\author{Calculus Class}
+\date{March 31, 2025 (based on filename)}
+
+\begin{document}
+\maketitle
+
+% Administrative Note at the beginning based on transcript start
+%\fbox{\parbox{\textwidth}{
+%\textit{Instructor Opening:} "Yes, just to close the door. Look, so today we will learn the last technique for the integrals lesson..."
+%}}
+%\vspace{1em}
+
+\section{Introduction}
+
+Today, we delve into the final major technique for finding antiderivatives in this course: the integration of rational functions. These functions, formed by the ratio of two polynomials, appear frequently in various applications. We will develop a systematic approach to handle them. Afterwards, we will begin our transition from indefinite integrals (antiderivatives) to the concept of the definite integral, exploring its intuitive meaning related to area.
+
+\section{Rational Functions}
+
+\begin{definition}[Rational Function]
+A function $f(x)$ is called a \textbf{rational function} if it can be expressed as the ratio of two polynomials, $P(x)$ and $Q(x)$, where $Q(x)$ is not the zero polynomial:
+\[ f(x) = \frac{P(x)}{Q(x)} \]
+\end{definition}
+
+\begin{example}[Examples of Rational Functions]
+\begin{itemize}
+    \item $\frac{3x + 4}{1}$ (Any polynomial is a rational function with denominator 1)
+    \item $\frac{7x^2 - 5}{x^3 + x^2}$
+    \item $\frac{x^7 - 8}{x^3 + x^2}$
+\end{itemize}
+\end{example}
+
+\begin{example}[Non-Examples]
+The following are \emph{not} rational functions because they involve non-polynomial terms (fractional powers, roots):
+\begin{itemize}
+    \item $\frac{x^{3/2}}{x+1}$ (The numerator is not a polynomial due to the fractional exponent.)
+    \item $\frac{x}{\sqrt{x+1}}$ (The denominator involves a square root, hence is not a polynomial.)
+\end{itemize}
+\end{remark}
+
+Our focus today will be on integrating rational functions $\frac{P(x)}{Q(x)}$ where the degree of the denominator polynomial $Q(x)$ is at most 2.
+
+\section{Integration of Rational Functions}
+
+We will break down the integration process based on the degree of the denominator $Q(x)$.
+
+\subsection{Case 1: Denominator is Linear (Degree 1)}
+
+Suppose we want to compute $\int \frac{P(x)}{ax+b} dx$, where $a \neq 0$.
+
+\begin{method}[Integrating $\frac{P(x)}{ax+b}$]
+\leavevmode
+\begin{enumerate}
+    \item \textbf{Polynomial Long Division:} Perform long division to divide $P(x)$ by $ax+b$. This yields a quotient polynomial $\hat{P}(x)$ and a constant remainder $R$:
+    \[ \frac{P(x)}{ax+b} = \hat{P}(x) + \frac{R}{ax+b} \]
+    (The remainder must be a constant because its degree must be less than the degree of the divisor $ax+b$, which is 1).
+    \item \textbf{Integrate Term-by-Term:} Integrate the result:
+    \[ \int \frac{P(x)}{ax+b} dx = \int \hat{P}(x) dx + \int \frac{R}{ax+b} dx \]
+    The first integral, $\int \hat{P}(x) dx$, is straightforward polynomial integration. The second integral is:
+    \[ \int \frac{R}{ax+b} dx = R \int \frac{1}{ax+b} dx = R \cdot \frac{1}{a} \ln\abs{ax+b} + C \]
+    Remember the factor of $\frac{1}{a}$ comes from the chain rule (or a simple $u$-substitution $u=ax+b$).
+\end{enumerate}
+\end{method}
+
+\begin{example}[Linear Denominator]
+Let's compute $\int \frac{x^3 + 7x + 2}{2x+1} dx$.
+
+\textbf{Step 1: Polynomial Division}
+We divide $x^3 + 7x + 2$ by $2x+1$.
+(Following the speaker's derivation steps):
+\begin{itemize}
+    \item $(x^3) / (2x) = \frac{1}{2}x^2$. Multiply: $\frac{1}{2}x^2 (2x+1) = x^3 + \frac{1}{2}x^2$. Subtract: $(x^3+7x+2) - (x^3+\frac{1}{2}x^2) = -\frac{1}{2}x^2 + 7x + 2$.
+    \item $(-\frac{1}{2}x^2) / (2x) = -\frac{1}{4}x$. Multiply: $-\frac{1}{4}x(2x+1) = -\frac{1}{2}x^2 - \frac{1}{4}x$. Subtract: $(-\frac{1}{2}x^2+7x+2) - (-\frac{1}{2}x^2 - \frac{1}{4}x) = (7+\frac{1}{4})x + 2 = \frac{29}{4}x + 2$.
+    \item $(\frac{29}{4}x) / (2x) = \frac{29}{8}$. Multiply: $\frac{29}{8}(2x+1) = \frac{29}{4}x + \frac{29}{8}$. Subtract: $(\frac{29}{4}x+2) - (\frac{29}{4}x + \frac{29}{8}) = 2 - \frac{29}{8} = \frac{16-29}{8} = -\frac{13}{8}$.
+\end{itemize}
+So, the division gives:
+\[ \frac{x^3 + 7x + 2}{2x+1} = \underbrace{\frac{1}{2}x^2 - \frac{1}{4}x + \frac{29}{8}}_{\hat{P}(x)} + \underbrace{\frac{-13/8}{2x+1}}_{\frac{R}{ax+b}} \]
+\begin{remark}
+The speaker seems to have made a slight error in the final remainder calculation during the lecture, stating the remainder term as $-\frac{29/8}{2x+1}$. The correct remainder is $-\frac{13}{8}$. For pedagogical consistency with the lecture's flow, we will proceed using the speaker's *stated* result from the division process, but note the discrepancy. The speaker stated:
+\[ \frac{x^3 + 7x + 2}{2x+1} = \frac{1}{2}x^2 - \frac{1}{4}x + \frac{29}{8} - \frac{29/8}{2x+1} \]
+(This decomposition implies the remainder was $-29/8$, not $-13/8$.) Always double-check polynomial division.
+\end{remark}
+
+\textbf{Step 2: Integration} (Using the speaker's decomposition)
+\begin{align*} \int \frac{x^3 + 7x + 2}{2x+1} dx &= \int \left( \frac{1}{2}x^2 - \frac{1}{4}x + \frac{29}{8} - \frac{29/8}{2x+1} \right) dx \\ &= \int \left( \frac{1}{2}x^2 - \frac{1}{4}x + \frac{29}{8} \right) dx - \int \frac{29/8}{2x+1} dx \\ &= \left( \frac{1}{2} \cdot \frac{x^3}{3} - \frac{1}{4} \cdot \frac{x^2}{2} + \frac{29}{8}x \right) - \frac{29}{8} \int \frac{1}{2x+1} dx \\ &= \frac{x^3}{6} - \frac{x^2}{8} + \frac{29}{8}x - \frac{29}{8} \cdot \left( \frac{1}{2} \ln\abs{2x+1} \right) + C \\ &= \frac{x^3}{6} - \frac{x^2}{8} + \frac{29}{8}x - \frac{29}{16} \ln\abs{2x+1} + C \end{align*}
+\end{example}
+
+\subsection{Case 2: Denominator is Quadratic (Degree 2)}
+
+Now consider $\int \frac{P(x)}{Q(x)} dx$ where $Q(x) = ax^2+bx+c$ has degree 2 ($a \neq 0$).
+
+\begin{method}[Integrating $\frac{P(x)}{ax^2+bx+c}$ - General Setup]
+\leavevmode
+\begin{enumerate}
+    \item \textbf{Normalize (Optional but Recommended):} Factor out the leading coefficient $a$ from the denominator:
+    \[ \int \frac{P(x)}{ax^2+bx+c} dx = \frac{1}{a} \int \frac{P(x)}{x^2 + (b/a)x + (c/a)} dx \]
+    This simplifies subsequent steps by making the quadratic denominator monic (leading coefficient 1). Let $B=b/a$ and $C=c/a$. We now focus on integrating $\frac{P(x)}{x^2+Bx+C}$.
+    \begin{example}[Normalization]
+    \[ \int \frac{x+7}{3x^2+x+6} dx = \frac{1}{3} \int \frac{x+7}{x^2 + \frac{1}{3}x + 2} dx \]
+    \end{example}
+    \item \textbf{Polynomial Long Division:} Divide $P(x)$ by the (now monic) quadratic $x^2+Bx+C$. This gives a quotient $\hat{P}(x)$ and a remainder $R(x)$ whose degree is strictly less than 2 (i.e., degree 0 or 1). So, $R(x)$ has the form $D_1 x + D_2$.
+    \[ \frac{P(x)}{x^2+Bx+C} = \hat{P}(x) + \frac{D_1 x + D_2}{x^2+Bx+C} \]
+    \begin{example}[Division]
+    Consider $\frac{x^3}{x^2+1}$. Division gives:
+    \[ \frac{x^3}{x^2+1} = x - \frac{x}{x^2+1} \]
+    Here $\hat{P}(x) = x$ and the remainder term is $\frac{-x}{x^2+1}$, so $D_1=-1, D_2=0$.
+    \end{example}
+    \item \textbf{Integrate:} The integral becomes:
+    \[ \int \frac{P(x)}{x^2+Bx+C} dx = \int \hat{P}(x) dx + \int \frac{D_1 x + D_2}{x^2+Bx+C} dx \]
+    The integral $\int \hat{P}(x) dx$ is easy. The main challenge is calculating the integral of the remainder term:
+    \[ \int \frac{D_1 x + D_2}{x^2+Bx+C} dx \]
+    The method for this integral depends on the nature of the roots of the quadratic denominator $x^2+Bx+C$, determined by its discriminant $\Delta = B^2 - 4C$.
+\end{enumerate}
+\end{method}
+
+We now analyze the integral $\int \frac{D_1 x + D_2}{x^2+Bx+C} dx$ based on the discriminant $\Delta$.
+
+\subsubsection{Subcase 2.1: Double Root ($\Delta = B^2-4C = 0$)}
+
+If the discriminant is zero, the quadratic is a perfect square.
+
+\begin{method}[Quadratic Denominator - Double Root]
+\leavevmode
+\begin{enumerate}
+    \item \textbf{Identify Perfect Square:} Since $\Delta=0$, $C = B^2/4$. The denominator is $x^2+Bx+B^2/4 = (x+B/2)^2$.
+    \item \textbf{Substitution:} Let $t = x+B/2$. Then $x=t-B/2$ and $dx=dt$. The integral becomes:
+    \[ \int \frac{D_1 x + D_2}{(x+B/2)^2} dx = \int \frac{D_1(t-B/2) + D_2}{t^2} dt = \int \left( \frac{D_1 t}{t^2} + \frac{D_2 - D_1 B/2}{t^2} \right) dt \]
+    \item \textbf{Integrate:}
+    \[ \int \left( \frac{D_1}{t} + \frac{D_2 - D_1 B/2}{t^2} \right) dt = D_1 \ln\abs{t} - \frac{D_2 - D_1 B/2}{t} + C' \]
+    \item \textbf{Substitute Back:} Replace $t$ with $x+B/2$.
+\end{enumerate}
+\end{method}
+
+\begin{example}[Double Root]
+Compute $\int \frac{3x-7}{x^2+4x+4} dx$.
+The denominator is $x^2+4x+4 = (x+2)^2$. This is the double root case ($B=4, C=4, \Delta=4^2-4(4)=0$).
+Let $t = x+2$, so $x=t-2$ and $dx=dt$.
+\begin{align*} \int \frac{3x-7}{(x+2)^2} dx &= \int \frac{3(t-2)-7}{t^2} dt \\ &= \int \frac{3t - 6 - 7}{t^2} dt \\ &= \int \frac{3t - 13}{t^2} dt \\ &= \int \left( \frac{3}{t} - \frac{13}{t^2} \right) dt \\ &= 3 \ln\abs{t} - 13 \left( -\frac{1}{t} \right) + C \\ &= 3 \ln\abs{t} + \frac{13}{t} + C \\ &= 3 \ln\abs{x+2} + \frac{13}{x+2} + C \end{align*}
+\end{example}
+
+\subsubsection{Subcase 2.2: Distinct Real Roots ($\Delta = B^2-4C > 0$)}
+
+If the discriminant is positive, the quadratic has two distinct real roots, $x_1$ and $x_2$.
+
+\begin{method}[Quadratic Denominator - Distinct Real Roots]
+\leavevmode
+\begin{enumerate}
+    \item \textbf{Factor Denominator:} Find the roots $x_1, x_2$ (e.g., using the quadratic formula) and factor the denominator: $x^2+Bx+C = (x-x_1)(x-x_2)$.
+    \item \textbf{Partial Fraction Decomposition:} There exist unique constants $A$ and $B$ such that:
+    \[ \frac{D_1 x + D_2}{x^2+Bx+C} = \frac{D_1 x + D_2}{(x-x_1)(x-x_2)} = \frac{A}{x-x_1} + \frac{B}{x-x_2} \]
+    (We accept this theorem without proof here.)
+    \item \textbf{Find A and B:} To find $A$ and $B$, multiply both sides by the denominator $(x-x_1)(x-x_2)$:
+    \[ D_1 x + D_2 = A(x-x_2) + B(x-x_1) \]
+    Expand the right side and collect terms:
+    \[ D_1 x + D_2 = (A+B)x + (-Ax_2 - Bx_1) \]
+    Equate the coefficients of $x$ and the constant terms to get a system of two linear equations for $A$ and $B$:
+    \begin{align*} A + B &= D_1 \\ -Ax_2 - Bx_1 &= D_2 \end{align*}
+    Solve this system for $A$ and $B$. (Alternatively, one can use the "Heaviside cover-up method" or substitute convenient values of $x$, like $x_1$ and $x_2$, into the equation $D_1 x + D_2 = A(x-x_2) + B(x-x_1)$ after clearing denominators.)
+    \item \textbf{Integrate:}
+    \begin{align*} \int \frac{D_1 x + D_2}{x^2+Bx+C} dx &= \int \left( \frac{A}{x-x_1} + \frac{B}{x-x_2} \right) dx \\ &= A \ln\abs{x-x_1} + B \ln\abs{x-x_2} + C' \end{align*}
+\end{enumerate}
+\end{method}
+
+\begin{example}[Distinct Real Roots 1]
+Compute $\int \frac{3x-8}{x^2+5x+4} dx$.
+Denominator: $x^2+5x+4$. Discriminant $\Delta = 5^2 - 4(4) = 25-16=9 > 0$. Roots are $x = \frac{-5 \pm \sqrt{9}}{2} = \frac{-5 \pm 3}{2}$, so $x_1 = -1$ and $x_2 = -4$.
+Factorization: $x^2+5x+4 = (x-(-1))(x-(-4)) = (x+1)(x+4)$.
+Partial Fractions: Set up
+\[ \frac{3x-8}{(x+1)(x+4)} = \frac{A}{x+1} + \frac{B}{x+4} \]
+Clear denominators: $3x-8 = A(x+4) + B(x+1)$.
+Equate coefficients:
+\begin{align*} \text{coeff of } x: \quad A+B &= 3 \\ \text{constant term: } \quad 4A+B &= -8 \end{align*}
+Subtracting the first equation from the second: $(4A+B)-(A+B) = -8-3 \implies 3A = -11 \implies A = -11/3$.
+Substitute $A$ back into $A+B=3$: $-11/3 + B = 3 \implies B = 3 + 11/3 = 9/3 + 11/3 = 20/3$.
+Integration:
+\begin{align*} \int \frac{3x-8}{x^2+5x+4} dx &= \int \left( \frac{-11/3}{x+1} + \frac{20/3}{x+4} \right) dx \\ &= -\frac{11}{3} \ln\abs{x+1} + \frac{20}{3} \ln\abs{x+4} + C \end{align*}
+\end{example}
+
+\begin{example}[Distinct Real Roots 2 - Requires Division First]
+Compute $\int \frac{x^4}{x^2+2x-3} dx$.
+\textbf{Step 1: Polynomial Division}
+Divide $x^4$ by $x^2+2x-3$. (Following speaker's steps)
+\begin{itemize}
+    \item $x^2(x^2+2x-3) = x^4+2x^3-3x^2$. Subtract: $x^4 - (x^4+2x^3-3x^2) = -2x^3+3x^2$.
+    \item $-2x(x^2+2x-3) = -2x^3-4x^2+6x$. Subtract: $(-2x^3+3x^2) - (-2x^3-4x^2+6x) = 7x^2-6x$.
+    \item $7(x^2+2x-3) = 7x^2+14x-21$. Subtract: $(7x^2-6x) - (7x^2+14x-21) = -20x+21$.
+\end{itemize}
+So, $\frac{x^4}{x^2+2x-3} = x^2-2x+7 + \frac{-20x+21}{x^2+2x-3}$.
+The integral is $\int (x^2-2x+7) dx + \int \frac{-20x+21}{x^2+2x-3} dx$.
+The first part is $\frac{x^3}{3} - x^2 + 7x$.
+
+\textbf{Step 2: Integrate Remainder Term}
+Focus on $\int \frac{-20x+21}{x^2+2x-3} dx$.
+Denominator: $x^2+2x-3$. Discriminant $\Delta = 2^2 - 4(-3) = 4+12 = 16 > 0$.
+Roots are $x = \frac{-2 \pm \sqrt{16}}{2} = \frac{-2 \pm 4}{2}$, so $x_1 = 1$ and $x_2 = -3$.
+Factorization: $x^2+2x-3 = (x-1)(x+3)$.
+Partial Fractions:
+\[ \frac{-20x+21}{(x-1)(x+3)} = \frac{A}{x-1} + \frac{B}{x+3} \]
+Clear denominators: $-20x+21 = A(x+3) + B(x-1)$.
+Equate coefficients:
+\begin{align*} \text{coeff of } x: \quad A+B &= -20 \\ \text{constant term: } \quad 3A-B &= 21 \end{align*}
+Add the two equations: $(A+B)+(3A-B) = -20+21 \implies 4A = 1 \implies A = 1/4$.
+Substitute $A$ back into $A+B=-20$: $1/4 + B = -20 \implies B = -20 - 1/4 = -80/4 - 1/4 = -81/4$.
+Integrate the remainder part:
+\[ \int \left( \frac{1/4}{x-1} + \frac{-81/4}{x+3} \right) dx = \frac{1}{4} \ln\abs{x-1} - \frac{81}{4} \ln\abs{x+3} \]
+
+\textbf{Step 3: Combine Results}
+The final answer is:
+\[ \int \frac{x^4}{x^2+2x-3} dx = \frac{x^3}{3} - x^2 + 7x + \frac{1}{4} \ln\abs{x-1} - \frac{81}{4} \ln\abs{x+3} + C \]
+\end{example}
+
+\subsubsection{Subcase 2.3: No Real Roots (Irreducible Quadratic, $\Delta = B^2-4C < 0$)}
+
+If the discriminant is negative, the quadratic has no real roots and cannot be factored over the real numbers.
+
+\begin{method}[Quadratic Denominator - No Real Roots]
+\leavevmode
+\begin{enumerate}
+    \item \textbf{Complete the Square:} Rewrite the denominator by completing the square:
+    \[ x^2+Bx+C = \left(x + \frac{B}{2}\right)^2 + \left(C - \frac{B^2}{4}\right) \]
+    Since $\Delta = B^2-4C < 0$, the term $k^2 = C - B^2/4$ is positive. Let $k = \sqrt{C-B^2/4}$. The denominator is $(x+B/2)^2 + k^2$.
+    \item \textbf{Substitution:} Let $t = x+B/2$. Then $x=t-B/2$ and $dx=dt$. The integral becomes:
+    \[ \int \frac{D_1 x + D_2}{(x+B/2)^2 + k^2} dx = \int \frac{D_1(t-B/2) + D_2}{t^2 + k^2} dt = \int \frac{D_1 t + (D_2 - D_1 B/2)}{t^2 + k^2} dt \]
+    \item \textbf{Split the Integral:} Separate the integral into two parts:
+    \[ \int \frac{D_1 t}{t^2 + k^2} dt + \int \frac{D_2 - D_1 B/2}{t^2 + k^2} dt \]
+    \item \textbf{Integrate Each Part:}
+    \begin{itemize}
+        \item The first part is solved using a $u$-substitution $u=t^2+k^2$, $du=2t dt$:
+        \[ \int \frac{D_1 t}{t^2 + k^2} dt = \frac{D_1}{2} \int \frac{2t}{t^2 + k^2} dt = \frac{D_1}{2} \ln(t^2 + k^2) \]
+        (No absolute value needed as $t^2+k^2$ is always positive).
+        \item The second part involves the arctangent function:
+        \[ \int \frac{D_2 - D_1 B/2}{t^2 + k^2} dt = (D_2 - D_1 B/2) \int \frac{1}{t^2 + k^2} dt = (D_2 - D_1 B/2) \cdot \frac{1}{k} \arctan\left(\frac{t}{k}\right) \]
+    \end{itemize}
+    \item \textbf{Combine and Substitute Back:} Add the results from the two parts and replace $t$ with $x+B/2$.
+\end{enumerate}
+\end{method}
+
+\begin{example}[No Real Roots 1]
+Compute $\int \frac{3x+1}{x^2+6x+11} dx$.
+Denominator: $x^2+6x+11$. Discriminant $\Delta = 6^2 - 4(11) = 36-44 = -8 < 0$. No real roots.
+Complete the square: $x^2+6x+11 = (x^2+6x+9) + 2 = (x+3)^2 + 2$. Here $k^2=2$, so $k=\sqrt{2}$.
+Substitution: Let $t = x+3$. Then $x=t-3$ and $dx=dt$.
+Numerator: $3x+1 = 3(t-3)+1 = 3t-9+1 = 3t-8$.
+Integral becomes:
+\[ \int \frac{3t-8}{t^2+2} dt = \int \frac{3t}{t^2+2} dt - \int \frac{8}{t^2+2} dt \]
+Integrate parts:
+\begin{itemize}
+    \item $\int \frac{3t}{t^2+2} dt = \frac{3}{2} \int \frac{2t}{t^2+2} dt = \frac{3}{2} \ln(t^2+2)$
+    \item $\int \frac{8}{t^2+2} dt = 8 \int \frac{1}{t^2+(\sqrt{2})^2} dt = 8 \cdot \frac{1}{\sqrt{2}} \arctan\left(\frac{t}{\sqrt{2}}\right)$
+\end{itemize}
+Combine and substitute back $t=x+3$:
+\[ \int \frac{3x+1}{x^2+6x+11} dx = \frac{3}{2} \ln((x+3)^2+2) - \frac{8}{\sqrt{2}} \arctan\left(\frac{x+3}{\sqrt{2}}\right) + C \]
+\[ = \frac{3}{2} \ln(x^2+6x+11) - 4\sqrt{2} \arctan\left(\frac{x+3}{\sqrt{2}}\right) + C \]
+\end{example}
+
+\begin{example}[No Real Roots 2 - Requires Division First]
+Compute $\int \frac{x^4}{x^2+2x+5} dx$.
+\textbf{Step 1: Polynomial Division}
+Divide $x^4$ by $x^2+2x+5$. (Following speaker's steps)
+\begin{itemize}
+    \item $x^2(x^2+2x+5) = x^4+2x^3+5x^2$. Subtract: $x^4 - (x^4+2x^3+5x^2) = -2x^3-5x^2$.
+    \item $-2x(x^2+2x+5) = -2x^3-4x^2-10x$. Subtract: $(-2x^3-5x^2) - (-2x^3-4x^2-10x) = -x^2+10x$.
+    \item $-1(x^2+2x+5) = -x^2-2x-5$. Subtract: $(-x^2+10x) - (-x^2-2x-5) = 12x+5$.
+\end{itemize}
+So, $\frac{x^4}{x^2+2x+5} = x^2-2x-1 + \frac{12x+5}{x^2+2x+5}$.
+The integral is $\int (x^2-2x-1) dx + \int \frac{12x+5}{x^2+2x+5} dx$.
+The first part is $\frac{x^3}{3} - x^2 - x$.
+
+\textbf{Step 2: Integrate Remainder Term}
+Focus on $\int \frac{12x+5}{x^2+2x+5} dx$.
+Denominator: $x^2+2x+5$. Discriminant $\Delta = 2^2 - 4(5) = 4-20 = -16 < 0$. No real roots.
+Complete the square: $x^2+2x+5 = (x^2+2x+1)+4 = (x+1)^2+4$. Here $k^2=4$, so $k=2$.
+Substitution: Let $t=x+1$. Then $x=t-1$ and $dx=dt$.
+Numerator: $12x+5 = 12(t-1)+5 = 12t-12+5 = 12t-7$.
+Integral becomes:
+\[ \int \frac{12t-7}{t^2+4} dt = \int \frac{12t}{t^2+4} dt - \int \frac{7}{t^2+4} dt \]
+Integrate parts:
+\begin{itemize}
+    \item $\int \frac{12t}{t^2+4} dt = 6 \int \frac{2t}{t^2+4} dt = 6 \ln(t^2+4)$
+    \item $\int \frac{7}{t^2+4} dt = 7 \int \frac{1}{t^2+2^2} dt = 7 \cdot \frac{1}{2} \arctan\left(\frac{t}{2}\right)$
+\end{itemize}
+Combine remainder integral: $6 \ln(t^2+4) - \frac{7}{2} \arctan\left(\frac{t}{2}\right)$.
+
+\textbf{Step 3: Combine Results and Substitute Back}
+Substitute $t=x+1$:
+\[ \int \frac{x^4}{x^2+2x+5} dx = \left(\frac{x^3}{3} - x^2 - x\right) + \left(6 \ln((x+1)^2+4) - \frac{7}{2} \arctan\left(\frac{x+1}{2}\right)\right) + C \]
+\[ = \frac{x^3}{3} - x^2 - x + 6 \ln(x^2+2x+5) - \frac{7}{2} \arctan\left(\frac{x+1}{2}\right) + C \]
+\end{example}
+
+\section{A Glimpse into Definite Integrals}
+
+So far, we've focused on finding antiderivatives, often called \emph{indefinite integrals}. We now shift perspective slightly to introduce the \emph{definite integral}, which is fundamentally a number associated with a function over an interval, often interpreted as an area.
+
+\subsection{Motivation: The Area Problem}
+
+Consider a continuous, non-negative function $f(x)$ on an interval $[a, b]$. A fundamental question in calculus is: What is the area $S$ of the region bounded by the graph $y=f(x)$, the x-axis, and the vertical lines $x=a$ and $x=b$?
+
+This region might have a curved boundary, making direct calculation using simple geometric formulas (like those for rectangles or triangles) impossible. How can we find this area precisely?
+
+\subsection{Approximating Area with Rectangles}
+
+The core idea, dating back to Archimedes, is to approximate the area using shapes we understand – rectangles.
+\begin{enumerate}
+    \item \textbf{Partition the Interval:} Divide the interval $[a,b]$ into $n$ smaller subintervals. For simplicity, let's use equal widths: $\Delta x = \frac{b-a}{n}$. Let the partition points be $x_0=a, x_1=a+\Delta x, x_2=a+2\Delta x, \dots, x_n=a+n\Delta x=b$.
+    \item \textbf{Construct Rectangles:} Over each subinterval $[x_{i-1}, x_i]$, construct a rectangle whose base is $\Delta x$. The height of the rectangle can be chosen in different ways, for example:
+        \begin{itemize}
+            \item Using the function value at the right endpoint: height $f(x_i)$. Area $= f(x_i)\Delta x$.
+            \item Using the function value at the left endpoint: height $f(x_{i-1})$. Area $= f(x_{i-1})\Delta x$.
+            \item Using the minimum function value on the subinterval: height $m_i = \inf_{x \in [x_{i-1}, x_i]} f(x)$. Area $= m_i \Delta x$.
+            \item Using the maximum function value on the subinterval: height $M_i = \sup_{x \in [x_{i-1}, x_i]} f(x)$. Area $= M_i \Delta x$.
+        \end{itemize}
+    \item \textbf{Sum the Areas:} Add the areas of all $n$ rectangles. This sum gives an approximation of the total area $S$.
+    \[ \text{Approximate Area} \approx \sum_{i=1}^n (\text{height}_i) \cdot \Delta x \]
+\end{enumerate}
+Intuitively, as we make the partition finer (i.e., increase $n$, making $\Delta x$ smaller), the sum of the areas of the rectangles should become a better and better approximation to the true area $S$.
+
+\subsection{Darboux Sums}
+
+Let's focus on the approximations using the minimum and maximum heights on each subinterval. These lead to the concept of Darboux sums.
+
+\begin{definition}[Darboux Sums]
+Let $f$ be a bounded function on $[a,b]$, and let $P = \{x_0, x_1, \dots, x_n\}$ be a partition of $[a,b]$. Let $\Delta x_i = x_i - x_{i-1}$. Let
+\begin{align*} m_i &= \inf \{ f(x) \mid x \in [x_{i-1}, x_i] \} \\ M_i &= \sup \{ f(x) \mid x \in [x_{i-1}, x_i] \} \end{align*}
+The \textbf{Lower Darboux Sum} of $f$ with respect to $P$ is:
+\[ L(f, P) = \sum_{i=1}^n m_i \Delta x_i \]
+The \textbf{Upper Darboux Sum} of $f$ with respect to $P$ is:
+\[ U(f, P) = \sum_{i=1}^n M_i \Delta x_i \]
+\end{definition}
+
+For any partition $P$, the lower sum $L(f,P)$ represents the sum of areas of rectangles inscribed under the curve (using minimum heights), providing a lower bound for the true area $S$. The upper sum $U(f,P)$ uses circumscribed rectangles (maximum heights), providing an upper bound. Thus:
+\[ L(f, P) \le S \le U(f, P) \]
+
+\subsection{Convergence and the Definite Integral}
+
+What happens as we refine the partition (make $\Delta x_i$ smaller, e.g., by taking $n \to \infty$ for equal subintervals)?
+\begin{itemize}
+    \item The lower sums $L(f,P)$ tend to increase (or stay the same).
+    \item The upper sums $U(f,P)$ tend to decrease (or stay the same).
+\end{itemize}
+For "well-behaved" functions (including continuous functions), the lower sums and upper sums converge to the \emph{same} value as the partition becomes arbitrarily fine.
+
+\begin{definition}[The Definite Integral]
+If the limit of the lower Darboux sums and the limit of the upper Darboux sums both exist and are equal as the mesh of the partition (the width of the largest subinterval) approaches zero, then the function $f$ is said to be \textbf{(Riemann) integrable} on $[a,b]$. This common limit is called the \textbf{definite integral} of $f$ from $a$ to $b$, denoted by:
+\[ \int_a^b f(x) dx \]
+If $f(x) \ge 0$, this value represents the exact area under the curve $y=f(x)$ from $x=a$ to $x=b$.
+\end{definition}
+
+\begin{remark}
+Continuous functions on a closed interval $[a,b]$ are always Riemann integrable.
+\end{remark}
+
+\subsection{The Fundamental Connection (Preview)}
+
+Calculating integrals using the limit definition of Darboux sums is often difficult. The truly remarkable result, which connects definite integrals (area/limits of sums) with indefinite integrals (antiderivatives), is the Fundamental Theorem of Calculus.
+
+\begin{theorem}[Fundamental Theorem of Calculus, Part 2 - Preview]
+If $f$ is continuous on $[a,b]$ and $F$ is any antiderivative of $f$ (i.e., $F'(x) = f(x)$ for all $x$ in $[a,b]$), then
+\[ \int_a^b f(x) dx = F(b) - F(a) \]
+\end{theorem}
+
+This theorem provides an incredibly powerful method for calculating definite integrals: find an antiderivative $F$ and evaluate it at the endpoints. We will explore this fundamental theorem in detail soon. It justifies why we spent so much time learning techniques to find antiderivatives!
+
+\section*{Administrative Notes and Closing}
+
+\begin{itemize}
+    \item \textit{Student Feedback Acknowledged:} Some students mentioned the pace can feel quite fast at times, making it challenging to simultaneously write notes and fully absorb the material. We'll try to be mindful of this, but please don't hesitate to ask for clarification or a moment to catch up during the lecture. Reviewing these notes afterwards is also highly recommended.
+    \item \textit{Closing Questions:} Are there any questions on today's material on rational functions or the introduction to definite integrals? Any new points to discuss before we conclude?
+\end{itemize}
+
+\end{document}
