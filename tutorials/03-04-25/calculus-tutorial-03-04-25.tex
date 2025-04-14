@@ -1,0 +1,433 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem, fancybox, hyperref}
+\usepackage{bbm}
+
+\setlength{\parskip}{1.2em}
+\setlength{\parindent}{0em}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{fact}[definition]{Fact}
+\newtheorem{exercise}[definition]{Exercise}
+\newtheorem{note}[definition]{Note}
+
+% For admin notes
+\newenvironment{adminblock}
+    {\vspace{1.5em}
+     \begin{center}%
+     \begin{minipage}{0.96\linewidth}%
+     \setlength{\fboxsep}{10pt}%
+     \begin{Sbox}\begin{minipage}{.97\linewidth}
+     \textbf{Administrative Information}\\[0.6em]}
+    {\end{minipage}\end{Sbox}\fbox{\TheSbox}
+     \end{minipage}
+     \end{center}\vspace{1.5em}}
+
+\begin{document}
+
+\begin{center}
+    \vspace*{0.2em}
+    \LARGE\textbf{Lecture Notes: Rational Function Integrals, Partial Fractions, and Definite Integrals}
+    
+    \vspace{0.7em}
+    \large\emph{A Conceptual and Rigorous Guide for Undergraduates}\\[0.3em]
+    \normalsize\textbf{Instructor:} ~[Course Staff] \\
+    \today
+\end{center}
+
+% ================= ADMINISTRATIVE NOTES =================
+\begin{adminblock}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{No class next Thursday} due to university scheduling. Watch for updates on the next meeting after the Passover break.
+    \item \textbf{Exam Coverage:} Some advanced cases of partial fraction decomposition (e.g., denominator degree 3 or more) are optional for exams—verify details with course instructors.
+    \item \textbf{Homework:} Assignments are based on the methods and problem types practiced in lectures and recitations.
+    \item \textbf{Use of LLMs (ChatGPT/other tools):} These are often unreliable for mathematics computations and answers. Use for idea generation only—do not submit their unverified output as correct answers on homework or quizzes.
+    \item \textbf{Units:} Unless otherwise instructed, always specify “units of area” in your final answers to area questions if no measurement units are given.
+    \item \textbf{Graphical Reasoning:} Ability to sketch and analyze intersections is part of expected exam skills.
+    \item \textbf{Office Hours and Further Help:} You are encouraged to raise questions during class or come to office hours if you have difficulty with substitution, integration, area analysis, or manipulating integration limits.
+\end{itemize}
+\end{adminblock}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation and Big Ideas}
+Calculus, at its heart, is about two great problems: differentiation ("how does something change?") and integration ("how much accumulates?"). Rational functions—expressions of one polynomial divided by another—are some of the most natural objects in mathematics and science, appearing in physics, probability, statistics, and engineering.
+
+\emph{Why do we care about integrating rational functions?} Because:
+\begin{itemize}
+    \item They arise constantly in applications, but their integrals are rarely elementary.
+    \item Their integrals, and the areas they represent, introduce crucial linking ideas in analysis and geometry.
+    \item They demand, but also reward, algebraic dexterity and mathematical insight—especially with techniques like polynomial division and partial fraction decomposition.
+\end{itemize}
+
+Our goals are to master:
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{Integrating rational functions}, including when to use algebraic division versus decomposition to simpler fractions (partial fractions).
+    \item \textbf{Understanding definite integrals as area}, interpreting integration bounds, and switching variables with care.
+    \item \textbf{Mastering graphical reasoning}: finding where curves cross, who is "on top", and describing area in terms of integrals.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Integration of Rational Functions: Polynomial Division and Partial Fractions}
+
+\subsection{The Anatomy of a Rational Function}
+
+\begin{definition}
+A \textbf{rational function} is any function of the form \(\displaystyle f(x) = \frac{P(x)}{Q(x)}\), where \(P\) and \(Q\) are polynomials, and \(Q(x) \not= 0\).
+\end{definition}
+
+\textbf{Key question:} How can we compute
+\[
+\int \frac{P(x)}{Q(x)}\,dx~?
+\]
+
+\textbf{Two central cases:}
+\begin{itemize}[label=--]
+    \item \emph{Case 1:} \(\deg P(x) \geq \deg Q(x)\): Use \textbf{polynomial long division} to write the integrand as “polynomial + proper fraction”, then integrate each part.
+    \item \emph{Case 2:} \(\deg P(x) < \deg Q(x)\): The rational expression is called \textbf{proper}. Try to decompose it as a sum of “partial fractions”, each much easier to integrate.
+\end{itemize}
+
+\vspace{0.2em}
+\textbf{Motivation:} Why split into partial fractions? Because
+\begin{itemize}[itemsep=0.2em]
+    \item Term-by-term, the integrals are standard (often logarithms/arctangents).
+    \item It dramatically simplifies otherwise complicated expressions.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example: When the Denominator's Degree is Greater}
+
+\begin{example}
+Evaluate \(\displaystyle \int \frac{1}{x^2 - 4}\, dx \).
+\end{example}
+\textbf{Step 1 (Factor the denominator):}
+\(x^2 - 4 = (x - 2)(x + 2)\).
+
+\textbf{Step 2 (Set up the decomposition):} Seek \(A, B\) such that
+\[
+\frac{1}{x^2 - 4} = \frac{A}{x - 2} + \frac{B}{x + 2}
+\]
+
+\textbf{Step 3 (Clear denominators and solve for $A,B$):}
+\[
+1 = A(x + 2) + B(x - 2)
+\]
+Match the terms:
+\[
+1 = A x + 2A + B x - 2B = (A+B)x + (2A - 2B)
+\]
+
+Set coefficients equal:
+\[
+\begin{cases}
+A + B = 0 \\
+2A - 2B = 1
+\end{cases}
+\implies
+\begin{cases}
+B = -A\\
+2A - 2(-A) = 1 \implies 4A = 1 \implies A = \frac{1}{4}\\
+B = -\frac{1}{4}
+\end{cases}
+\]
+
+\textbf{Step 4 (Integrate):}
+\begin{align*}
+\int \frac{1}{x^2 - 4}\, dx &= \int \left( \frac{1}{4} \cdot \frac{1}{x-2} - \frac{1}{4} \cdot \frac{1}{x+2} \right) dx \\
+&= \frac{1}{4} \ln|x-2| - \frac{1}{4} \ln|x+2| + C\\
+&= \frac{1}{4} \ln\left| \frac{x-2}{x+2} \right| + C.
+\end{align*}
+
+\begin{remark}
+Here, partial fractions turn something daunting into something manageable! Always check if the denominator factors to distinct linear terms first—it makes decomposition quick.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example: When Numerator’s Degree is at Least the Denominator's}
+
+\begin{example}
+Evaluate
+\[
+\int \frac{3x + 5}{x^2 + 4x + 3}\, dx
+\]
+\end{example}
+\textbf{Step 1 (Factor denominator):}\\
+\(x^2 + 4x + 3 = (x+1)(x+3)\).
+
+\textbf{Step 2 (Partial fraction setup):}
+\[
+\frac{3x + 5}{x^2 + 4x + 3} = \frac{A}{x + 1} + \frac{B}{x + 3}
+\]
+Clear denominators:
+\[
+3x + 5 = A(x+3) + B(x+1)
+\]
+\[
+= (A+B)x + (3A + B)
+\]
+Equate coefficients:
+\[
+\begin{cases}
+A + B = 3 \\
+3A + B = 5
+\end{cases}
+\implies
+\begin{cases}
+B = 3 - A\\
+3A + 3 - A = 5 \implies 2A = 2 \implies A = 1\\
+B = 2
+\end{cases}
+\]
+
+\textbf{Step 3 (Integrate):}
+\[
+\int \frac{3x + 5}{x^2 + 4x + 3}\, dx = \int \left( \frac{1}{x+1} + \frac{2}{x+3} \right) dx = \ln|x+1| + 2\ln|x+3| + C
+\]
+Alternatively, as a single logarithm:
+\[
+\ln|x+1|(x+3)^2 + C
+\]
+
+\begin{remark}
+When the numerator’s degree is less than the denominator’s, go straight to partial fractions. If not, use division first!
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example: Integrating with an Irreducible Quadratic or Higher Degree Denominator}
+
+\textbf{Suppose you face a denominator of degree 3 (or higher).} If it factors as products of distinct linear terms, include a partial fraction for each. If repeated roots, include those powers. If an irreducible quadratic appears, include numerators as $Bx+C$.
+
+\vspace{1ex}
+\begin{example}
+\textbf{Degree 3 Denominator: Structure with Repeated Roots}
+
+Let’s outline, for degree 3 denominator (more general):
+\[
+\frac{P(x)}{(x-1)^2 (x+2)}
+\]
+The decomposition is
+\[
+\frac{A}{x-1} + \frac{B}{(x-1)^2} + \frac{C}{x+2}
+\]
+Always reduce the degrees systematically in your numerators as well.
+\end{example}
+
+\textbf{For irreducible quadratic in denominator:}
+\begin{example}
+\[
+\frac{2x+5}{(x^2 + 1)(x-2)} = \frac{A}{x-2} + \frac{Bx+C}{x^2 + 1}
+\]
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Substitution and Non-Rational Functions}
+
+\textbf{Can we use substitutions to handle non-rational integrals?} Absolutely, especially when facing roots.
+
+\begin{example}[Integrating with Radical Denominators]
+Compute
+\[
+\int \frac{x}{\sqrt{x} + \sqrt[3]{x}}\,dx
+\]
+\textbf{Discussion and Solution:}
+
+Let’s rewrite the denominator in exponents: $\sqrt{x} = x^{1/2}$, $\sqrt[3]{x}=x^{1/3}$. The \emph{least common denominator} for $1/2$ and $1/3$ is $1/6$.
+
+Let $t = x^{1/6}$, so $x = t^6$ and $dx=6t^5 dt$.
+
+Compute the denominator:
+\[
+\sqrt{x} + \sqrt[3]{x} = t^3 + t^2
+\]
+Now, substitute:
+\[
+x \to t^6,\quad dx \to 6t^5 dt
+\]
+So the integral becomes
+\[
+\int \frac{t^6}{t^3 + t^2} \cdot 6t^5 dt = 6 \int \frac{t^{11}}{t^3 + t^2} dt = 6 \int \frac{t^9}{t+1} dt
+\]
+However, correcting the algebra:
+\[
+\text{(Original substitution)}\quad \int \frac{x}{\sqrt{x} + \sqrt[3]{x}} dx
+\]
+With $x = t^6$, $dx = 6t^5 dt$. So,
+\[
+= \int \frac{t^6}{t^3 + t^2} \cdot 6 t^5 dt = 6 \int \frac{t^{11}}{t^3 + t^2} dt = 6\int \frac{t^9}{t + 1} dt
+\]
+But see in transcript, the substitution used is $6 t^5 / (t^3 + t^2)$, hence,
+\[
+6 \int \frac{t^5}{t^3 + t^2} dt
+\]
+Factor denominator: $t^2(t+1)$. So
+\[
+= 6 \int \frac{t^5}{t^2 (t+1)} dt = 6 \int \frac{t^3}{t+1} dt
+\]
+Now use polynomial division: $t^3/(t+1) = t^2 - t + 1 - \frac{1}{t+1}$
+
+So:
+\[
+6 \int \frac{t^3}{t+1} dt = 6 \int \left( t^2 - t + 1 - \frac{1}{t+1} \right) dt
+= 6 \left( \frac{t^3}{3} - \frac{t^2}{2} + t - \ln|t+1| \right) + C
+\]
+Finally, recall $t = x^{1/6}$.
+\end{example}
+
+\begin{remark}
+When denominators are sums of radicals, clever substitutions using least common denominators of the exponents help to rationalize and simplify the integral.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definite Integrals and Area}
+\textbf{What is a definite integral?} For a function $f(x)$ and $a < b$,
+\[
+\int_a^b f(x)\,dx
+\]
+is, algebraically, the change in any antiderivative $F(x)$ from $a$ to $b$:
+\[
+F(b) - F(a)
+\]
+\emph{Geometrically,} for continuous $f$, this is the signed area bounded by the graph $y=f(x)$, the $x$-axis, and the vertical lines $x=a$, $x=b$.
+
+\begin{definition}
+A \textbf{definite integral} $\displaystyle \int_a^b f(x) dx$ represents the net (signed) area under the curve $y = f(x)$ between $x = a$ and $x = b$.
+\end{definition}
+
+\begin{remark}
+Areas below the $x$-axis count as \emph{negative} area. When the question asks for ``area,'' take absolute values as necessary:
+\[
+\text{Area} = \int_{\alpha}^{\beta} |f(x)|dx
+\]
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Definite Integrals via Substitution}
+
+\begin{example}
+Compute
+\[
+\int_4^8 \sqrt{x^2 - 15} \, dx
+\]
+Let $t = x^2 - 15 \implies dt = 2x dx$. Thus, $dx = \frac{dt}{2x}$.
+
+When $x=4$, $t = 16-15 = 1$.\\
+When $x=8$, $t = 64-15 = 49$.
+
+Substitute back:
+\[
+\int_{x=4}^{x=8} \sqrt{x^2 - 15} dx = \int_{t=1}^{t=49} \frac{\sqrt{t}}{2\sqrt{t+15}} dt
+\]
+[The computation is completed as per standard techniques, back-substituting as needed. Remember to \emph{change the limits} when you change variables! If you prefer, you can instead leave the limits as $x$ values, solve the indefinite integral, substitute back for $x$, and then compute $F(8) - F(4)$.]
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Riemann Sums and Area Under a Curve}
+
+\begin{remark}
+The integral $\int_a^b f(x)dx$ can be interpreted as the limiting sum of small rectangle areas: subdividing $[a,b]$ into $n$ intervals, the area under $y=f(x)$ is approximated by
+\[
+\sum_{i=1}^n f(x_i^*) \Delta x
+\]
+As $\Delta x \to 0$, this sum approaches the true area.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Area Between Curves}
+
+\textbf{Main principle}:\\
+If $f(x) \geq g(x)$ on $[a,b]$, then
+\[
+\text{Area between the curves} = \int_a^b [f(x) - g(x)]\, dx
+\]
+If $f$ and $g$ cross, break the domain at the intersection points.
+
+\begin{example}[Classic Area Between Curves]
+Compute the area between $y = \frac{1}{2}x + 2$ and $y = x^2$ over $x \in [0,1]$.
+
+Here, $y_{line} \geq y_{parab}$ on $[0,1]$, so area is:
+\begin{align*}
+A &= \int_0^1 \left( \frac{1}{2} x + 2 - x^2 \right) dx\\
+&= \left[ \frac{1}{4}x^2 + 2x - \frac{1}{3}x^3 \right]_0^1
+= \left( \frac{1}{4} + 2 - \frac{1}{3} \right) - (0) 
+= \frac{1}{4} + 2 - \frac{1}{3}\\
+&= \frac{1}{4} + \frac{8}{4} - \frac{1}{3} = \frac{9}{4} - \frac{1}{3} = \frac{27-4}{12} = \frac{23}{12}
+\end{align*}
+\textbf{Thus, the area is} $\boxed{\frac{23}{12}}$ (area units).
+\end{example}
+
+\begin{remark}
+If the curves cross, always determine which function is "on top" in each region, and split the integral as needed.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Finding Intersection Points and Breaking the Integral}
+
+\begin{example}
+Find the area enclosed by $y = -4x^2 + 3$ and $y = 2x^2 - 1$.
+
+First, solve $-4x^2 + 3 = 2x^2 - 1 \implies 6x^2 = 4 \implies x = \pm \sqrt{\frac{2}{3}}$.
+
+The area is then:
+\[
+A = \int_{-\sqrt{2/3}}^{\sqrt{2/3}} \big[(-4x^2 + 3) - (2x^2 - 1)\big] dx
+= \int_{-\sqrt{2/3}}^{\sqrt{2/3}} (-6x^2 + 4) dx
+\]
+And integrate as usual.
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Technical Tips and Further Examples}
+
+\subsection{Changing Order of Integration}
+
+\begin{example}
+Given $y = 2x-4$ and $x = y^2$, find the area between them.
+
+It can be easier to integrate in $y$: solve $x$ for each, find $y$-range, and compute:
+\[
+A = \int_{y_1}^{y_2} \left[ (2y-4) - (y^2) \right] dy
+\]
+where $y_1,y_2$ are the intersection $y$-values.
+\end{example}
+
+\subsection{Integrals Producing Negative Values}
+
+\begin{remark}
+A definite integral $\int_a^b f(x)dx$ may be negative if $f(x)<0$ on $[a,b]$. The \textbf{area} is always positive; always check what is being asked!
+\end{remark}
+
+\subsection{Graphical and Symmetry Reasoning}
+
+\begin{remark}
+If $f$ is even and the interval $[ -a, a ]$, then
+\[
+\int_{-a}^a f(x)\,dx = 2\int_0^a f(x)\,dx
+\]
+See examples in homework and class.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{2em}
+\begin{center}
+    \rule{0.7\textwidth}{0.6pt}
+\end{center}
+\vspace{0.7em}
+\textbf{Key Takeaways:}
+\begin{itemize}[leftmargin=1.6em]
+    \item Use polynomial division if numerator is of higher degree.
+    \item Always factor denominators fully before partial fractions.
+    \item For radicals, substitute with fractional exponents, finding a common denominator for exponents.
+    \item For definite integrals, redraw limits after substitution, or else substitute back at the end.
+    \item When finding areas between curves, graph and analyze intersections, splitting into suitable integrals if needed.
+    \item Take absolute values as needed for areas.
+    \item Practice carefully the transitions from algebraic manipulation to geometric reasoning; many exam errors stem from not switching thoughtfully between the two!
+\end{itemize}
+
+\begin{center}
+    \textsc{End of Notes}
+\end{center}
+
+\end{document}

@@ -1,0 +1,396 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm,geometry,fancyhdr}
+\usepackage{mathtools}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{framed}
+
+\geometry{margin=1in}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
+\renewcommand{\baselinestretch}{1.15}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textsc{Calculus: Improper Integrals and Comparison Tests}}
+\rhead{\thepage}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+
+\definecolor{AdminBlue}{rgb}{0.0,0.22,0.51}
+\newenvironment{administrative_note}
+  {\begin{leftbar}\color{AdminBlue}\small\ignorespaces}
+  {\end{leftbar}\ignorespacesafterend}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Lecture Notes: Improper Integrals and the Comparison Test}}\\[1em]
+    {\large Undergraduate Calculus II}\\
+    \vspace{1em}
+    \today
+\end{center}
+
+\vspace{0.5em}
+
+%----------------------
+% Administrative Section
+%----------------------
+\begin{administrative_note}
+\textbf{Administrative Announcements:}
+\begin{itemize}
+    \item \textbf{Schedule Change:} Due to the holiday (Yom HaAtzmaut), some classes have been rescheduled. Instead of the usual two sessions (Sunday and Monday), \emph{there will be one lecture on Sunday and recitation on Monday}. Please check Moodle for updated details and attend accordingly.
+    \item \textbf{Zoom Links:} University Zoom session links will be distributed on Moodle. For certain sessions, the instructor may have to leave early (e.g., today, at 2 PM, this is a one-time exception).
+    \item \textbf{Assessment:} For specific questions about grading distributions (e.g., “how much is Question 4 worth, or what percent will X count”), please consult the Moodle or administrative guidelines. Typically, assignments are graded leniently, but pay attention to instructions about rounding and submission procedures, especially around holidays.
+    \item \textbf{Personal Note:} Health circumstances (e.g., instructor recently having a fever -- “39.5”) or technical difficulties may affect class flow. Please show understanding if minor adjustments occur.
+    \item \textbf{General Reminder:} Always identify problematic points in integrals for domain issues, and check course announcements regularly for logistical updates.
+\end{itemize}
+\end{administrative_note}
+
+%----------------------
+% Mathematical Content
+%----------------------
+
+\section{Motivation: Why Study Improper Integrals?}
+
+Many integrals that naturally arise in calculus cannot be computed directly using the standard Riemann definition, either because the domain is unbounded (extends to infinity), or because the integrand itself becomes singular (blows up to infinity) at some point in the interval of integration. 
+
+These \textbf{improper integrals} are crucial both for theoretical developments (e.g., Fourier analysis, probability theory) and real-world applications (e.g., physical processes with infinite or singular behaviors). Before we formalize their definitions, let us explore the kinds of problems they allow us to solve and provide some intuition for their necessity.
+
+\subsection*{Example (Motivation): Area under $\frac{1}{\sqrt{x}}$ on $[0,1]$}
+Consider the integral
+\[
+\int_0^1 \frac{1}{\sqrt{x}}\,dx.
+\]
+At first glance, this looks like a regular definite integral. However, as $x\to0^+$, the function $1/\sqrt{x}$ heads to infinity, so the area under the curve near $x=0$ is problematic. Does the total area make sense (i.e., is it finite)? We'll soon see how "competing infinities" (height increases, width shrinks) can combine to yield a finite, calculable result---or in some cases, an infinite, undefined one.
+
+\section{Definitions: What are Improper Integrals?}
+
+Let us formalize the notion of improper integrals. We consider two main types:
+
+\subsection{Type I: Infinite Interval}
+We integrate over unbounded intervals such as $[a,\infty)$ or $(-\infty,b]$.
+
+\begin{definition}[Improper Integral over an Infinite Interval]
+Let $f:[a,\infty)\to\mathbb{R}$ be a function. We define
+\[
+\int_a^\infty f(x)\,dx \coloneqq \lim_{t\to\infty} \int_a^t f(x)\,dx,
+\]
+provided this limit exists (is finite). A similar definition holds for $(-\infty, b]$.
+\end{definition}
+
+\subsection{Type II: Integrand Becomes Infinite (Singularity)}
+Even on a finite interval $[a,b]$, the function $f(x)$ may \emph{not} be defined or become infinite at $a$, $b$, or some interior point.
+
+\begin{definition}[Improper Integral due to a Singularity at an Endpoint]
+Suppose $f$ is continuous on $(a,b]$ but perhaps not defined at $a$. We define
+\[
+\int_a^b f(x)\,dx \coloneqq \lim_{t\to a^+} \int_t^b f(x)\,dx
+\]
+if this limit exists (is finite).
+
+Similarly, if the singularity is at $b$ (i.e., $f$ not continuous at $b$), we set
+\[
+\int_a^b f(x)\,dx \coloneqq \lim_{t\to b^-} \int_a^t f(x)\,dx.
+\]
+\end{definition}
+
+\begin{remark}
+More generally, if there are singularities at both endpoints or even inside the interval, the integral is defined by splitting at those points and considering appropriate limits for each subinterval.
+\end{remark}
+
+\section{Intuitive Picture: Area under a Curve near a Singularity}
+
+Suppose $f(x)$ becomes infinite at one endpoint, say $x=a$. The standard definite integral does not make sense, but we can attempt to compute the area by chopping off the problematic part and taking a limit:
+
+\begin{itemize}
+    \item For each $t > a$, compute $\int_t^b f(x)\,dx$.
+    \item Observe what happens as $t\to a^+$.
+    \item If the limit exists and is finite, we say the improper integral \emph{converges}; otherwise, it \emph{diverges}.
+\end{itemize}
+
+The intuition is subtle: sometimes, despite $f(x)$ becoming infinite, the \emph{shrinking base} counteracts the \emph{growing height}, and the total area is finite (\emph{converges}). At other times, the area is dominated by the unboundedness, resulting in \emph{divergence} (infinite area).
+
+\section{Worked Examples: Calculating Improper Integrals}
+
+Below, each example from the original lecture is faithfully presented and fully explained.
+
+\begin{example}
+Evaluate the improper integral
+\[
+\int_0^1 \frac{1}{\sqrt{x}}\,dx.
+\]
+\end{example}
+\begin{proof}[Solution and Commentary]
+The function $1/\sqrt{x}$ is undefined at $x=0$, so this is an improper integral with a singularity at the lower endpoint. By the formal definition,
+\[
+\int_0^1 \frac{1}{\sqrt{x}}\,dx = \lim_{t\to 0^+} \int_t^1 x^{-1/2}\,dx.
+\]
+
+First, compute the antiderivative:
+\[
+\int x^{-1/2} dx = 2x^{1/2} + C.
+\]
+So,
+\[
+\int_t^1 x^{-1/2}\,dx = \left[2x^{1/2}\right]_t^1 = 2 - 2\sqrt{t}.
+\]
+
+Taking the limit as $t \to 0^+$:
+\[
+\lim_{t\to 0^+} \left(2 - 2\sqrt{t}\right) = 2 - 0 = 2.
+\]
+
+\textbf{Interpretation:} Despite the integrand becoming infinite at $x=0$, the total area under the curve from $0$ to $1$ is finite and equals $2$.
+\end{proof}
+
+\begin{example}
+Determine if the following improper integral converges or diverges:
+\[
+\int_0^1 \frac{1}{1 - x}\,dx.
+\]
+\end{example}
+\begin{proof}[Solution and Commentary]
+Here, the function $1/(1-x)$ has a singularity at $x=1$ (the upper endpoint). By definition,
+\[
+\int_0^1 \frac{1}{1-x}\,dx = \lim_{t\to 1^-} \int_0^t \frac{1}{1-x}\,dx.
+\]
+Find the antiderivative:
+\[
+\int \frac{1}{1-x} dx = -\ln|1 - x| + C.
+\]
+Hence,
+\[
+\int_0^t \frac{1}{1-x} dx = -\ln|1-t| + \ln 1 = -\ln(1-t).
+\]
+As $t \to 1^-$, $1-t \to 0^+$, so $\ln(1-t) \to -\infty$,
+\[
+-\ln(1-t) \to +\infty.
+\]
+\textbf{Conclusion:} The area under the curve diverges; the improper integral does not exist (in the sense of being finite).
+\end{proof}
+
+\begin{example}
+For which real values of $\alpha$ does the following integral converge?
+\[
+\int_0^A \frac{dx}{x^\alpha}
+\]
+where $A>0$ is a constant.
+\end{example}
+\begin{proof}[Solution and Commentary]
+\textbf{Case 1: $\alpha = 0$.}
+
+Here, $\frac{1}{x^0} = 1$, so
+\[
+\int_0^A dx = A.
+\]
+No issues at the endpoint.
+
+\textbf{Case 2: $\alpha<1$, $\alpha\neq 0$.}
+
+Compute the antiderivative:
+\[
+\int x^{-\alpha} dx = \frac{x^{1-\alpha}}{1-\alpha} + C.
+\]
+By definition,
+\[
+\int_0^A x^{-\alpha} dx = \lim_{t\to 0^+} \int_t^A x^{-\alpha}dx = \left.\frac{x^{1-\alpha}}{1-\alpha}\right|_t^A = \frac{A^{1-\alpha} - t^{1-\alpha}}{1-\alpha}.
+\]
+As $t \to 0^+$:
+\begin{itemize}
+    \item If $1 - \alpha > 0$ ($\alpha<1$), $t^{1-\alpha} \to 0$. So the integral converges to
+    \[
+    \frac{A^{1-\alpha}}{1-\alpha}
+    \]
+    \item If $1 - \alpha < 0$ ($\alpha > 1$), $t^{1-\alpha} \to +\infty$. The integral diverges.
+\end{itemize}
+
+\textbf{Case 3: $\alpha = 1$.}
+\[
+\int \frac{1}{x} dx = \ln|x| + C
+\]
+Thus,
+\[
+\int_0^A \frac{dx}{x} = \lim_{t\to 0^+} \ln(A) - \ln(t) = \ln(A) - (-\infty) = +\infty
+\]
+So, \textbf{diverges}. 
+
+\textbf{Conclusion:} The integral converges if and only if $\alpha < 1$.
+\end{proof}
+
+\begin{example}
+Suppose $a, b>0$ with $b>a$, and $\alpha>0$. Does
+\[
+\int_a^b \frac{dx}{(x-a)^\alpha}
+\]
+converge?\\
+Similarly for
+\[
+\int_a^b \frac{dx}{(b-x)^\alpha}
+\]
+\end{example}
+\begin{proof}[Solution-by-Reduction]
+By substitution $y = x-a$, $dx = dy$, the integral becomes
+\[
+\int_0^{b-a} \frac{dy}{y^\alpha},
+\]
+which converges for $\alpha < 1$ by our previous example. 
+
+Similarly, for $z = b-x$, $dx = -dz$, and adjusting limits, we obtain the same form, and the same convergence criterion applies: \textbf{the integral over $(x-a)^{-\alpha}$ or $(b-x)^{-\alpha}$ on a finite interval converges iff $\alpha<1$.}
+\end{proof}
+
+\begin{example}
+Evaluate
+\[
+\int_0^1 \frac{dx}{\sqrt{1 - x}}
+\]
+\end{example}
+\begin{proof}[Solution]
+The problem point is at $x=1$, where the denominator vanishes.
+
+By definition:
+\[
+\int_0^1 \frac{dx}{\sqrt{1-x}} = \lim_{t\to 1^-} \int_0^t (1-x)^{-1/2} dx
+\]
+
+Antiderivative:
+\[
+\int (1 - x)^{-1/2} dx = -2 (1 - x)^{1/2} + C
+\]
+So
+\[
+\int_0^t (1 - x)^{-1/2} dx = -2 \sqrt{1-t} + 2 \cdot 1
+\]
+So as $t \to 1^-$:
+\[
+-2\sqrt{1-t} + 2 \to 2
+\]
+Alternatively, recognize that $\int_0^t \frac{dx}{\sqrt{1 - x}} = \arcsin(\sqrt{t})$, and as $t \to 1$, $\arcsin(1)=\pi/2$.
+
+\textbf{Conclusion:} The area converges; the improper integral equals $\pi/2$.
+\end{proof}
+
+\begin{example}
+Evaluate or determine convergence of
+\[
+\int_{-\frac{\pi}{2}}^{-\frac{\pi}{4}} \frac{\cos x}{1+\sin x} dx
+\]
+\end{example}
+\begin{proof}[Solution \& Reasoning]
+The denominator $1 + \sin x$ vanishes at $x = -\frac{\pi}{2}$, so the integral is improper at that endpoint.
+
+By the definition,
+\[
+\int_{-\frac{\pi}{2}}^{-\frac{\pi}{4}} \frac{\cos x}{1+\sin x} dx = \lim_{t\to (-\frac{\pi}{2})^+} \int_t^{-\frac{\pi}{4}} \frac{\cos x}{1+\sin x} dx
+\]
+Let’s substitute $u = 1 + \sin x$, then $du = \cos x dx$. Thus, the antiderivative is $\ln|1+\sin x|$.
+
+As $x \to -\frac{\pi}{2}^+$, $\sin x \to -1$, so $1+\sin x \to 0^+$. Therefore, $\ln(1+\sin x)$ diverges to $-\infty$. Thus, the integral diverges.
+\end{proof}
+
+\begin{example}[Parameter Dependence]
+For which values of $\alpha$ does the following integral converge?
+\[
+\int_{-\frac{\pi}{2}}^{-\frac{\pi}{4}} \frac{\cos x}{(1+\sin x)^\alpha} dx
+\]
+\end{example}
+\begin{proof}[Insight]
+Via substitution $y = \sin x$, $dy = \cos x dx$, so the integral becomes
+\[
+\int_{-1}^{-1/\sqrt{2}} \frac{dy}{(1+y)^\alpha}
+\]
+which, as seen earlier, converges if and only if $\alpha < 1$.
+\end{proof}
+
+\section{General Principle: The Comparison Test for Improper Integrals}
+
+Calculating improper integrals exactly isn’t always feasible, but we can often tell if they converge by \textbf{comparing} them to integrals whose (non-)convergence behavior we already know.
+
+\begin{theorem}[Direct Comparison Test for Improper Integrals]
+Suppose $0 \leq g(x) \leq f(x)$ for all $x$ in an interval of integration (possibly except at endpoints). Then:
+\begin{enumerate}
+    \item If $\int_{a}^{b} f(x) dx$ converges, then so does $\int_{a}^{b} g(x) dx$.
+    \item If $\int_{a}^{b} g(x) dx$ diverges, then so does $\int_{a}^{b} f(x) dx$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+For practical use, what \textbf{really} matters is the behavior near the singularity (or infinity), not away from it. We will develop a more refined tool---the \textbf{Limit Comparison Test}---in the next lecture.
+\end{remark}
+
+\begin{example}
+Determine whether
+\[
+\int_0^5 \frac{dx}{\sqrt{x}+x^{2/3}+x}
+\]
+converges.
+\end{example}
+\begin{proof}[Solution]
+Notice that $\sqrt{x}$, $x^{2/3}$, and $x$ are positive on $[0,5]$.
+
+For $x\in(0,5]$,
+\[
+\sqrt{x} + x^{2/3} + x \geq \sqrt{x}
+\implies
+\frac{1}{\sqrt{x} + x^{2/3} + x} \leq \frac{1}{\sqrt{x}}
+\]
+But we know
+\[
+\int_0^5 \frac{1}{\sqrt{x}} dx
+\]
+converges (see earlier). So, by the Direct Comparison Test, our original integral also converges.
+\end{proof}
+
+\begin{example}[Limitation]
+Suppose you tried to compare to a function that diverges faster than your original. For example,
+\[
+\int_0^1 \frac{dx}{x^2 + x + x^4}
+\]
+For small $x$, $x^2$ dominates, so $x^2 + x + x^4 < 3x^2$. So,
+\[
+\frac{1}{x^2 + x + x^4} > \frac{1}{3x^2}
+\]
+But,
+\[
+\int_0^1 \frac{dx}{x^2}
+\]
+diverges, so by the Direct Comparison Test, so does the original integral.
+
+\color{gray}
+\textit{Non-Example:} If instead you compare a function $h(x) \leq k(x)$ where $k$ diverges, this comparison tells you \textbf{nothing} about $h$'s convergence (it could still converge). That's why the choice of functions in comparison is essential.
+\color{black}
+\end{example}
+
+\section{Summary and Looking Ahead}
+
+\begin{itemize}
+    \item Improper integrals extend the Riemann integral to functions with infinite intervals or unbounded behavior at endpoints.
+    \item The concept of convergence for these integrals is defined via appropriate limits.
+    \item A variety of singular behaviors can still lead to finite total area, depending on how rapidly the function blows up.
+    \item Critical parameter values (e.g., powers of $x$ near $0$) mark the \emph{borderline} between convergence and divergence.
+    \item Direct comparison with simpler, well-understood functions is a powerful method for establishing (non-)convergence.
+    \item Next time, we will develop and apply the \emph{Limit Comparison Test}, a more refined and much more practical tool for investigating improper integrals.
+\end{itemize}
+
+\section*{Further Reading and Practice}
+\begin{itemize}
+    \item Stewart, \textit{Calculus}, Chapter 7.
+    \item Practice: Identify all problematic points in given integrals, decide whether to use a limit from the right or left, and apply both the comparison tests and calculations from first principles for mastery.
+\end{itemize}
+
+\vspace{2em}
+\begin{administrative_note}
+\textbf{Administrative Reminders (Reprise):}
+\begin{itemize}
+    \item For updates regarding course logistics, assignment due dates, and room or schedule changes, check the Moodle regularly.
+    \item Zoom session links and announcements will be distributed prior to relevant classes.
+    \item If you are ill or need to miss a class, please contact the instructor as early as possible, and consult course materials or peers to stay caught up.
+    \item Any further questions about the grading policy, rounding rules, or schedule disruptions around national holidays will be addressed on Moodle and in class reviews.
+\end{itemize}
+\end{administrative_note}
+
+\end{document}

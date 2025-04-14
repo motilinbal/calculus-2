@@ -1,0 +1,464 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fullpage}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Custom environment for administrative notes
+\newtcolorbox{administrative_note}[1][]{
+    colback=gray!15!white,
+    colframe=gray!60!black,
+    fonttitle=\bfseries,
+    title=Administrative Note #1
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{nonexample}[theorem]{Non-Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries Improper Integrals: Theory, Intuition, and Applications} \\
+    \vspace{0.2cm}
+    {\large\it Calculus II, Undergraduate Lecture Exposition}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{administrative_note}
+\textbf{Lecture Logistics \& Announcements}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Lecture Venue:} Online (Zoom); please check your audio connection and use the chat for communication as needed.
+    \item \textbf{Muting:} All participants are muted by default during the lecture for clarity. Please use the chat to ask questions or contribute answers---this is encouraged!
+    \item \textbf{Q\&A:} The instructor monitors the chat and may pause for live questions.
+    \item \textbf{Material Pace:} Today's lesson is planned to be slightly shorter; both sections of the course are aligned in their progress.
+    \item \textbf{Lecture Materials:} All notes and materials written or shown during the session will be shared after the lesson. Participation and active engagement are always welcome!
+    \item \textbf{Holiday Wishes:} At the end of today's session, the instructor wishes all students a happy holiday and confirms that classes will break for the holiday period, resuming afterwards.
+\end{itemize}
+\end{administrative_note}
+
+\vspace{0.6cm}
+
+\tableofcontents
+
+\vspace{0.5cm}
+
+\section{Motivation for Improper Integrals}
+
+In the calculus of real functions, we frequently encounter integrals over intervals where the function is {\it unbounded} or where the interval itself is {\it infinite}. These situations arise in physics (e.g., computing total mass with density approaching infinity), engineering, and mathematics itself (e.g., convergence of series, Fourier analysis). Standard Riemann integration only applies to continuous, bounded functions over closed, bounded intervals. To extend the beautiful and practical theory of the integral, we must carefully define \emph{improper integrals} and determine when they have meaningful (finite) values.
+
+\vspace{0.4cm}
+
+\section{Definition and Formalism of Improper Integrals}
+
+\subsection{Improper Integrals at a Finite Endpoint}
+
+\begin{definition}[Improper Integral with a Finite Singularity]
+Let $f : [a, b) \to \mathbb{R}$ be a function which is integrable (Riemann, Lebesgue, or in the sense understood by the course) on every closed subinterval $[t,b]$ with $a < t < b$. If $f$ is unbounded, or not defined, or not continuous at $a$, we define
+\[
+\int_{a}^{b} f(x) \, dx := \lim_{t \to a^+} \int_{t}^{b} f(x) \, dx,
+\]
+provided the limit exists and is finite.
+\end{definition}
+
+\begin{remark}
+Analogously, if the singularity is at the upper limit $b$, we define
+\[
+\int_{a}^{b} f(x)\, dx := \lim_{t \to b^-} \int_{a}^{t} f(x) \, dx.
+\]
+If both endpoints are improper, limits are taken at both sides.
+\end{remark}
+
+\begin{example}
+Consider $f(x) = 1/\sqrt{x}$ on $(0,1]$. This function is unbounded at $x = 0$.
+
+We write:
+\[
+\int_{0}^{1} \frac{1}{\sqrt{x}} \, dx = \lim_{t \to 0^+} \int_{t}^{1} \frac{1}{\sqrt{x}} \, dx.
+\]
+Calculating:
+\[
+\int_{t}^{1} x^{-1/2} \, dx = 2x^{1/2} \Big|_t^1 = 2(1 - \sqrt{t}),
+\]
+and as $t\rightarrow 0^+$, $\sqrt{t} \to 0$, so the limit is $2$. Therefore, the improper integral \emph{converges}.
+\end{example}
+
+\subsection{Improper Integrals over Infinite Intervals} 
+
+\begin{definition}[Improper Integral on an Infinite Interval]
+ Suppose $f : [a, \infty) \to \mathbb{R}$ is integrable on every $[a, t]$. Then
+\[
+\int_a^{\infty} f(x)\, dx = \lim_{t\to\infty} \int_a^{t} f(x)\, dx,
+\]
+if the limit exists.
+\end{definition}
+
+\begin{example}
+$\int_{1}^{\infty} \frac{1}{x^2} dx = \lim_{t \to \infty} \int_{1}^{t} x^{-2} dx = \lim_{t \to \infty} ( -x^{-1} ) \big|_{1}^{t} = \lim_{t \to \infty} ( -\frac{1}{t} + 1 ) = 1$.
+
+The improper integral converges.
+\end{example}
+
+\vspace{0.3cm}
+
+\section{Convergence Tests for Improper Integrals}
+Before we develop general criteria for the convergence of these integrals, reflect on the following guiding questions:
+
+\begin{itemize}
+    \item When an integrand ``blows up'' near an endpoint, how can we decide if the total area is still finite?
+    \item Are there easy-to-check benchmarks that let us deduce convergence/divergence without explicit computation?
+\end{itemize}
+
+The comparison methods serve as indispensable tools for answering such questions, just as for the convergence of infinite series.
+
+\subsection{First Comparison Test}
+
+\begin{theorem}[First Comparison (Direct) Test]
+Let $f, g : (a, b) \to [0, \infty)$ be non-negative functions, both integrable over every closed subinterval $[t, b]$ for $t > a$. Suppose there exists $M > 0$ such that
+\[
+0 \leq f(x) \leq g(x) \quad \text{for all} \quad x\in (a, b).
+\]
+Then:
+\begin{itemize}
+    \item[(i)] If $\displaystyle \int_a^b g(x)\, dx$ converges, then so does $\displaystyle \int_a^b f(x)\, dx$.
+    \item[(ii)] If $\displaystyle \int_a^b f(x)\, dx$ diverges, then so does $\displaystyle \int_a^b g(x)\, dx$.
+\end{itemize}
+\end{theorem}
+
+\begin{remark}
+This is analogous to the comparison test for series: a function smaller than a convergent one also converges; larger than a divergent one also diverges.
+\end{remark}
+
+\vspace{0.2cm}
+
+\subsubsection*{Example: Applying the First Comparison Test}
+
+\begin{example}
+Is
+\[
+\int_0^1 \frac{1}{\sqrt{1 - x}}\, dx
+\]
+convergent?
+
+Solution: Note, near $x = 1$,
+\[
+\frac{1}{\sqrt{1-x}} \approxeq (1 - x)^{-1/2}.
+\]
+Let $g(x) = (1 - x)^{-1/2}$. For $\alpha < 1$ in the integral
+\[
+\int_0^1 \frac{1}{(1-x)^\alpha}\, dx
+\]
+the integral converges at $x = 1$ iff $\alpha < 1$. Here $\alpha = 1/2 < 1$, so the integral converges.
+\end{example}
+
+\vspace{0.4cm}
+
+\subsection{The Limit Comparison (Second Comparison) Test}
+
+Suppose the inequalities needed in the first comparison test aren't clear (as when $f$ and $g$ behave similarly, but neither dominates everywhere). The following test, analogous to the ``limit comparison test'' for series, offers enormous power.
+
+\begin{theorem}[Limit Comparison Test for Improper Integrals]
+Let $f, g : (a, b) \to [0, \infty)$ be functions, integrable on every $[t, b]$ for $t > a$. Consider
+\[
+L := \lim_{x \to a^+} \frac{f(x)}{g(x)}
+\]
+if the limit exists (possibly $\infty$). Then:
+\begin{itemize}
+    \item[(a)] If $0 < L < \infty$, then $\displaystyle \int_a^b f(x) dx$ converges if and only if $\displaystyle \int_a^b g(x) dx$ converges.
+    \item[(b)] If $L = 0$ and $\displaystyle \int_a^b g(x) dx$ converges, then $\displaystyle \int_a^b f(x) dx$ converges.
+    \item[(c)] If $L = \infty$ and $\displaystyle \int_a^b g(x) dx$ diverges, then $\displaystyle \int_a^b f(x) dx$ diverges.
+\end{itemize}
+\end{theorem}
+
+\begin{remark}
+Part (a) is the most useful: if $f$ and $g$ are ``comparable'' near $a$, and one converges, so does the other; if one diverges, so does the other.
+\end{remark}
+
+\begin{remark}
+Why must $L > 0$ (not inclusive)? If $L = 0$, then $f$ is infinitesimal compared to $g$ near $a$, so if $g$ converges, then so does $f$ (but not vice versa). Similarly for $L = \infty$.
+\end{remark}
+
+\subsubsection*{Motivational Example}
+
+Suppose $f(x) \approx (x - a)^{-\alpha}$ as $x \to a^+$, for some $\alpha > 0$.
+
+Compare with $g(x) = (x - a)^{-\alpha}$. The limit of their ratio is finite and nonzero, so they ``stand or fall together'': both converge for $\alpha < 1$, both diverge for $\alpha \geq 1$.
+
+\vspace{0.3cm}
+
+\section{Worked Examples}
+
+Every example below either reconstructs one that was solved live in the lecture, or is included for clarity and insight.
+
+\begin{example}[Convergence of $\int_0^1 \frac{1}{\sqrt{1 - x^4}} dx$]
+Let us consider:
+\[
+\int_0^1 \frac{dx}{\sqrt{1 - x^4}}
+\]
+\textbf{Analysis.} Note the function inside the square root, $1 - x^4$, vanishes at $x = 1$, so the integrand ``blows up'' there. Let's seek a function $g(x)$ for comparison.
+
+First, factor:
+\[
+1 - x^4 = (1 - x^2)(1 + x^2) = (1 - x)(1 + x)(1 + x^2)
+\]
+Therefore,
+\[
+\sqrt{1 - x^4} = \sqrt{1 - x} \cdot \sqrt{1 + x} \cdot \sqrt{1 + x^2}
+\]
+The ``problematic'' factor is $\sqrt{1 - x}$, which vanishes as $x \to 1^-$ and causes the blow-up.
+
+Set
+\[
+g(x) = \frac{1}{\sqrt{1 - x}}
+\]
+
+\textbf{Applying the Limit Comparison Test:}
+
+Compute
+\[
+\lim_{x \to 1^-} \frac{f(x)}{g(x)} = \lim_{x \to 1^-} \frac{1/\sqrt{1 - x^4}}{1/\sqrt{1 - x}} = \lim_{x \to 1^-} \frac{\sqrt{1 - x}}{\sqrt{1 - x^4}}
+\]
+
+Substituting the factorization,
+\[
+= \lim_{x \to 1^-} \frac{1}{\sqrt{(1 + x)(1 + x^2)} }
+\]
+Plugging $x = 1$, numerator $1$, denominator $\sqrt{2 \cdot 2} = 2$, so the limit is $1/2$.
+
+Since $0 < 1/2 < \infty$, the test applies.
+
+\null
+
+\textbf{Comparing with a Known Benchmark:}
+Recall:
+\[
+\int_0^1 \frac{dx}{(1-x)^{\alpha}}
+\]
+converges if $\alpha < 1$. Here, $g(x)$ has $\alpha = 1/2$.
+
+Therefore,
+\[
+\int_0^1 \frac{dx}{\sqrt{1 - x}}
+\]
+converges, so by the test, so does 
+\[
+\int_0^1 \frac{dx}{\sqrt{1 - x^4}}
+\]
+\end{example}
+
+\begin{remark}
+The key insight is to find a $g(x)$ which matches the worst singular behavior of $f(x)$ near the problematic point. Factoring helps to illuminate this.
+\end{remark}
+
+\vspace{0.2cm}
+
+\begin{example}[Convergence of $\int_1^2 \frac{6\sqrt{2-x}}{x^2 - 5x + 6} dx$]
+We are to determine whether
+\[
+\int_1^2 \frac{6 \sqrt{2 - x}}{x^2 - 5x + 6}\, dx
+\]
+converges.
+
+\textbf{Step 1: Factor the denominator:}
+\[
+x^2 - 5x + 6 = (x - 2)(x - 3)
+\]
+So,
+\[
+= 6 \cdot \frac{\sqrt{2 - x}}{(x - 2)(x - 3)}
+\]
+
+\textbf{Step 2: Identify the problematic point.} At $x = 2$, the denominator vanishes---this is where we study the singularity.
+
+\textbf{Step 3: Match singularities by adjusting form:}
+Let’s write everything in terms of $2-x$ where possible.
+
+Note that $x - 2 = -(2 - x)$. We can write the denominator as $-(2 - x)(x - 3)$. Pulling out $-1$:
+\[
+= -6 \cdot \frac{\sqrt{2 - x}}{(2 - x)(x - 3)} = \frac{6}{\sqrt{2 - x}(3 - x)}
+\]
+
+\textbf{Step 4: Choose $g(x) = 1/\sqrt{2 - x}$ (the core singularity).}
+
+\textbf{Step 5: Compute limit:}
+\[
+\lim_{x \to 2^-} \frac{6/\bigl(\sqrt{2 - x}(3 - x)\bigr)}{1/\sqrt{2 - x}} = \lim_{x \to 2^-} \frac{6}{3 - x}
+\]
+As $x\to 2^-$, $3-x \to 1$, so the limit is $6$.
+
+\textbf{Step 6: Determine convergence of comparison integral.}
+\[
+\int_1^2 \frac{1}{\sqrt{2-x}}\, dx
+\]
+Again, $\alpha = 1/2 < 1$, so this converges.
+
+\textbf{Conclusion:} The original integral converges.
+\end{example}
+
+\vspace{0.2cm}
+
+\begin{example}[Convergence of $\int_1^2 \frac{\sin x}{\ln x} dx$]
+Let’s analyze
+\[
+\int_1^2 \frac{\sin x}{\ln x}\, dx
+\]
+The problematic point is $x = 1$, since $\ln 1 = 0$.
+
+Choose $g(x) = 1/\ln x$. Now,
+\[
+\frac{f(x)}{g(x)} = \sin x
+\]
+As $x \to 1^+$, $\sin x \to \sin 1 \neq 0$.
+
+Also, as shown in a previous session, the comparison integral
+\[
+\int_1^2 \frac{1}{\ln x}\, dx
+\]
+diverges, because the antiderivative diverges at $x = 1$ like $-\ln (\ln x)$.
+
+By the limit comparison test, since $g(x)$ diverges and $f(x)/g(x)$ tends to a finite, nonzero value, the original integral diverges as well.
+\end{example}
+
+\vspace{0.2cm}
+
+\begin{example}[Convergence of $\int_0^1 \frac{dx}{1 - \cos x}$]
+Now, consider
+\[
+\int_0^1 \frac{dx}{1 - \cos x}
+\]
+Problematic point is $x = 0$ since $\cos 0 = 1$ (denominator vanishes).
+
+Let’s choose $g(x) = 1/x^2$.
+
+First, note that as $x\to 0$, $1 - \cos x \sim \frac{x^2}{2}$ (via Taylor expansion). Therefore:
+\[
+\frac{1}{1 - \cos x} \sim \frac{2}{x^2}
+\]
+So,
+\[
+\frac{f(x)}{g(x)} = \frac{1/(1 - \cos x)}{1/x^2} = \frac{x^2}{1 - \cos x} \to 2 \quad \text{as} \quad x \to 0
+\]
+Therefore, $L = 2$.
+
+We know
+\[
+\int_0^1 \frac{1}{x^2} dx
+\]
+diverges ($\alpha = 2 > 1$). Therefore, the original integral diverges.
+\end{example}
+
+\vspace{0.2cm}
+
+\section{The \texorpdfstring{$\alpha$}{alpha}-Test for Integrals with Power Singularities}
+
+Experience suggests that many singularities are of the ``power type'' near the endpoint. The following test summarizes the behavior:
+
+\begin{theorem}[$\alpha$-Test for Power Singularities]
+For $\alpha > 0$,
+\[
+\int_a^b \frac{dx}{(b - x)^\alpha}
+\]
+converges at $x = b$ if and only if $\alpha < 1$.
+
+Similarly, for
+\[
+\int_a^b \frac{dx}{(x - a)^\alpha}
+\]
+converges at $x = a$ if and only if $\alpha < 1$.
+\end{theorem}
+
+\begin{remark}
+The motivation: The indefinite integral is
+\[
+\int \frac{dx}{x^\alpha} =
+\begin{cases}
+\frac{x^{1-\alpha}}{1-\alpha} + C & \text{if}~ \alpha \neq 1 \\
+\ln |x| + C & \text{if}~ \alpha = 1
+\end{cases}
+\]
+\end{remark}
+
+\section{On Absolute Convergence of Improper Integrals}
+Motivated by the study of series, we define absolute and conditional convergence for integrals.
+
+\begin{definition}[Absolute Convergence]
+Let $f: (a, b) \to \mathbb{R}$ be integrable on each subinterval $[t, b]$, $a < t < b$. We say that the improper integral
+\[
+\int_a^b f(x) dx
+\]
+\emph{converges absolutely} if
+\[
+\int_a^b |f(x)| dx
+\]
+converges.
+\end{definition}
+
+\begin{theorem}
+If $\int_a^b |f(x)| dx$ converges, then so does $\int_a^b f(x) dx$. However, the converse need not hold (i.e., the integral can converge ``conditionally'').
+\end{theorem}
+
+\vspace{0.2cm}
+
+\begin{example}[Absolute Convergence with Oscillatory Functions]
+Let’s study:
+\[
+\int_0^1 \frac{\sin(1/x)}{\sqrt{x}} dx
+\]
+We can bound:
+\[
+\left| \frac{\sin(1/x)}{\sqrt{x}} \right| \leq \frac{1}{\sqrt{x}}, \quad \text{since}\ |\sin(1/x)| \leq 1
+\]
+Now,
+\[
+\int_0^1 \frac{1}{\sqrt{x}} dx
+\]
+converges (by the $\alpha$-test, $\alpha = 1/2$).
+
+By the comparison test, the integral of $|f(x)|$ converges, so the original integral converges absolutely, and hence converges.
+\end{example}
+
+\vspace{0.3cm}
+
+\begin{remark}
+Absolute convergence is of particular importance when working with oscillatory integrals, such as those with sine or cosine in their numerators, as we often encounter in Fourier analysis and mathematical physics.
+\end{remark}
+
+\vspace{0.3cm}
+
+\section{Additional Insights and Questions}
+
+\begin{itemize}
+    \item \textbf{Why compare with $x^{-\alpha}$-type functions?} Because the $\alpha$-test provides a ``universal'' benchmark for integrability at endpoints for singular functions.
+    \item \textbf{How do you choose $g(x)$?} Aim for a function that replicates the ``worst'' singular term in $f(x)$ near the critical point.
+    \item \textbf{Why does the limit comparison suffice?} Since if two functions behave the same (up to a constant) near the singularity, their integrals will either both diverge or both converge.
+    \item \textbf{Can you always apply the $\alpha$-test?} Only if the behavior matches (or can be squeezed above and below) by such a singularity.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{administrative_note}
+\textbf{Summary of Key Administrative Points}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Lecture Muting and Participation:} By default, all participants are muted; please use the chat to engage or answer questions. Your input is essential, and questions are always welcome.
+    \item \textbf{Materials Availability:} Everything written or displayed in class will be made available for your continued study and exam preparation.
+    \item \textbf{Schedule Updates:} Today's lesson is shorter due to programming schedule alignment; both course sections are synchronized.
+    \item \textbf{Holiday Wishes and Break:} Wishing everyone a joyful holiday. No classes during the holiday break; lectures resume after.
+\end{itemize}
+\end{administrative_note}
+
+\end{document}

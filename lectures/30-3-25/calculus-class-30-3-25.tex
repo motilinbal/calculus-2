@@ -1,0 +1,540 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
+\geometry{margin=1.05in}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\tcbuselibrary{skins}
+\usepackage{thmtools}
+\usepackage{tikz}
+
+\renewcommand{\baselinestretch}{1.15}
+
+%--- Theorem environments, Definitions, Examples, Announcements ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{examplex}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem*{remark}{Remark}
+\newtheorem*{motivation}{Motivation}
+\newtheorem*{historicalnote}{Historical Note}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newenvironment{announcement}{%
+    \par\vspace{10pt}%
+    \begin{tcolorbox}[breakable, enhanced, colframe=black, colback=gray!14, title=Course Administration, leftrule=4pt, rightrule=0pt, top=3pt, bottom=3pt, fonttitle=\normalsize\bfseries]%
+}{%
+    \end{tcolorbox}\vspace{4pt}%
+}
+
+\newenvironment{nonexample}{\begin{examplex}\textbf{(Non-example).} }{\end{examplex}}
+
+% Header
+\title{\textbf{Integration of Rational Functions and the Definite Integral:\\
+Concept, Computation, and Connections}\\[0.75em]\normalsize Calculus II – Undergraduate Mathematics Lecture Notes}
+\author{Prepared by: Course Instructor (edited and enhanced for clarity and depth)}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ===== Administrative Announcements =====
+\begin{announcement}
+    \begin{itemize}[leftmargin=1.5em]
+        \item \textbf{Session Schedule:} Our current focus is integrals, both indefinite and definite. We expect to reach the topic of double integrals in later lessons.
+        \item \textbf{Application of Techniques:} Methods of integration covered here (including substitution) will reappear in advanced contexts (e.g., double integrals), so mastery is strongly encouraged.
+        \item \textbf{No Third Meeting This Week:} There will \emph{not} be a class meeting on the upcoming Tuesday. As usual, regular sessions are held on Wednesday and Thursday.
+        \item \textbf{Practice Session Recommendation:} Students are \emph{highly encouraged} to attend all recitation/practice sessions for reinforcement and deeper understanding.
+    \end{itemize}
+\end{announcement}
+
+\tableofcontents
+
+\section{Motivation: Why Study Integrals of Rational Functions?}
+
+\begin{motivation}
+Integration is one of the most powerful tools in mathematics, allowing us to compute areas, solve differential equations, and analyze continuous processes. A large class of functions we frequently encounter are \emph{rational functions}: expressions given by the ratio of two polynomials. Many classical and applied problems (from physics to engineering) lead us to compute integrals of rational functions.
+
+Integrating rational functions is not just about computation; it's about recognizing structure and applying elegant methods such as substitution, partial fractions, and completing the square. Moreover, understanding the theory and techniques behind these integrals provides a foundation for tackling more complex integrals, including those involving multiple variables. Finally, definite integrals (integrals over a closed interval) are closely tied to the concept of area under curves and have deep theoretical importance, culminating in the Fundamental Theorem of Calculus.
+\end{motivation}
+
+\section{Rational Functions: Definition \& Structure}
+
+\begin{definition}
+    A \textbf{rational function} is any function \( R(x) \) expressible as the quotient
+    \[
+        R(x) = \frac{P(x)}{Q(x)}
+    \]
+    where \( P(x) \) and \( Q(x) \) are polynomials with real (or complex) coefficients, and \( Q(x) \not\equiv 0 \). The function is defined wherever \( Q(x) \neq 0 \).
+\end{definition}
+
+\begin{remark}
+    Rational functions arise naturally in many mathematical models and serve as a testbed for integration techniques due to their well-understood algebraic structure.
+\end{remark}
+
+\section{Integrating Rational Functions: The Strategic Overview}
+
+\subsection{General Strategy}
+
+To integrate rational functions, we typically follow these steps:
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{Polynomial Division:} If the degree of the numerator is at least as large as that of the denominator (\(\deg P \geq \deg Q\)), perform division to write as \( S(x) + \dfrac{R(x)}{Q(x)} \), where \( S(x) \) is a polynomial and the remainder has \(\deg R < \deg Q\).
+    \item \textbf{Partial Fraction Decomposition:} Express the remaining proper fraction as a sum of simpler fractions whose denominators are of degree 1 (linear factors), degree 2 (irreducible quadratics), or their powers.
+    \item \textbf{Integrate Each Term:} Use substitution, logarithmic, or arctangent integration as appropriate for each term.
+\end{enumerate}
+
+\begin{remark}
+    Special cases may require completing the square in the denominator, especially when irreducible quadratics are present.
+\end{remark}
+
+
+\section{Categories and Methods: Systematic Case Breakdown}
+
+We categorize the typical forms of rational integrands as follows:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Simple Linear Factor (Repeated or Not):} \(\displaystyle \int \frac{A}{(x-p)^k} \, dx \)
+    \item \textbf{Linear Numerator over Irreducible Quadratic:} \(\displaystyle \int \frac{ax + b}{x^2 + px + q}\, dx \), possibly with a quadratic denominator that does \emph{not} factor over the reals.
+    \item \textbf{Two Distinct Linear Factors:} \(\displaystyle \int \frac{A}{(x + p)(x + q)} \, dx \)
+    \item \textbf{Degree of Numerator \(\geq\) Denominator:} Polynomial division is required.
+\end{enumerate}
+
+Let us move through each case, providing both conceptual explanation and concrete examples.
+
+\subsection{Case 1: Powers of Linear Factors}
+
+\begin{definition}
+    The \textbf{principle for integrating powers of linear factors} is as follows:
+    
+    For real constants \( A \), \( p \), and \( k \in \mathbb{N} \), consider
+    \[
+        \int \frac{A}{(x-p)^{k}}\, dx.
+    \]
+    \begin{itemize}
+        \item If \( k \neq 1 \):
+        \[
+            \int \frac{A}{(x-p)^k} dx = \frac{-A}{(k-1)(x-p)^{k-1}} + C.
+        \]
+        \item If \( k = 1 \):
+        \[
+            \int \frac{A}{x-p} dx = A\, \ln|x-p| + C.
+        \]
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    These formulas are deduced by substitution. The case \( k=1 \) yields a logarithm, while \( k>1 \) produces a negative power.
+\end{remark}
+
+\begin{examplex}
+    Compute $\displaystyle \int \frac{2}{x-5} dx$.
+    
+    \emph{Solution:} This matches the \( k=1 \) case:
+    \[
+    \int \frac{2}{x-5} dx = 2 \ln|x-5| + C.
+    \]
+\end{examplex}
+
+\begin{examplex}
+    Compute $\displaystyle \int \frac{2}{(x-5)^2}\, dx$.
+
+    \emph{Solution:} Here $k=2$, so
+    \[
+    \int \frac{2}{(x-5)^2} dx = -2\cdot \frac{1}{x-5} + C = -\frac{2}{x-5} + C.
+    \]
+\end{examplex}
+
+\begin{remark}
+    \emph{Tip}: It is generally more reliable to quickly re-derive such formulas via substitution than to memorize them, especially under exam conditions.
+\end{remark}
+
+\subsection{Case 2: Linear over Irreducible Quadratic}
+
+Suppose we want to integrate:
+\[
+\int \frac{ax + b}{x^2 + px + q}\,dx
+\]
+where $x^2 + px + q$ does \emph{not} factor over the reals (\( \Delta = p^2 - 4q < 0 \)), i.e., is irreducible.
+
+The general strategy:
+\begin{itemize}
+    \item Try to express the numerator as a linear combination of the derivative of the denominator and a constant, i.e.,
+    \[
+        ax + b = k\, (2x + p) + c,
+    \]
+    where $2x+p$ is the derivative of $x^2 + px + q$.
+    \item Split the given fraction accordingly and integrate each part using standard formulas (logarithmic for derivative-over-denominator and arctangent for the constant-over-quadratic part).
+\end{itemize}
+
+\begin{examplex}\label{ex:irredquad}
+    Compute $\displaystyle \int \frac{x+4}{x^2 + 6x + 10} dx$.
+    
+    \emph{Step 1:} Verify irreducibility:
+
+    Calculate the discriminant:
+    \[
+        \Delta = 6^2 - 4 \cdot 1 \cdot 10 = 36 - 40 = -4 < 0.
+    \]
+    Thus, irreducible.
+
+    \emph{Step 2:} Write $x+4$ in terms of the derivative of the denominator:
+    \[
+        \frac{d}{dx}(x^2 + 6x + 10) = 2x + 6.
+    \]
+    Seek $a, b$ such that
+    \[
+        x + 4 = a(2x+6) + b.
+    \]
+    Expanding,
+    \[
+        x + 4 = 2a x + 6a + b.
+    \]
+    Setting coefficients equal:
+    \begin{align*}
+        x: &\qquad 1 = 2a \implies a = \frac{1}{2} \\
+        \text{const:} &\qquad 4 = 6a + b \implies b = 4 - 6\cdot\frac{1}{2} = 1
+    \end{align*}
+    Thus,
+    \[
+        x + 4 = \frac{1}{2}(2x + 6) + 1.
+    \]
+
+    \emph{Step 3:} Substitute into the integral and split:
+    \begin{align*}
+        \int \frac{x+4}{x^2 + 6x + 10} dx 
+        &= \int \frac{\frac{1}{2}(2x+6) + 1}{x^2 + 6x + 10} dx\\
+        &= \frac{1}{2} \int \frac{2x + 6}{x^2 + 6x + 10} dx + \int \frac{1}{x^2 + 6x + 10} dx.
+    \end{align*}
+
+    \textbf{Sub-Integral 1} (logarithmic part): Let $u = x^2 + 6x + 10$, $du = (2x+6)dx$,
+    \[
+        \int \frac{2x+6}{x^2 + 6x + 10} dx = \int \frac{du}{u} = \ln|u| + C.
+    \]
+
+    \textbf{Sub-Integral 2} (arctangent part):
+
+    Complete the square in the denominator:
+    \[
+        x^2 + 6x + 10 = (x+3)^2 + 1
+    \]
+    Therefore,
+    \[
+        \int \frac{1}{x^2 + 6x + 10} dx = \int \frac{1}{(x+3)^2 + 1^2}\, dx = \arctan(x+3) + C.
+    \]
+
+    \emph{Final Answer:}
+    \[
+        \int \frac{x+4}{x^2 + 6x + 10} dx = \frac{1}{2} \ln|x^2 + 6x + 10| + \arctan(x+3) + C
+    \]
+\end{examplex}
+
+\subsection{Case 3: Numerator Not Easily Matched to Derivative}
+
+When the numerator is not easily expressible as a multiple of the derivative of the denominator or otherwise, complete the square and use arctangent or other standard integrals.
+
+\begin{examplex}
+    Compute $\displaystyle \int \frac{x}{2x^2 + x + 3} dx$.
+
+    \emph{Step 1:} Confirm irreducibility.
+
+    Compute the discriminant:
+    \[
+    \Delta = 1^2 - 4\cdot 2 \cdot 3 = 1 - 24 = -23 < 0,
+    \]
+    so denominator is irreducible.
+
+    \emph{Step 2:} Express numerator as a linear combination of the derivative of the denominator plus a constant:
+
+    The derivative is $4x + 1$.
+
+    Seek $a, b$ so that
+    \[
+    x = a(4x+1) + b.
+    \]
+    
+    Equate coefficients:
+    \begin{align*}
+    4a &= 1 \implies a = \frac{1}{4}\\
+    a + b &= 0 \implies b = -\frac{1}{4}
+    \end{align*}
+
+    \emph{Step 3:} Substitute and split:
+
+    \[
+    \int \frac{x}{2x^2 + x + 3} dx
+    = \frac{1}{4} \int \frac{4x + 1}{2x^2 + x + 3} dx - \frac{1}{4} \int \frac{1}{2x^2 + x + 3} dx
+    \]
+
+    The first integral is handled via substitution as before.
+
+    \emph{For the second}, write the denominator in monic form:
+    \[
+    2x^2 + x + 3 = 2\left(x^2 + \frac{1}{2}x + \frac{3}{2}\right)
+    \]
+    Complete the square:
+    \[
+    x^2 + \frac{1}{2}x + \frac{3}{2} 
+    = \left(x + \frac{1}{4}\right)^2 + \left(\frac{23}{16}\right)
+    \]
+    Thus,
+    \[
+    \int \frac{1}{2x^2 + x + 3} dx = \frac{1}{2} \int \frac{1}{\left(x + \frac{1}{4}\right)^2 + \left(\frac{\sqrt{23}}{4}\right)^2} dx
+    \]
+    This is a standard arctangent form:
+    \[
+    \int \frac{1}{x^2 + a^2} dx = \frac{1}{a} \arctan\left( \frac{x}{a} \right) + C
+    \]
+
+    \emph{Complete answer:}
+    \begin{align*}
+    \int \frac{x}{2x^2 + x + 3} dx 
+      &= \frac{1}{4} \ln|2x^2 + x + 3|  \\
+      &\qquad - \frac{1}{4} \cdot \frac{1}{\frac{\sqrt{23}}{4}} \arctan\left( \frac{x + \frac{1}{4}}{\frac{\sqrt{23}}{4}} \right) + C\\
+    & = \frac{1}{4} \ln|2x^2 + x + 3| - \frac{1}{\sqrt{23}} \arctan\left( \frac{4x + 1}{\sqrt{23}} \right) + C.
+    \end{align*}
+
+    \emph{Tip}: The "heroic" step is completing the square and recognizing the arctangent pattern.
+\end{examplex}
+
+\subsection{Case 4: Two Distinct Linear Factors (Partial Fractions)}
+
+When the denominator factors into distinct linear terms, we can write:
+\[
+\int \frac{A}{(x + p)(x + q)} dx
+\]
+with constants $A, p, q$, $p \neq q$.
+
+Decompose using partial fractions:
+\[
+\frac{A}{(x + p)(x + q)} = \frac{B}{x + p} + \frac{C}{x + q}
+\]
+Solve for $B,C$, then integrate term-wise.
+
+\begin{examplex}
+    Compute $\displaystyle \int \frac{1}{(x + 1)(x + 2)} dx$.
+    
+    \emph{Step 1:} Set up partial fractions:
+    \[
+    \frac{1}{(x + 1)(x + 2)} = \frac{A}{x + 1} + \frac{B}{x + 2}
+    \]
+    Multiply both sides by $(x + 1)(x + 2)$:
+    \[
+    1 = A(x + 2) + B(x + 1)
+    \]
+    Expand and solve:
+    \begin{align*}
+    1 &= A x + 2A + B x + B \\
+      &= (A + B)x + (2A + B)
+    \end{align*}
+    Equate coefficients:
+    \[
+    \begin{cases}
+    A + B = 0 \\
+    2A + B = 1
+    \end{cases}
+    \Rightarrow ~ A = 1,~ B = -1
+    \]
+    \emph{Step 2:} Write the integral:
+    \[
+    \int \frac{1}{(x+1)(x+2)} dx = \int \left( \frac{1}{x+1} - \frac{1}{x+2} \right) dx = \ln|x+1| - \ln|x+2| + C
+    \]
+\end{examplex}
+
+\begin{remark}
+    Partial fractions are a versatile tool for integrating rational functions. Always factor the denominator completely before proceeding.
+\end{remark}
+
+\begin{examplex}
+    Compute $\displaystyle \int \frac{x}{x^2 + 2x - 3} dx$.
+    
+    \textbf{Step 1:} Factor denominator.
+    \[
+    x^2 + 2x - 3 = (x + 3)(x - 1)
+    \]
+    \textbf{Step 2:} Write partial fractions for $\dfrac{x}{(x + 3)(x - 1)}$:
+    \[
+    \frac{x}{(x + 3)(x - 1)} = \frac{A}{x + 3} + \frac{B}{x - 1}
+    \]
+    Multiply by $(x+3)(x-1)$:
+    \[
+    x = A(x-1) + B(x+3) = (A+B)x + (3B - A)
+    \]
+    Coefficient comparison:
+    \[
+    \begin{cases}
+        A + B = 1\\
+        -A + 3B = 0
+    \end{cases}
+    \]
+    Solving gives $A = \dfrac{1}{4}$, $B = \dfrac{3}{4}$.
+
+    \textbf{Step 3:} Integrate each term:
+    \begin{align*}
+    \int \frac{x}{x^2 + 2x - 3} dx 
+        &= \int \left( \frac{1}{4} \cdot \frac{1}{x+3} + \frac{3}{4} \cdot \frac{1}{x-1} \right) dx \\
+        &= \frac{1}{4} \ln|x+3| + \frac{3}{4} \ln|x-1| + C
+    \end{align*}
+\end{examplex}
+
+\subsection{Case 5: Division When Numerator Degree is Higher}
+
+\begin{definition}
+If $\deg P(x) \geq \deg Q(x)$, perform polynomial division:
+\[
+\frac{P(x)}{Q(x)} = S(x) + \frac{R(x)}{Q(x)}
+\]
+where $S(x)$ is a polynomial and $\deg R(x) < \deg Q(x)$.
+\end{definition}
+
+\begin{examplex}
+Compute $\displaystyle \int \frac{x^3 - 1}{x+2} dx$.
+
+\emph{Step 1:} Perform division.
+\[
+x^3 - 1 \div (x+2):
+\]
+Divide $x^3$ by $x$ to get $x^2$,
+\[
+x^3 - 1 = x^2(x+2) - 2x(x+2) + 4(x+2) - 9
+\]
+Thus,
+\[
+\frac{x^3 - 1}{x+2} = x^2 - 2x + 4 - \frac{9}{x+2}
+\]
+\emph{Step 2:} Integrate each term:
+\begin{align*}
+\int \frac{x^3 - 1}{x+2} dx &= \int \left( x^2 - 2x + 4 - \frac{9}{x+2} \right) dx \\
+&= \frac{1}{3} x^3 - x^2 + 4x - 9 \ln |x+2| + C
+\end{align*}
+\end{examplex}
+
+\section{Definite Integrals: Area Under a Curve and the Darboux (Riemann) Definition}
+
+\subsection{Motivation: Why Definite Integrals?}
+
+\begin{motivation}
+Definite integrals provide a rigorous method for measuring the area under a curve, a question that dates back to the ancient Greeks, but which only achieved mathematical precision in the 19th century. Today, definite integrals are fundamental in physics (work, probabilities, densities), engineering, and beyond.
+\end{motivation}
+
+\subsection{Formal Riemann/Darboux Definition of the Definite Integral}
+
+Let $f: [a,b] \to \mathbb{R}$ be bounded. The idea is to \emph{approximate the area under $f$} from above and below, then refine the approximation.
+
+\begin{enumerate}
+\item \textbf{Partition} the interval $[a,b]$ into $n$ subintervals: $a = x_0 < x_1 < \dots < x_n = b$.
+\item For each subinterval $[x_{i-1}, x_i]$, define:
+    \begin{itemize}
+        \item $M_i = \sup\{ f(x) : x \in [x_{i-1}, x_i] \}$ (supremum on $[x_{i-1},x_i]$)
+        \item $m_i = \inf\{ f(x) : x \in [x_{i-1}, x_i] \}$ (infimum on $[x_{i-1},x_i]$)
+    \end{itemize}
+\item The \emph{upper} and \emph{lower Darboux sums} are:
+    \[
+    U(f,P) = \sum_{i=1}^n M_i\, (x_i - x_{i-1}),\qquad
+    L(f,P) = \sum_{i=1}^n m_i\, (x_i - x_{i-1})
+    \]
+\item \emph{Upper and lower integrals} are the infimum and supremum over all partitions:
+    \[
+    \overline{\int_a^b} f(x)\,dx = \inf_P U(f,P), \qquad
+    \underline{\int_a^b} f(x)\,dx = \sup_P L(f,P)
+    \]
+\end{enumerate}
+
+\begin{definition}
+We say $f$ is \textbf{Darboux (or Riemann) integrable} on $[a,b]$ if and only if
+\[
+\overline{\int_a^b} f(x)\,dx = \underline{\int_a^b} f(x)\,dx
+\]
+In this case, their common value, denoted $\int_a^b f(x)\,dx$, is the \textbf{definite integral} of $f$ from $a$ to $b$.
+\end{definition}
+
+\begin{examplex}
+Graphically, if $f(x)$ is continuous on $[a, b]$, slicing the interval into thinner and thinner subintervals gives more precise upper and lower rectangle approximations for the area under the graph of $f$. When the mesh size goes to zero, the two approximations squeeze together to the exact area.
+\end{examplex}
+
+\begin{remark}
+\textbf{Continuity implies integrability:} \emph{If $f$ is continuous on $[a, b]$, it is Darboux (and Riemann) integrable.}
+\end{remark}
+
+\begin{historicalnote}
+Darboux and Riemann developed equivalent formalizations of the integral. The "stretched S" in the integral notation actually comes from "sum" ($S$ or $\Sigma$), reflecting the original conception of the integral as a limit of sums.
+\end{historicalnote}
+
+\subsection{When Does the Definite Integral Not Exist? A Non-Example}
+
+\begin{nonexample}
+\textbf{Dirichlet Function.} Define $f: [0,1] \to \mathbb{R}$ by
+\[
+    f(x) = \begin{cases}
+        1 & \text{if } x \text{ is rational} \\
+        0 & \text{if } x \text{ is irrational}
+    \end{cases}
+\]
+This function is \emph{not} Riemann integrable: every interval, no matter how small, contains both rationals and irrationals, so all lower sums are zero (using $m_i = 0$), all upper sums are one ($M_i = 1$), and the upper and lower integral do not agree.
+\end{nonexample}
+
+\subsection{Interpreting the Integral Notation \texorpdfstring{$\int$}{int}}
+
+\begin{remark}
+The notation $\int_a^b f(x) dx$ is deeply meaningful:
+\begin{itemize}
+    \item The "elongated S" ($\int$) evokes "sum."
+    \item $f(x)$ is the \emph{height} of the function at $x$.
+    \item $dx$ is the \emph{width} of an infinitesimal subinterval.
+    \item Thus, $\int_a^b f(x) dx$ signifies summing up infinitely many infinitesimal rectangles of area $f(x)dx$ from $x=a$ to $x=b$.
+\end{itemize}
+\end{remark}
+
+\section{The Fundamental Theorem of Calculus: Bridging Differentiation and Integration}
+ 
+\subsection{Statement and Significance}
+
+\begin{theorem}[Fundamental Theorem of Calculus (Newton-Leibniz)]
+    Let $f$ be continuous on $[a, b]$, and let $F$ be any antiderivative of $f$ on $[a, b]$ (i.e., $F'(x)=f(x)$ for all $x$ in $[a, b]$). Then:
+    \[
+        \int_a^b f(x)\,dx = F(b) - F(a)
+    \]
+\end{theorem}
+
+\begin{remark}
+    This remarkable result is the elegant bridge connecting differentiation and integration. It allows us to compute the area under a curve without limits or sums: simply find a primitive, evaluate at endpoints, and subtract.
+\end{remark}
+
+\begin{historicalnote}
+This theorem was developed independently by Isaac Newton and Gottfried Wilhelm Leibniz in the 17th century—each giving a different notation, but both recognizing the unity between rate-of-change (derivative) and accumulation (integral).
+\end{historicalnote}
+
+\section{Further Remarks and Connections}
+
+\begin{itemize}
+    \item The methods and ideas developed here for rational functions are foundational for later topics, including multiple integrals and complex integration.
+    \item While we focused on elementary integrals, modern mathematics introduces numerous generalizations (e.g., Lebesgue integrals, Ito integrals). For this course, the Riemann/Darboux approach suffices.
+    \item When in doubt during computation, return to core principles: algebraic manipulation (division, factoring, completing the square), partial fractions, and substitution.
+\end{itemize}
+
+\section*{Summary and Looking Ahead}
+
+In this unit, we:
+\begin{itemize}
+    \item Clarified the structure of rational functions and cases for integration.
+    \item Developed systematic methods: division, substitution, decomposition, and geometric interpretation of the integral.
+    \item Explored the precise connection between integrals and area via Darboux's definition.
+    \item Introduced the Fundamental Theorem, unlocking a powerful computational shortcut.
+\end{itemize}
+In the following sessions, we will put these ideas into action—solving definite integrals and applying our knowledge to compute areas, and later, extend these concepts to higher dimensions with double integrals.
+
+\begin{announcement}
+    \begin{itemize}[leftmargin=1.5em]
+        \item \textbf{No class meeting} on Tuesday this week.
+        \item Practice/recitation sessions are highly recommended.
+        \item Stay tuned for further announcements regarding the start of the next module and any updates to the course schedule.
+        \item If you have administrative or content questions, please refer to the course website or contact the instructor directly.
+    \end{itemize}
+\end{announcement}
+
+\end{document}

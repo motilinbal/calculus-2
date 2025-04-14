@@ -1,0 +1,390 @@
+\documentclass[11pt,oneside]{article}
+\usepackage{amsmath,amssymb,amsthm,geometry,enumitem,hyperref,mathtools,framed}
+\geometry{margin=1in}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{remark}
+\newtheorem*{administrative_note}{Administrative Announcement}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{2em}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Improper Integrals: Definitions, Techniques, and Convergence}}
+
+    \vspace{0.5em}
+
+    \textbf{Lecture Notes and Announcements}
+
+    \vspace{0.3em}
+    \emph{Prepared for Undergraduate Calculus Students}
+\end{center}
+
+\bigskip
+
+\begin{administrative_note}
+\vspace{0.8em}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Course Update:} Until further notice, classes will be held via Zoom and not in person. Please check your course email for the meeting link and updates.
+    \item \textbf{Office Hours:} If you have further questions or would like to discuss additional problems, you are encouraged to reach out after class or during designated office hours.
+    \item \textbf{Exercise:} Some results and techniques (such as convergence for certain $\alpha$ in improper integrals) are left for you to prove at home with the guidance below.
+    \item \textbf{General Note:} If you have any concerns or questions about course structure, scheduling, logistics, or assessment, please communicate with the instructional staff as early as possible.
+\end{itemize}
+\vspace{0.7em}
+\end{administrative_note}
+
+\bigskip
+
+\section{Motivation: Why Improper Integrals?}
+
+In your calculus journey so far, you have learned to compute definite integrals of continuous functions over closed, bounded intervals.
+But what happens when:
+\begin{itemize}
+    \item The interval of integration is infinite, e.g., $\int_1^{\infty} \frac{1}{x^2}\,dx$?
+    \item The function is unbounded at a point within or at the endpoint of the interval, e.g., $\int_0^1 \frac{1}{\sqrt{x}}\,dx$?
+\end{itemize}
+
+Such integrals occur frequently in applications and in theoretical mathematics: for instance, in probability theory (normal distribution), in analyzing series (by comparison with integrals), and in physics (potential fields, etc.). To handle these, we \textbf{extend the definition of the definite integral} using limits, entering the world of \emph{improper integrals}.
+
+\section{Improper Integrals: Definitions and First Examples}
+
+\subsection{Improper Integrals at Finite Endpoints (Unbounded Functions)}
+
+Suppose $f$ is defined on an interval $[a, b)$ (that is, it may not be defined or may blow up at $b$) and $f$ is \emph{bounded} and \emph{integrable} on every subinterval $[a, t]$ for $t < b$.
+We define the \emph{improper integral}
+\[
+\int_a^b f(x)\,dx := \lim_{t \to b^-} \int_a^t f(x)\,dx
+\]
+provided this limit exists (and is finite!).
+
+Likewise, if $f$ is problematic (e.g., becomes infinite) at $a$, one writes:
+\[
+\int_a^b f(x)\,dx := \lim_{t \to a^+} \int_t^b f(x)\,dx
+\]
+Again, provided the limit exists.
+
+\paragraph{Intuitive picture:}
+We avoid values where $f$ is not defined by integrating short of the problematic endpoint, and take the limit as we approach it.
+
+\vspace{0.7em}
+\noindent
+\textbf{Fundamental Question:} Does the limit exist (and is it finite)? If yes, we say the improper integral \textbf{converges}. If the limit does not exist or is infinite, we say the improper integral \textbf{diverges}.
+
+\subsection{A Classic Example: $\displaystyle \int_0^1 \frac{1}{\sqrt{x}}\,dx$}
+
+\begin{example}
+Let us consider the function $f(x) = \dfrac{1}{\sqrt{x}}$ on the interval $(0,1]$. Note that $f$ is \href{https://en.wikipedia.org/wiki/Unbounded_function}{\emph{unbounded}} as $x \to 0^+$: $f(x) \to \infty$.
+
+We define the improper integral:
+\[
+\int_0^1 \frac{1}{\sqrt{x}}\,dx := \lim_{t\to 0^+} \int_t^1 \frac{1}{\sqrt{x}}\,dx
+\]
+We compute:
+\begin{align*}
+\int_t^1 \frac{1}{\sqrt{x}}\,dx
+    &= \left[2\sqrt{x}\right]_{x=t}^{x=1} = 2\sqrt{1} - 2\sqrt{t} = 2 - 2\sqrt{t} \\
+\Rightarrow \int_0^1 \frac{1}{\sqrt{x}}\,dx
+    &= \lim_{t\to 0^+} (2 - 2\sqrt{t}) = 2
+\end{align*}
+
+\textbf{Conclusion:} Though $f(x)$ blows up at $0$, the area under the curve from $0$ to $1$ is \emph{finite}: the improper integral converges to $2$.
+
+\textbf{Visual intuition:} The graph of $1/\sqrt{x}$ on $(0,1]$ rises steeply near $x=0$, but the ``area'' does not become infinite.
+\end{example}
+
+\begin{remark}
+Why can we compute the area, even though $f$ is not defined at $x=0$? The improper integral is defined as a limit that never actually plugs in $x=0$. Instead, it considers areas starting at $x=t>0$, then lets $t \to 0^+$.
+\end{remark}
+
+\section{Improper Integrals: General Definition}
+
+\begin{definition}[Improper Integral of the First Kind]
+Let $f:[a, b) \to \mathbb{R}$ be a function bounded and integrable on $[t, b]$ for all $t > a$. Then
+\[
+\int_a^b f(x)\,dx := \lim_{t \to a^+} \int_t^b f(x)\,dx
+\]
+if this limit \emph{exists} and is finite.
+
+If not, we say the integral \emph{diverges}.
+\end{definition}
+
+A similar definition is given for $f$ defined on $(a, b]$, with a possible singularity at $b$:
+\[
+\int_a^b f(x)\,dx := \lim_{t \to b^-} \int_a^t f(x)\,dx
+\]
+
+\begin{remark}
+An interval $[a, b)$ is called a \emph{half-open interval}. At the ``open'' end, the function may not be defined or may be unbounded. Our limits always approach from within the domain of $f$.
+\end{remark}
+
+\begin{example}[Singularity at the Right Endpoint]
+Calculate
+\[
+\int_0^1 \frac{1}{\sqrt{1-x^2}}\,dx
+\]
+
+\textbf{Solution:}
+Here, the integrand $f(x) = \frac{1}{\sqrt{1-x^2}}$ is unbounded at $x=1$.
+
+We set
+\[
+\int_0^1 \frac{1}{\sqrt{1-x^2}}\,dx = \lim_{t \to 1^-} \int_0^t \frac{1}{\sqrt{1-x^2}}\,dx
+\]
+
+The antiderivative is $\arcsin x$, so:
+\begin{align*}
+\int_0^t \frac{1}{\sqrt{1-x^2}}\,dx = \arcsin t - \arcsin 0 = \arcsin t
+\end{align*}
+Therefore,
+\[
+\int_0^1 \frac{1}{\sqrt{1-x^2}}\,dx = \lim_{t \to 1^-} \arcsin t = \arcsin 1 = \frac{\pi}{2}
+\]
+
+\textbf{Conclusion:} The improper integral converges to $\frac{\pi}{2}$. This is, in fact, the area of a quarter of the unit circle.
+\end{example}
+
+\begin{example}[Divergence at Endpoint]
+Consider
+\[
+\int_0^1 \frac{1}{x^2}\,dx
+\]
+We have (for $t > 0$):
+\[
+\int_t^1 \frac{1}{x^2}\,dx = \left[ -\frac{1}{x} \right]_{t}^1 = -1 + \frac{1}{t}
+\]
+As $t \to 0^+$, $1/t \to \infty$, so:
+\[
+\int_0^1 \frac{1}{x^2}\,dx = \infty
+\]
+\textbf{Conclusion:} The improper integral \emph{diverges}; the area under $1/x^2$ near $0$ is infinite.
+\end{example}
+
+\section{A Family of Examples: Powers of $x$ at the Endpoint}\label{sec:power_examples}
+
+A natural question is: For which $p > 0$ does the integral
+\[
+\int_0^1 \frac{1}{x^p}\,dx
+\]
+converge?
+
+Let's analyze this in full generality:
+
+\begin{theorem}
+Let $\alpha \in \mathbb{R}$. Consider the improper integral
+\[
+I(\alpha) = \int_0^b x^{-\alpha}\,dx
+\]
+for $b > 0$. Then:
+\begin{itemize}
+    \item[(a)] If $\alpha < 1$, the integral converges.
+    \item[(b)] If $\alpha \geq 1$, the integral diverges.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+We compute, for $t \in (0, b)$:
+\[
+I(\alpha, t) = \int_t^b x^{-\alpha}\,dx =
+\begin{cases}
+    \left. \frac{x^{1-\alpha}}{1-\alpha} \right|_{x=t}^{x=b}, & \text{if } \alpha \neq 1 \\
+    \left. \ln x \right|_{x=t}^{x=b}, & \text{if } \alpha = 1
+\end{cases}
+\]
+
+For $\alpha \neq 1$:
+\[
+I(\alpha, t) = \frac{b^{1-\alpha} - t^{1-\alpha}}{1-\alpha}
+\]
+Take the limit as $t \to 0^+$. Suppose $\alpha < 1$ so $1-\alpha>0$:
+\[
+t^{1-\alpha} \to 0, \quad I(\alpha) = \frac{b^{1-\alpha}}{1-\alpha}
+\]
+\emph{Converges.}
+
+But if $\alpha > 1$, then $1-\alpha<0$, so $t^{1-\alpha} \to \infty$, and the integral diverges to infinity.
+
+In the special case $\alpha=1$:
+\[
+I(1, t) = \ln b - \ln t = \ln\left(\frac{b}{t}\right) \to \infty \text{ as } t \to 0^+
+\]
+Again, the integral diverges.
+
+\end{proof}
+
+\begin{example}
+Consider:
+\begin{enumerate}
+    \item For $\alpha = \frac{1}{2}$, $\int_0^1 \dfrac{1}{x^{1/2}}\,dx$ converges (see earlier Example).
+    \item For $\alpha = 2$, $\int_0^1 \dfrac{1}{x^2}\,dx$ diverges (computed above).
+    \item For $\alpha = 1$, $\int_0^1 \dfrac{1}{x}\,dx$ diverges (see previous discussion).
+\end{enumerate}
+\end{example}
+
+\begin{remark}
+\textbf{Intuition:} The function rises \emph{too fast} near $x=0$ when the exponent is too large ($\alpha \geq 1$), so the area accumulates without bound.
+\end{remark}
+
+\section{Root and Trigonometric Integrals: Further Illustrations}
+
+\begin{example}[Improper Integral involving Trigonometric Functions]
+Compute:
+\[
+\int_0^{\pi/2} \frac{\cos x}{\sqrt{1 - \sin x}}\,dx
+\]
+
+\textit{Solution:}
+Let $u = 1 - \sin x$, so $du = -\cos x\,dx$, or $dx = -\frac{du}{\cos x}$.
+
+Alternatively, set $y = \sin x$, so $dy = \cos x\,dx$. When $x = 0$, $y = 0$. When $x = \pi/2$, $y = 1$.
+
+Thus,
+\[
+\int_0^{\pi/2} \frac{\cos x}{\sqrt{1 - \sin x}}\,dx = \int_{y=0}^{y=1} \frac{dy}{\sqrt{1 - y}} 
+\]
+This is the same as $\int_0^1 (1-y)^{-1/2}\,dy$, which we've already calculated:
+
+\[
+\int_0^1 (1-y)^{-1/2}\,dy = \lim_{t\to 1^-} \int_0^t (1-y)^{-1/2}\,dy = \lim_{t\to 1^-} \left[-2\sqrt{1-y}\right]_0^t = 2 - 0 = 2
+\]
+
+\textbf{Conclusion:} The value is $2$.
+\end{example}
+
+\section{Advanced Example: Substitution and Complex Integrands}
+
+\begin{example}
+Evaluate:
+\[
+\int_{\ln 2}^{\ln 9} \frac{1}{\sqrt[3]{e^x-1}}\,dx
+\]
+
+\textit{Solution:} Let $t = e^x$, so $dt = e^x dx$ and $dx = dt/t$. When $x = \ln 2$, $t = 2$; when $x = \ln 9$, $t = 9$. Thus,
+\[
+\int_{\ln 2}^{\ln 9} \frac{1}{\sqrt[3]{e^x-1}}\,dx
+ = \int_{2}^{9} \frac{1}{\sqrt[3]{t-1}} \cdot \frac{dt}{t}
+\]
+
+This is still not conveniently integrable, but represents a more tractable substitution. Further substitutions (for instance, $u = (t-1)^{1/3}$) may or may not lead to an elementary expression. The essential lesson is the flexible use of substitution in analyzing improper integrals.
+
+\end{example}
+
+\section{Comparison Tests for Improper Integrals}
+
+Often, one cannot compute an improper integral directly, but wishes to know whether it converges. The following is a key tool:
+
+\begin{theorem}[Comparison Test for Improper Integrals]
+Let $f$ and $g$ be non-negative functions on $[a, b)$. Suppose $f(x) \leq g(x)$ for all $x$ in some right-hand neighborhood $[a, a+\delta)$ for some $\delta > 0$, and that both are integrable on $[t, b]$ for all $t \in (a,b)$. Then:
+\begin{enumerate}
+    \item If $\int_a^b g(x)\,dx$ converges, then so does $\int_a^b f(x)\,dx$.
+    \item If $\int_a^b f(x)\,dx$ diverges, then so does $\int_a^b g(x)\,dx$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+In many practical cases, the inequality holds on the whole interval.
+\end{remark}
+
+\subsection{Worked Examples}
+
+\begin{example}
+Determine the convergence of
+\[
+\int_1^2 \frac{1}{\ln x}\,dx
+\]
+\textbf{Solution:} As $x \to 1^+$, $\ln x \sim x-1$. Therefore, for $x$ near $1$,
+\[
+\frac{1}{\ln x} > \frac{1}{x-1}
+\]
+We know that
+\[
+\int_1^2 \frac{1}{x-1}\,dx = \left[ \ln(x-1) \right]_{x=1}^{x=2} = \ln 1 - \ln 0 = -\infty
+\]
+The improper integral diverges, so by the comparison test, so does $\int_1^2 \frac{1}{\ln x}\,dx$.
+
+\emph{Moral:} Even though $1/\ln x$ grows slowly, it's still too wild near $x=1$ for the area to be finite!
+\end{example}
+
+\begin{example}
+Analyze the convergence of:
+\[
+\int_0^1 \frac{1}{\sqrt{x} + 4x^{1/5} + 2x^{1/3}}\,dx
+\]
+
+Note that as $x \to 0^+$, $\sqrt{x} \ll x^{1/5} \ll x^{1/3}$, so the denominator is approximately $\sqrt{x}$, which is smallest.
+
+Thus,
+\[
+\frac{1}{\sqrt{x} + 4x^{1/5} + 2x^{1/3}} < \frac{1}{\sqrt{x}}
+\]
+
+From previous calculations, $\int_0^1 1/\sqrt{x}\,dx$ converges. So by the comparison test, our integral converges as well.
+\end{example}
+
+\begin{example}
+Evaluate the convergence of
+\[
+\int_0^1 \frac{x^2}{\sqrt{x^2 + 13}}\,dx
+\]
+For $x \to 0$, the numerator $x^2 \to 0$ much faster than the denominator $\sqrt{x^2 + 13} \to \sqrt{13}$. Thus the function is actually continuous at $x=0$ and the integral is proper (finite). Hence, the integral converges.
+\end{example}
+
+\subsection{Theoretical Insights}
+
+\begin{remark}
+\textbf{Why care about convergence?} Sometimes we do not need the actual value of an integral---only to know whether it is finite! For example, in probability, some quantities are only meaningful if the area under a density curve is finite.
+\end{remark}
+
+\section{Applications and Connections}
+
+\subsection{Improper Integrals in Probability}
+
+Consider the normal distribution (bell curve), whose density function is 
+\[
+f(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\]
+Defined for all $x \in \mathbb{R}$. To find the probability that a random variable $X$ lies in $[a,b]$:
+\[
+P(a \leq X \leq b) = \int_a^b f(x)\,dx
+\]
+Since $f$ is defined on all of $\mathbb{R}$, the total area:
+\[
+\int_{-\infty}^\infty f(x)\,dx = 1
+\]
+is an improper integral! Convergence of this area is crucial for $f$ to serve as a probability density.
+
+\subsection{Improper Integrals in Statistics}
+
+In statistics, many distributions (e.g., exponential, normal, Cauchy) require integrating over an infinite or semi-infinite range to compute probabilities or expected values. Improper integrals are essential in formalizing such computations.
+
+\section{Concluding Remarks}
+
+We have seen that improper integrals elegantly generalize the concept of area and total accumulation to include scenarios where the integrand or integration limits exhibit ``improper'' behavior. Mastery of these ideas will serve you in numerous branches of analysis, probability, and applied mathematics.
+
+If you have questions about course material or logistics, do not hesitate to reach out via email or in virtual office hours.
+
+\medskip
+
+\hrule
+\vspace{0.5em}
+\noindent
+\textbf{Administrative Announcement (Summary):}
+\begin{itemize}
+    \item Next class will be held on \textbf{Zoom}.
+    \item Additional assignment guidelines and results to be posted online.
+    \item If you are unsure about the convergence of a specific improper integral, use comparison tests or ask during office hours.
+\end{itemize}
+\vspace{0.5em}
+\hrule
+
+\end{document}

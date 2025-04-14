@@ -1,50 +1,458 @@
-The quotient is $S(x) = 3x+5$ and the remainder is $R(x) = -5x-1$.
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{environ}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+\theoremstyle{definition}
+\newtheorem{exercise}[definition]{Exercise}
+
+\NewEnviron{administrative_note}{
+  \begin{center}
+    \setlength{\fboxrule}{1pt}
+    \fbox{
+      \begin{minipage}{0.91\textwidth}
+        \bfseries \textcolor{blue}{Administrative Announcement}\\[2pt]
+        \begin{minipage}{\textwidth}
+          \BODY
+        \end{minipage}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+\begin{document}
+
+%--------------------%
+% Administrative     %
+%--------------------%
+
+\begin{administrative_note}
+    \begin{itemize}
+        \item \textbf{Recap:} This week you began the topic of \emph{integrals}. The lecture covered the concept of the indefinite integral, its meaning, the two primary methods (substitution and integration by parts), and guidance on their effective application.
+        \item \textbf{Course Logistics:}
+            \begin{itemize}
+                \item \textbf{Homework:} Exercises on integration techniques are assigned to reinforce the lecture material. Please review the designated problem list on the course \emph{Moodle} or according to the instructor's latest communication.
+                \item \textbf{Quizzes/Exams:} Material on the substitution and integration by parts methods may appear in quizzes and exams.
+                \item \textbf{Reference Materials:} You are encouraged to consult the recommended textbook series and supplementary resources. If you have trouble finding free resources, instructors can provide guidance on where to access them.
+                \item \textbf{Schedule:} Next week, the lecture will delve deeper into the geometric and interpretive meaning of the integral (areas, domains of integration, etc.), and introduce integration in several variables.
+            \end{itemize}
+        \item \textbf{Office Hours and Q\&A:}
+            \begin{itemize}
+                \item You are strongly encouraged to attend scheduled practice sessions and to ask questions in class or via the course forum.
+                \item For additional assistance, the lecturer recommends beginning with simpler polynomial integration before advancing to more complex rational or trigonometric integrands.
+            \end{itemize}
+    \end{itemize}
+\end{administrative_note}
+
+\section*{The Integral: Motivation and Fundamental Concepts}
+
+\subsection*{Why Integrals?}
+
+Recall that differentiation gives you the rate of change of a function — for instance, the slope of the tangent line at a point. But often, we face the \emph{inverse} problem: Suppose we are given the derivative (rate of change), can we reconstruct the \emph{original} function (up to a constant)? This is the central question that integration answers.
+
+\bigskip
+
+\begin{quote}
+\textbf{Guiding Question:} Given a function $f(x)$ which is the derivative of some (unknown) function $F(x)$, can we determine $F(x)$?
+\end{quote}
+
+\subsection*{The Indefinite Integral}
+
+\begin{definition}[Antiderivative and Indefinite Integral]
+A function $F$ is called an \emph{antiderivative} (or \emph{primitive}) of $f$ on an interval $I$ if
+\[
+    F'(x) = f(x) \quad \text{for all } x \in I.
+\]
+The process of finding $F$ given $f$ is called \emph{integration}, and $F$ is sometimes denoted
+\[
+    F(x) = \int f(x)\, dx
+\]
+where the arbitrary constant of integration is suppressed (but must always be recalled).
+\end{definition}
+
+\begin{remark}
+Unlike differentiation, which is (almost always) unique, integration produces a whole family of functions: if $F$ is an antiderivative, so is $F + C$ for any $C \in \mathbb{R}$.
+\end{remark}
+
+\subsection*{A Word on Notation: The $dx$}
+
+The $dx$ in the integral sign has several roles:
+\begin{itemize}
+    \item It indicates that integration is being performed with respect to $x$;
+    \item It arises from Riemann sums, where we sum $f(x_i^*)\Delta x$ over small subdivisions;
+    \item In multivariable calculus, it clarifies which variable we are integrating.
+\end{itemize}
+
+Don't be alarmed if in advanced courses you see integrals like $\iint f(x, y)\, dx\,dy$. For now, always write \emph{which} variable you are integrating in your single-variable calculations.
+
+\section{Two Essential Methods for Integrating Functions}
+
+Integration is not as algorithmic as differentiation. Most integrals require \emph{techniques} — methods that transform the integrand into a more manageable form. The two most fundamental techniques are:
+
+\begin{itemize}
+    \item \textbf{Integration by Parts}
+    \item \textbf{Substitution (Change of Variables)}
+\end{itemize}
+
+\subsection{Integration by Parts}
+
+\vspace{1ex}
+\begin{quote}
+\textbf{Heuristic:} When faced with a product of two functions, neither of which is easy to integrate outright, integration by parts allows you to ``trade'' a difficult integral for a simpler one.
+\end{quote}
+\vspace{1ex}
+
+\begin{theorem}[Integration by Parts Formula]\label{thm:parts}
+Let $u(x), v(x)$ be differentiable functions on an interval $I$. Then:
+\[
+    \int u'(x) v(x)\, dx = u(x) v(x) - \int u(x) v'(x)\, dx\,.
+\]
+Equivalently, in the more familiar ``$udv$'' form:
+\[
+    \int u\, dv = uv - \int v\, du\,,
+\]
+where $du = u'(x)dx$, $dv = v'(x)dx$.
+\end{theorem}
+
+\begin{proof}[Intuitive Derivation]
+Recall the product rule:
+\[
+    \frac{d}{dx} [u(x) v(x)] = u'(x) v(x) + u(x) v'(x)\,.
+\]
+Integrate both sides with respect to $x$:
+\[
+    \int \frac{d}{dx}[u(x)v(x)]\,dx = \int u'(x) v(x)\,dx + \int u(x) v'(x)\,dx\,.
+\]
+By the Fundamental Theorem of Calculus, the left side is $u(x)v(x)$ (omitting constant). Rearranging gives the desired formula.
+\end{proof}
+
+\begin{quote}
+\textbf{Strategic Choice:} The art in applying integration by parts is in choosing $u$ and $dv$. A good rule of thumb: \emph{choose $u$ such that $du$ is simpler than $u$, and $dv$ is easy to integrate to $v$.}
+\end{quote}
+
+\subsubsection*{Example 1: Integrating $\int \ln(x^2 + 2)\, dx$}
+
+Let us go through the example in close detail.
+
+\begin{example}\label{ex:lnx2plus2}
+Evaluate $\displaystyle \int \ln(x^2 + 2)\, dx$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Step 1: Identify the structure.} This is a single function, not a product. However, since $\ln(x^2+2)$ is ``complicated'', and its derivative is rational, we can treat the integral as follows:
+
+Set $\ln(x^2 + 2)$ as $u$, and $dv = dx$.
+\begin{align*}
+    u &= \ln(x^2 + 2) & dv &= dx \\
+    du &= \frac{2x}{x^2+2}dx & v &= x
+\end{align*}
+
+\textbf{Step 2: Apply the parts formula}
+\[
+\int \ln(x^2+2)\, dx = x \ln(x^2+2) - \int x \cdot \frac{2x}{x^2+2}\, dx
+\]
+Simplify:
+\[
+= x \ln(x^2+2) - 2 \int \frac{x^2}{x^2+2} dx
+\]
+
+\textbf{Step 3: Simplify the integrand further:}
+\[
+\frac{x^2}{x^2+2} = 1 - \frac{2}{x^2+2}
+\]
 Therefore,
-\[ \frac{3x^3+5x^2-2x+4}{x^2+1} = (3x+5) + \frac{-5x-1}{x^2+1} \]
-Now we integrate:
-\[ \int \frac{3x^3+5x^2-2x+4}{x^2+1} \dx = \int (3x+5) \dx + \int \frac{-5x-1}{x^2+1} \dx \]
-Split the second integral:
-\[ = \int (3x+5) \dx + \int \frac{-5x}{x^2+1} \dx + \int \frac{-1}{x^2+1} \dx \]
-Evaluate each part:
-\begin{itemize}
-    \item $\int (3x+5) \dx = \frac{3x^2}{2} + 5x + C_1$
-    \item $\int \frac{-1}{x^2+1} \dx = -\arctan(x) + C_2$
-    \item For $\int \frac{-5x}{x^2+1} \dx$, use substitution $t = x^2+1$. Then $dt = 2x \dx$, so $x \dx = \frac{1}{2} dt$.
-    \[ \int \frac{-5x}{x^2+1} \dx = \int \frac{-5}{t} \left(\frac{1}{2} dt\right) = -\frac{5}{2} \int \frac{1}{t} dt = -\frac{5}{2} \ln|t| + C_3 \]
-    Substitute back $t = x^2+1$. Since $x^2+1$ is always positive, we don't need the absolute value:
-    \[ = -\frac{5}{2} \ln(x^2+1) + C_3 \]
-\end{itemize}
-Combining all parts and merging the constants into a single $C$:
-\[ \int \frac{3x^3+5x^2-2x+4}{x^2+1} \dx = \frac{3x^2}{2} + 5x - \arctan(x) - \frac{5}{2} \ln(x^2+1) + C \]
+\[
+\int \ln(x^2+2) dx = x \ln(x^2+2) - 2 \int \left(1 - \frac{2}{x^2+2}\right) dx
+= x \ln(x^2+2) - 2\int dx + 4\int \frac{1}{x^2+2} dx 
+\]
+\[
+= x \ln(x^2+2) - 2x + 4 \cdot \frac{1}{\sqrt{2}} \arctan\left(\frac{x}{\sqrt{2}}\right) + C
+\]
+
+\begin{flushright}
+    $\boxed{\,x \ln(x^2 + 2) - 2x + \frac{4}{\sqrt{2}} \arctan \frac{x}{\sqrt{2}} + C\,}$
+\end{flushright}
+
+\textit{Clarification:} The key move was seeing the integrand as $x^2/(x^2 + 2)$, which pulls apart into $1 - 2/(x^2 + 2)$. This is a standard substitution that often appears when integrating quotients of polynomials.
+\end{proof}
+
+\begin{remark}
+If your answer looks slightly different but mathematically equivalent (due to, for instance, writing $2\sqrt{2}$ instead of $\frac{4}{\sqrt{2}}$), recall that constants may be simplified as you wish.
+\end{remark}
+
+\subsection{Substitution (Change of Variables)}
+
+\begin{definition}[Substitution]
+Suppose $u = g(x)$ is a differentiable function and $f$ is continuous. Then
+\[
+    \int f(g(x)) g'(x)\, dx = \int f(u)\, du
+\]
+where $du = g'(x)dx$.
+\end{definition}
+This is the most direct application, but more generally, substitution is a way to ``repackage'' complicated integrals by introducing a new variable, often making the integral much more tractable.
+
+\begin{remark}
+There are subtleties with substitution, especially regarding limits of integration and the form of $dx$ after substitution. Be precise — always express everything in the integral (including $dx$) in terms of the new variable.
+\end{remark}
+
+\subsubsection*{Example 2: Integrating $\int \sin^3 x \cos^2 x\, dx$}
+
+\begin{example}\label{ex:sin3cos2}
+Evaluate $\displaystyle \int \sin^3 x \cos^2 x\, dx$.
 \end{example}
 
-\begin{example}[Revisiting $x \arctan x$] \label{ex:x_arctan_x}
-Calculate $\int x \arctan(x) \dx$. (This example was discussed in the context of a past quiz).
+\begin{proof}[Solution]
+\textbf{Step 1: Recognize potential for substitution.} Notice that both $\sin$ and $\cos$ are present in powers. A classic approach is to save one $\sin x$ factor for $dx$, and write the rest in terms of $\cos x$:
+\[
+\sin^3 x \cos^2 x = \sin^2 x \cos^2 x \cdot \sin x = (1 - \cos^2 x) \cos^2 x \cdot \sin x
+\]
+\[
+= [\cos^2 x - \cos^4 x] \sin x
+\]
 
-\textit{Solution:} This requires Integration by Parts. We choose $u = \arctan(x)$ because its derivative is simpler, and $dv = x \dx$ because it's easy to integrate.
-Let $u = \arctan(x)$ and $dv = x \dx$.
-\begin{itemize}
-    \item $u = \arctan(x) \implies du = \frac{1}{1+x^2} \dx$
-    \item $dv = x \dx \implies v = \int x \dx = \frac{x^2}{2}$
-\end{itemize}
-Using the formula $\int u \, dv = uv - \int v \, du$:
-\[ \int x \arctan(x) \dx = \arctan(x) \left(\frac{x^2}{2}\right) - \int \left(\frac{x^2}{2}\right) \left(\frac{1}{1+x^2}\right) \dx \]
-\[ = \frac{x^2}{2} \arctan(x) - \frac{1}{2} \int \frac{x^2}{1+x^2} \dx \]
-To evaluate the remaining integral, use algebraic manipulation similar to Example \ref{ex:ln_x2_plus_2}:
-\[ \int \frac{x^2}{1+x^2} \dx = \int \frac{(x^2+1)-1}{1+x^2} \dx = \int \left( 1 - \frac{1}{1+x^2} \right) \dx \]
-\[ = \int 1 \dx - \int \frac{1}{1+x^2} \dx = x - \arctan(x) + C' \]
-Substituting this back:
-\[ \int x \arctan(x) \dx = \frac{x^2}{2} \arctan(x) - \frac{1}{2} (x - \arctan(x)) + C \]
-\[ = \frac{x^2}{2} \arctan(x) - \frac{1}{2}x + \frac{1}{2}\arctan(x) + C \]
-\[ = \frac{x^2+1}{2} \arctan(x) - \frac{x}{2} + C \]
+\textbf{Step 2: Set} $u = \cos x$, so $du = -\sin x\, dx \implies -du = \sin x\, dx$.
+
+\textbf{Step 3: Substitute:}
+\[
+\int \sin^3 x \cos^2 x\, dx
+= \int [u^2 - u^4] \cdot \sin x\, dx
+= -\int (u^2 - u^4) du
+= -\int u^2\, du + \int u^4\, du
+= -\frac{1}{3} u^3 + \frac{1}{5} u^5 + C
+\]
+\[
+= -\frac{1}{3} \cos^3 x + \frac{1}{5} \cos^5 x + C
+\]
+
+\begin{flushright}
+    $\boxed{-\frac{1}{3} \cos^3 x + \frac{1}{5} \cos^5 x + C}$
+\end{flushright}
+
+\textit{Alternative:} You could also choose $u = \sin x$ and proceed similarly.
+\end{proof}
+
+\begin{remark}[On Cyclic Integrals]
+For some integrals involving both $\sin$ and $\cos$ (or $e^{ax}$ and $\sin$ or $\cos$), integrating by parts repeatedly may “cycle” and not terminate directly. In such cases, substitution and pattern recognition (including tabular integration, or dealing with systems of integrals) are often required.
+\end{remark}
+
+\subsection{Administrative Note — On $dx$ and Multivariable Integrals}
+As highlighted during the lecture, always include $dx$ (or $dt$, etc.) to specify clearly which variable you are integrating with respect to. This becomes especially important in later courses with multivariable integration (e.g., $\idotsint f(x, y, z)\, dx\, dy\, dz$). For now, remember \emph{every} indefinite integral includes $dx$.
+
+\section{Further Original Examples and Techniques}
+
+\subsection*{Example 3: Polynomial Division in Integration}
+
+\begin{example}\label{ex:polydivision}
+Evaluate
+\[
+\int \frac{3x^3 + 5x^2 - 2x + 4}{x^2 + 1}\, dx
+\]
 \end{example}
 
-\begin{administrative}
-    \item \textbf{Homework:** Example \ref{ex:ln_1_plus_sqrt_x} ($\int \ln(1+\sqrt{x}) \dx$) appeared as a non-graded homework problem (Section Vav in a previous assignment list). Example \ref{ex:x_arctan_x} ($\int x \arctan x \dx$) was mentioned as similar to a past quiz question. An example involving $e^{ax}\sin(bx)$ was mentioned as homework, to be discussed next week (related to periodic integrals).
-    \item \textbf{Quiz/Exam Info:** A quiz date was mentioned but not specified. Be aware that forgetting the constant of integration ($+C$) can result in a point deduction (e.g., 5 points mentioned). Example \ref{ex:x_arctan_x} is indicative of quiz/exam level questions.
-    \item \textbf{Next Week's Topics:** We will cover definite integrals, the concept of area under a curve, techniques for periodic integrals (like those involving $e^{ax}\sin(bx)$ or $e^{ax}\cos(bx)$), and partial fraction decomposition for integrating rational functions.
-    \item \textbf{Learning Resources:** Review sessions are available. External resources like specific YouTube channels or book series (e.g., Stewart's Calculus, mentioned as "Kalkulus") can be helpful for additional practice and explanation. Start with simpler problems (like polynomial integration) if you feel the basics are shaky.
-    \item \textbf{Notation:** Remember that $\dx$ indicates the variable of integration and will become more significant when we discuss definite integrals and multivariable calculus later.
-\end{administrative}
+\begin{proof}[Solution]
+\textbf{Step 1: Perform long division}:
+\begin{align*}
+3x^3 + 5x^2 - 2x + 4 = (x^2 + 1)\cdot(3x + 5) + (-5x - 1)
+\end{align*}
+So,
+\[
+\frac{3x^3 + 5x^2 - 2x + 4}{x^2 + 1} = 3x + 5 + \frac{-5x - 1}{x^2 + 1}
+\]
+
+\textbf{Step 2: Integrate term by term:}
+\begin{align*}
+\int \frac{3x^3 + 5x^2 - 2x + 4}{x^2 + 1} dx 
+    &= \int (3x + 5) dx + \int \frac{-5x}{x^2 + 1} dx + \int \frac{-1}{x^2 + 1} dx \\
+    &= \frac{3}{2} x^2 + 5x - 5 \int \frac{x}{x^2 + 1} dx - \int \frac{1}{x^2 + 1} dx
+\end{align*}
+
+Let us compute $\int \frac{x}{x^2+1} dx$:
+\[
+\text{Let } u = x^2 + 1, \quad du = 2x dx \implies x dx = \frac{1}{2} du
+\]
+So,
+\[
+\int \frac{x}{x^2 + 1} dx = \frac{1}{2} \int \frac{du}{u} = \frac{1}{2} \ln|x^2 + 1| + C
+\]
+
+And,
+\[
+\int \frac{1}{x^2+1} dx = \arctan x + C
+\]
+
+\textbf{Combine results:}
+\[
+= \frac{3}{2} x^2 + 5x - 5 \cdot \left( \frac{1}{2} \ln(x^2 + 1) \right ) - \arctan x + C
+= \frac{3}{2} x^2 + 5x - \frac{5}{2} \ln(x^2 + 1) - \arctan x + C
+\]
+\end{proof}
+
+\begin{remark}
+Whenever you have a rational function (degree numerator $\geq$ degree denominator), perform polynomial division before integrating.
+\end{remark}
+
+\subsection*{Example 4: Completing the Square and Recognizing Standard Forms}
+
+\begin{example}\label{ex:completesquare}
+Evaluate $\displaystyle \int \frac{1}{x^2 + 2x + 10}\, dx$.
+\end{example}
+
+\begin{proof}[Solution]
+Complete the square in the denominator:
+\[
+x^2 + 2x + 10 = (x + 1)^2 + 9
+\]
+This brings the integral to standard form:
+\[
+\int \frac{1}{(x+1)^2 + 3^2}\, dx = \frac{1}{3} \arctan\left( \frac{x+1}{3} \right ) + C
+\]
+\end{proof}
+
+\subsection{Trigonometric Substitution}
+
+\begin{example}\label{ex:trigsub}
+Evaluate $\displaystyle \int \frac{dx}{x^2 \sqrt{9 - x^2}}$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Step 1: Substitute $x = 3 \cos\theta$} (since $9 - x^2$ suggests $\sin$/$\cos$):
+\begin{align*}
+x &= 3 \cos\theta \implies dx = -3\sin\theta d\theta \\
+x^2 &= 9 \cos^2\theta \\
+9 - x^2 &= 9 (1 - \cos^2\theta) = 9 \sin^2\theta \implies \sqrt{9 - x^2} = 3\sin\theta
+\end{align*}
+Substitute all into the integral:
+\[
+\int \frac{dx}{x^2 \sqrt{9 - x^2}} 
+= \int \frac{-3\sin\theta\, d\theta}{9 \cos^2\theta \cdot 3\sin\theta}
+= \int \frac{-1}{9 \cos^2\theta} d\theta = -\frac{1}{9} \int \sec^2\theta\, d\theta
+= -\frac{1}{9} \tan\theta + C
+\]
+Now, express $\tan\theta$ in terms of $x$:
+\begin{align*}
+\cos\theta = x/3 \implies \sin\theta = \sqrt{1 - (x/3)^2} = \frac{\sqrt{9 - x^2}}{3} \\
+\tan\theta = \frac{\sin\theta}{\cos\theta} = \frac{\sqrt{9 - x^2}}{x}
+\end{align*}
+Therefore,
+\[
+\boxed{\, -\frac{1}{9} \cdot \frac{\sqrt{9 - x^2}}{x} + C\, }
+\]
+\end{proof}
+
+\section{Application: Integration by Parts with Inverse Trig Functions}
+
+\begin{example}\label{ex:arcsin}
+Evaluate $\displaystyle \int \arcsin x\, dx$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $u = \arcsin x$, $dv = dx$.
+
+Then,
+\[
+du = \frac{1}{\sqrt{1-x^2}}dx, \qquad v = x
+\]
+Apply integration by parts:
+\[
+\int \arcsin x\, dx = x \arcsin x - \int x \left( \frac{1}{\sqrt{1- x^2}} \right ) dx
+\]
+
+Substitute $t = 1 - x^2$, $dt = -2x dx$, so $-dt/2 = x dx$.
+
+Therefore,
+\[
+\int \frac{x}{\sqrt{1 - x^2}} dx = -\frac{1}{2} \int \frac{1}{\sqrt{t}} dt = -\frac{1}{2} \cdot 2 \sqrt{t} + C = -\sqrt{1 - x^2} + C
+\]
+
+Thus,
+\[
+\boxed{\int \arcsin x\, dx = x \arcsin x + \sqrt{1 - x^2} + C }
+\]
+\end{proof}
+
+\section{Integration -- Additional Original Examples}
+
+\subsection*{Example 5: Integration by Parts with $\int x \arctan x\, dx$}
+
+\begin{example}
+Evaluate $\displaystyle \int x \arctan x\, dx$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $u = \arctan x$, $dv = x\, dx$, so $du = \frac{1}{1 + x^2} dx,$ $v = \frac{1}{2} x^2$.
+
+But to better match the lecture's choices (and to confirm steps), let's do the standard parts breakdown:
+
+Instead, try $u = \arctan x$, $dv = x dx$:
+
+\[
+du = \frac{1}{1 + x^2} dx, \qquad v = \frac{1}{2} x^2
+\]
+By parts:
+\[
+\int x \arctan x\, dx = \frac{1}{2} x^2 \arctan x - \int \frac{1}{2} x^2 \cdot \frac{1}{1 + x^2} dx
+\]
+Note that $\frac{x^2}{1 + x^2} = 1 - \frac{1}{1 + x^2}$.
+Thus,
+\[
+= \frac{1}{2} x^2 \arctan x - \frac{1}{2} \int \left ( 1 - \frac{1}{1 + x^2} \right ) dx
+= \frac{1}{2} x^2 \arctan x - \frac{1}{2} x + \frac{1}{2} \int \frac{1}{1 + x^2} dx
+\]
+\[
+= \frac{1}{2} x^2 \arctan x - \frac{1}{2} x + \frac{1}{2} \arctan x + C
+\]
+
+\begin{flushright}
+    $\boxed{\; \frac{1}{2} x^2 \arctan x - \frac{1}{2} x + \frac{1}{2} \arctan x + C \;}$
+\end{flushright}
+\end{proof}
+
+\subsection{Further Discussion and Tips}
+
+\begin{itemize}
+    \item \textbf{Always Add the Constant:} Remember, every indefinite integral includes a $+ C$. Points are lost in assessments for omitting it!
+    \item \textbf{Value of Practice:} Integration is an art learned by doing. Practice many types—polynomials, rationals, trigonometric, exponentials, etc.
+    \item \textbf{Connecting Techniques:} Some problems require combining substitution and integration by parts or applying methods recursively.
+    \item \textbf{On Trickiness:} If an approach cycles forever or seems stuck, reconsider your choice of method. Try alternative substitutions, by parts, or polynomial division as appropriate.
+\end{itemize}
+
+\section{Appendix: Other Useful Standard Integrals}
+
+\begin{align*}
+    \int \frac{dx}{x^2 + a^2} &= \frac{1}{a} \arctan\left( \frac{x}{a} \right ) + C \\
+    \int \frac{dx}{\sqrt{a^2 - x^2}} &= \arcsin \left ( \frac{x}{a} \right ) + C \\
+    \int \frac{dx}{x^2 - a^2} &= \frac{1}{2a} \ln \left| \frac{x - a}{x + a} \right | + C
+\end{align*}
+
+\bigskip
+
+\hrule
+\bigskip
+
+%----------------------%
+% Administrative Tail  %
+%----------------------%
+\begin{administrative_note}
+\noindent\textbf{Summary of Announcements for This Module:}
+\begin{enumerate}[leftmargin=*]
+    \item Integrals are a major topic for this and coming weeks: keep up with assigned readings and exercises.
+    \item All original worked examples (including those used in class and appearing in assignments) are strongly recommended for review. \textbf{Each worked example in this document was carefully selected for its pedagogical value.}
+    \item Resources on Moodle/website include further worked problems and lecture notes.
+    \item If you struggle with problem sets, begin with simpler polynomial examples to build confidence, then advance to trigonometric and rational integrals.
+    \item Watch for announcements regarding any updates to assessment deadlines or locations.
+    \item Don't hesitate to contact the lecturer or teaching assistants (via email or during office hours) with mathematical or logistical questions.
+\end{enumerate}
+\end{administrative_note}
 
 \end{document}

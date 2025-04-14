@@ -1,0 +1,465 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor} % For potential use in boxes or notes
+\usepackage{lipsum} % Just for placeholder text if needed, remove in final
+
+% --- Theorem Environments ---
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\theoremstyle{remark} % Use remark style for proofs for less visual weight if preferred
+\newenvironment{proofsketch}{\noindent\textit{Proof Sketch.}}{\hfill$\square$}
+
+% --- Custom Command for Announcements ---
+\newcommand{\announcement}[1]{%
+  \par\medskip % Add space before
+  \noindent\fbox{\begin{minipage}{0.95\textwidth}
+  \textbf{Announcement:} #1
+  \end{minipage}}%
+  \par\medskip % Add space after
+}
+
+% --- Title ---
+\title{Calculus II: The Definite Integral and the Fundamental Theorem}
+\author{Notes based on Lecture of February 4th, 2025}
+\date{}
+
+\begin{document}
+\maketitle
+
+% --- Announcements Section ---
+\announcement{
+  Please note that next week's lecture on **Wednesday** will be held **online via Zoom**. This is due to the Psychometric exam taking place on campus. Please check the course website for the Zoom link. The format will be the same, but please ensure your microphones are muted unless asking a question.
+  \smallskip % Add a little vertical space
+  
+  Keep practicing the exercises related to integration techniques. Working through problems is the best way to solidify your understanding. Don't hesitate to utilize office hours or discussion forums if you encounter difficulties.
+}
+
+% --- Main Mathematical Content ---
+\section{Motivation: From Area Approximation to Precise Calculation}
+
+Remember our initial exploration of the definite integral? We thought about calculating the distance traveled by an object whose velocity $v(t)$ varies over time. If the velocity were constant, distance would simply be velocity $\times$ time. But what if it's not?
+
+Imagine plotting velocity against time. The total distance traveled from time $t=a$ to $t=b$ corresponds to the area under the velocity curve between $a$ and $b$.
+
+\begin{center}
+\textit{[Imagine a curve representing non-constant velocity $v(t)$ vs. time $t$.]}
+\end{center}
+
+How can we find this area? The idea, explored by Riemann and Darboux, is to approximate it. We divide the time interval $[a, b]$ into many small subintervals. In each small interval, say of width $\Delta t$, the velocity doesn't change *too* much. We could approximate the velocity as being constant within that tiny interval.
+
+*   We could pick the *minimum* velocity $v_{min, i}$ in the $i$-th interval and calculate $v_{min, i} \times \Delta t$. Summing these up gives a lower estimate of the total distance (a "lower sum").
+*   We could pick the *maximum* velocity $v_{max, i}$ and calculate $v_{max, i} \times \Delta t$. Summing these gives an upper estimate ("upper sum").
+
+\begin{center}
+\textit{[Imagine rectangles under the curve (lower sum) and rectangles enclosing the curve (upper sum).]}
+\end{center}
+
+As we make the subintervals smaller and smaller ($\Delta t \to 0$), both the lower sum and the upper sum should converge to the *true* area (or distance). If they converge to the same value, we say the function is *integrable*, and that common limit is the **definite integral**, denoted:
+\[
+\int_a^b v(t) dt \quad \text{or more generally} \quad \int_a^b f(x) dx
+\]
+This integral represents the precise "signed area" between the curve $y=f(x)$ and the x-axis from $x=a$ to $x=b$.
+
+This definition via limits of sums is conceptually crucial, but calculating these limits directly is often impractical. We need a more powerful tool. That tool connects the seemingly separate concepts of integration (finding area) and differentiation (finding rates of change).
+
+\section{Antiderivatives and the Fundamental Theorem of Calculus}
+
+\begin{definition}[Antiderivative]
+Let $f$ be a function defined on an interval $I$. A function $F$ is called an **antiderivative** of $f$ on $I$ if $F'(x) = f(x)$ for all $x \in I$.
+\end{definition}
+
+Recall that if $F(x)$ is one antiderivative of $f(x)$, then any other antiderivative must be of the form $F(x) + C$, where $C$ is an arbitrary constant. The indefinite integral $\int f(x) dx$ represents the entire family of antiderivatives, $F(x) + C$.
+
+Now, the crucial connection:
+
+\begin{theorem}[The Fundamental Theorem of Calculus, Part 2 - Evaluation]
+Let $f$ be a function that is integrable on the closed interval $[a, b]$. Let $F$ be any antiderivative of $f$ on $[a, b]$ (i.e., $F'(x) = f(x)$ for $x \in [a, b]$). Then,
+\[
+\int_a^b f(x) dx = F(b) - F(a)
+\]
+\end{theorem}
+
+\begin{remark}
+This theorem is sometimes called the Newton-Leibniz formula. It provides the essential link: the definite integral (a limit of sums, representing area) can be calculated by finding *any* antiderivative and evaluating it at the endpoints.
+\end{remark}
+
+\begin{remark}[The Role of the Constant $C$]
+Notice the theorem says *any* antiderivative works. Why? Suppose we chose $F(x) + C$ instead of $F(x)$. Then the calculation would be:
+\[
+(F(b) + C) - (F(a) + C) = F(b) + C - F(a) - C = F(b) - F(a)
+\]
+The constant $C$ always cancels out in the evaluation. This is why we don't need to include the "$+ C$" when evaluating definite integrals.
+
+For instance, to evaluate $\int_0^1 x dx$:
+An antiderivative is $F(x) = \frac{x^2}{2}$.
+$\int_0^1 x dx = F(1) - F(0) = \frac{1^2}{2} - \frac{0^2}{2} = \frac{1}{2}$.
+If we chose $G(x) = \frac{x^2}{2} + 3$:
+$\int_0^1 x dx = G(1) - G(0) = (\frac{1^2}{2} + 3) - (\frac{0^2}{2} + 3) = \frac{1}{2} + 3 - 0 - 3 = \frac{1}{2}$.
+The result is the same.
+\end{remark}
+
+\begin{definition}[Evaluation Notation]
+The expression $F(b) - F(a)$ is often denoted compactly as:
+\[
+F(x) \bigg|_a^b \quad \text{or} \quad [F(x)]_a^b
+\]
+So, the Fundamental Theorem can be written as $\int_a^b f(x) dx = F(x) \big|_a^b$.
+\end{definition}
+
+\subsection{Basic Examples Using the FTC}
+
+Let's apply the theorem to some simple cases.
+
+\begin{example}
+Calculate $\int_1^2 3 dx$.
+The function is $f(x) = 3$. An antiderivative is $F(x) = 3x$.
+\[
+\int_1^2 3 dx = 3x \bigg|_1^2 = (3 \times 2) - (3 \times 1) = 6 - 3 = 3
+\]
+Geometrically, this is the area of a rectangle with height 3 and width $2-1=1$. The area is $3 \times 1 = 3$, which matches.
+\end{example}
+
+\begin{example}
+Calculate $\int_1^2 -3 dx$.
+The function is $f(x) = -3$. An antiderivative is $F(x) = -3x$.
+\[
+\int_1^2 -3 dx = -3x \bigg|_1^2 = (-3 \times 2) - (-3 \times 1) = -6 - (-3) = -6 + 3 = -3
+\]
+Here, the function is below the x-axis. The integral gives a negative value, representing the "signed area". The actual geometric area is $|-3|=3$.
+\end{example}
+
+\begin{example}
+Calculate $\int_1^2 x dx$.
+The function is $f(x) = x$. An antiderivative is $F(x) = \frac{x^2}{2}$.
+\[
+\int_1^2 x dx = \frac{x^2}{2} \bigg|_1^2 = \frac{2^2}{2} - \frac{1^2}{2} = \frac{4}{2} - \frac{1}{2} = 2 - \frac{1}{2} = \frac{3}{2}
+\]
+We can check this geometrically. The region under $y=x$ from $x=1$ to $x=2$ is a trapezoid with height (along the x-axis) $2-1=1$, and parallel bases (y-values) of length $f(1)=1$ and $f(2)=2$. The area of a trapezoid is $\frac{1}{2} \times (\text{base}_1 + \text{base}_2) \times \text{height} = \frac{1}{2} \times (1+2) \times 1 = \frac{3}{2}$. It matches! This gives us confidence in the FTC.
+\end{example}
+
+\section{Techniques for Evaluating Definite Integrals}
+
+The power of the FTC lies in reducing the problem of finding a definite integral to finding an antiderivative. Thus, the techniques we learned for indefinite integration (like substitution and integration by parts) are essential.
+
+\subsection{Integration by Parts for Definite Integrals}
+
+Recall the integration by parts formula for indefinite integrals: $\int u dv = uv - \int v du$. For definite integrals, we apply the evaluation at the endpoints:
+
+\begin{theorem}[Integration by Parts for Definite Integrals]
+If $u'(x)$ and $v'(x)$ are continuous on $[a, b]$, then
+\[
+\int_a^b u(x) v'(x) dx = u(x) v(x) \bigg|_a^b - \int_a^b v(x) u'(x) dx
+\]
+Alternatively, using the $dv = v'(x)dx$ and $du = u'(x)dx$ notation:
+\[
+\int_a^b u dv = uv \bigg|_a^b - \int_a^b v du
+\]
+\end{theorem}
+
+\begin{example}
+Calculate $I = \int_0^1 x e^{-x} dx$.
+
+This suggests integration by parts. We need to choose $u$ and $dv$. A good strategy is to choose $u$ such that $du$ is simpler than $u$, and $dv$ such that we can easily integrate it to find $v$.
+Let $u = x$ and $dv = e^{-x} dx$.
+Then $du = 1 dx$ (simpler!) and $v = \int e^{-x} dx = -e^{-x}$. (We don't need $+C$ here).
+
+Applying the formula:
+\begin{align*} I &= uv \bigg|_a^b - \int_a^b v du \\ &= x(-e^{-x}) \bigg|_0^1 - \int_0^1 (-e^{-x}) (1 dx) \\ &= [-xe^{-x}]_0^1 - \int_0^1 -e^{-x} dx \\ &= [-xe^{-x}]_0^1 + \int_0^1 e^{-x} dx \end{align*}
+Now, evaluate the first term and find the antiderivative for the second integral:
+\begin{align*} I &= \left( (-1 \cdot e^{-1}) - (-0 \cdot e^{0}) \right) + \left[ -e^{-x} \right]_0^1 \\ &= (-e^{-1} - 0) + \left( (-e^{-1}) - (-e^{0}) \right) \\ &= -e^{-1} - e^{-1} + e^{0} \\ &= -2e^{-1} + 1 \\ &= 1 - \frac{2}{e} \end{align*}
+
+Does the result make sense? The integrand $f(x) = xe^{-x}$ is positive for $x \in (0, 1]$. Since $e \approx 2.718$, $e > 2$, so $1/e < 1/2$, and $2/e < 1$. Thus, $1 - 2/e$ is positive, which is consistent with integrating a positive function.
+\end{example}
+
+\subsection{Substitution for Definite Integrals}
+
+When using substitution $u = g(x)$ for definite integrals $\int_a^b f(g(x)) g'(x) dx$, we have two options:
+
+1.  Find the indefinite integral in terms of $u$, substitute back to $x$, and then evaluate using the original limits $a$ and $b$.
+2.  Find the indefinite integral in terms of $u$ and **change the limits of integration** to be in terms of $u$. Then evaluate directly without substituting back. This is often more efficient.
+
+\begin{theorem}[Substitution for Definite Integrals]
+Let $u = g(x)$, so $du = g'(x) dx$. If $g'$ is continuous on $[a, b]$ and $f$ is continuous on the range of $g$, then
+\[
+\int_a^b f(g(x)) g'(x) dx = \int_{g(a)}^{g(b)} f(u) du
+\]
+Notice the limits change: the lower limit becomes $u_{lower} = g(a)$ and the upper limit becomes $u_{upper} = g(b)$.
+\end{theorem}
+
+\begin{example}
+Calculate $I = \int_1^e \frac{\ln^3 x}{x} dx$.
+
+This cries out for substitution. Let $u = \ln x$. Then $du = \frac{1}{x} dx$. This nicely matches the integrand structure: $I = \int_1^e (\ln x)^3 \cdot \frac{1}{x} dx$.
+
+Now, we change the limits:
+When $x=1$ (lower limit), $u = \ln(1) = 0$.
+When $x=e$ (upper limit), $u = \ln(e) = 1$.
+
+The integral transforms entirely in terms of $u$:
+\[
+I = \int_{u=0}^{u=1} u^3 du
+\]
+Now, we integrate with respect to $u$ and evaluate using the *new* limits:
+\[
+I = \frac{u^4}{4} \bigg|_0^1 = \frac{1^4}{4} - \frac{0^4}{4} = \frac{1}{4}
+\]
+This is much cleaner than finding the antiderivative $\frac{(\ln x)^4}{4}$ and then plugging in $x=e$ and $x=1$.
+\end{example}
+
+\begin{example}
+Calculate $\int_{-1}^1 \sqrt{2x+2} dx$.
+Let $u = 2x+2$. Then $du = 2 dx$, so $dx = \frac{1}{2} du$.
+Change limits:
+When $x=-1$, $u = 2(-1)+2 = 0$.
+When $x=1$, $u = 2(1)+2 = 4$.
+The integral becomes:
+\begin{align*} \int_{u=0}^{u=4} \sqrt{u} \left(\frac{1}{2} du\right) &= \frac{1}{2} \int_0^4 u^{1/2} du \\ &= \frac{1}{2} \left[ \frac{u^{3/2}}{3/2} \right]_0^4 \\ &= \frac{1}{2} \left[ \frac{2}{3} u^{3/2} \right]_0^4 \\ &= \frac{1}{3} \left[ u^{3/2} \right]_0^4 \\ &= \frac{1}{3} (4^{3/2} - 0^{3/2}) \\ &= \frac{1}{3} ((\sqrt{4})^3 - 0) = \frac{1}{3} (2^3) = \frac{8}{3} \end{align*}
+\end{example}
+
+\begin{example}
+Calculate $\int_0^\pi (\cos(3x) - \sin x) dx$.
+We can integrate term by term using linearity.
+Antiderivative of $\cos(3x)$ is $\frac{\sin(3x)}{3}$ (using a simple substitution $u=3x$).
+Antiderivative of $-\sin x$ is $\cos x$.
+So, the antiderivative of the integrand is $F(x) = \frac{\sin(3x)}{3} + \cos x$.
+Now evaluate:
+\begin{align*} \int_0^\pi (\cos(3x) - \sin x) dx &= \left[ \frac{\sin(3x)}{3} + \cos x \right]_0^\pi \\ &= \left( \frac{\sin(3\pi)}{3} + \cos \pi \right) - \left( \frac{\sin(0)}{3} + \cos 0 \right) \\ &= \left( \frac{0}{3} + (-1) \right) - \left( \frac{0}{3} + 1 \right) \\ &= (-1) - (1) = -2 \end{align*}
+\end{example}
+
+\section{Properties of Definite Integrals}
+
+Several fundamental properties follow from the definition or the FTC. Assume $f$ and $g$ are integrable on the relevant intervals and $c$ is a constant.
+
+\begin{enumerate}
+    \item \textbf{Zero Width Interval:} $\displaystyle \int_a^a f(x) dx = 0$.
+        (Since $F(a) - F(a) = 0$).
+
+    \item \textbf{Reversing Limits:} $\displaystyle \int_a^b f(x) dx = - \int_b^a f(x) dx$.
+        (Since $F(b) - F(a) = -(F(a) - F(b))$).
+
+    \item \textbf{Additivity:} If $a < c < b$, then $\displaystyle \int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx$.
+        (Geometrically clear: total area is sum of partial areas. Follows from $F(b)-F(a) = (F(c)-F(a)) + (F(b)-F(c))$).
+        \begin{remark}[General Additivity]
+            This property holds even if $c$ is not between $a$ and $b$. For example, $\int_a^c f(x) dx = \int_a^b f(x) dx + \int_b^c f(x) dx$ holds regardless of the order of $a, b, c$. This can be shown using property (2). For instance:
+            $\int_a^b + \int_b^c = (F(b)-F(a)) + (F(c)-F(b)) = F(c)-F(a) = \int_a^c$.
+            Examples from lecture:
+            \begin{itemize}
+                \item $\int_{-5}^5 f(x) dx = \int_{-5}^0 f(x) dx + \int_0^5 f(x) dx$.
+                \item $\int_{-5}^{10} f(x) dx = \int_{-5}^{15} f(x) dx + \int_{15}^{10} f(x) dx$. (Note the last term is $-\int_{10}^{15} f(x) dx$).
+            \end{itemize}
+        \end{remark}
+
+    \item \textbf{Linearity:}
+        \begin{itemize}
+            \item $\displaystyle \int_a^b c f(x) dx = c \int_a^b f(x) dx$.
+            \item $\displaystyle \int_a^b (f(x) \pm g(x)) dx = \int_a^b f(x) dx \pm \int_a^b g(x) dx$.
+        \end{itemize}
+        (These follow from properties of derivatives/antiderivatives and limits).
+
+    \item \textbf{Order Preservation:} If $f(x) \ge g(x)$ for all $x \in [a, b]$, then $\displaystyle \int_a^b f(x) dx \ge \int_a^b g(x) dx$.
+        (Since $f(x)-g(x) \ge 0$, its antiderivative $H(x)$ is non-decreasing, so $H(b) \ge H(a)$, meaning $H(b)-H(a) \ge 0$, which is $\int_a^b (f(x)-g(x)) dx \ge 0$).
+        \begin{corollary}
+            If $f(x) \ge 0$ for all $x \in [a, b]$, then $\displaystyle \int_a^b f(x) dx \ge 0$. (Let $g(x)=0$).
+        \end{corollary}
+        \begin{corollary}
+            If $f(x) \le 0$ for all $x \in [a, b]$, then $\displaystyle \int_a^b f(x) dx \le 0$.
+        \end{corollary}
+
+    \item \textbf{Triangle Inequality Analogue:} $\displaystyle \left| \int_a^b f(x) dx \right| \le \int_a^b |f(x)| dx$.
+        (Intuition: On the left side, positive and negative areas within the integral might cancel out before taking the absolute value. On the right side, we make all areas positive *before* integrating by taking $|f(x)|$, so the sum can only be larger or equal).
+\end{enumerate}
+
+\section{Even and Odd Functions}
+
+Symmetry can sometimes simplify definite integrals significantly, especially when integrating over symmetric intervals of the form $[-a, a]$.
+
+\begin{definition}
+Let $f$ be a function whose domain is symmetric about $x=0$ (i.e., if $x$ is in the domain, then $-x$ is also in the domain).
+\begin{itemize}
+    \item $f$ is **even** if $f(-x) = f(x)$ for all $x$ in the domain. (Graph is symmetric about the y-axis).
+    \item $f$ is **odd** if $f(-x) = -f(x)$ for all $x$ in the domain. (Graph is symmetric about the origin).
+\end{itemize}
+\end{definition}
+
+\begin{example}[Even Functions]
+$x^2, x^4, \dots, x^{2n}$, $\cos x$, $|x|$.
+\end{example}
+
+\begin{example}[Odd Functions]
+$x, x^3, \dots, x^{2n+1}$, $\sin x$, $\tan x$.
+\end{example}
+
+\begin{remark}
+Most functions are neither even nor odd (e.g., $e^x$, $x+1$).
+\end{remark}
+
+\begin{theorem}[Integration over Symmetric Intervals]
+Let $f$ be integrable on $[-a, a]$.
+\begin{enumerate}
+    \item If $f$ is **even**, then $\displaystyle \int_{-a}^a f(x) dx = 2 \int_0^a f(x) dx$.
+    \item If $f$ is **odd**, then $\displaystyle \int_{-a}^a f(x) dx = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proofsketch}[Proof Idea for the Even Case]
+We use the additivity property and substitution.
+\[
+\int_{-a}^a f(x) dx = \int_{-a}^0 f(x) dx + \int_0^a f(x) dx
+\]
+Let's analyze the first integral $\int_{-a}^0 f(x) dx$. Use the substitution $t = -x$.
+Then $dt = -dx$, or $dx = -dt$.
+The limits change: When $x=-a$, $t = -(-a) = a$. When $x=0$, $t = -0 = 0$.
+So, the first integral becomes:
+\[
+\int_{t=a}^{t=0} f(-t) (-dt)
+\]
+Now we use two facts:
+1.  Since $f$ is even, $f(-t) = f(t)$.
+2.  We can use the minus sign in $(-dt)$ to flip the integration limits (property 2): $-\int_a^0 = +\int_0^a$.
+\[
+\int_{a}^{0} f(t) (-dt) = - \int_{a}^{0} f(t) dt = + \int_{0}^{a} f(t) dt
+\]
+So, $\int_{-a}^0 f(x) dx = \int_0^a f(t) dt$. Since the variable of integration is a dummy variable, $\int_0^a f(t) dt = \int_0^a f(x) dx$.
+Substituting back into the split integral:
+\[
+\int_{-a}^a f(x) dx = \left( \int_0^a f(x) dx \right) + \int_0^a f(x) dx = 2 \int_0^a f(x) dx
+\]
+\end{proofsketch}
+
+\begin{proofsketch}[Proof Idea for the Odd Case]
+The steps are identical until we use the property of the odd function:
+\[
+\int_{-a}^0 f(x) dx = \int_{t=a}^{t=0} f(-t) (-dt)
+\]
+Since $f$ is odd, $f(-t) = -f(t)$.
+\[
+\int_{a}^{0} (-f(t)) (-dt) = \int_{a}^{0} f(t) dt
+\]
+Using property 2 to flip the limits introduces a minus sign:
+\[
+\int_{a}^{0} f(t) dt = - \int_{0}^{a} f(t) dt = - \int_{0}^{a} f(x) dx
+\]
+So, $\int_{-a}^0 f(x) dx = - \int_0^a f(x) dx$.
+Substituting back into the split integral:
+\[
+\int_{-a}^a f(x) dx = \left( - \int_0^a f(x) dx \right) + \int_0^a f(x) dx = 0
+\]
+\end{proofsketch}
+
+\begin{example}[Geometric Intuition for Odd Functions]
+Consider $\int_{-\pi}^{\pi} \sin x dx$. Since $\sin x$ is odd, the theorem states the integral is 0.
+Geometrically, the area under $\sin x$ from $0$ to $\pi$ is positive. The area from $-\pi$ to $0$ is below the x-axis and, due to symmetry, has exactly the same magnitude but is negative. The definite integral sums these signed areas, resulting in cancellation.
+\begin{center}
+\textit{[Sketch of sin(x) from -pi to pi, showing equal positive and negative areas.]}
+\end{center}
+\end{example}
+
+\section{Calculating Areas Between Curves}
+
+A primary application of definite integrals is finding the area of regions bounded by curves.
+
+\subsection{Area Between $f(x)$ and $g(x)$}
+
+Suppose we want to find the area of the region bounded above by $y=f(x)$, below by $y=g(x)$, and laterally by the vertical lines $x=a$ and $x=b$. Crucially, assume $f(x) \ge g(x)$ for all $x$ in $[a, b]$.
+
+\begin{center}
+\textit{[Sketch showing f(x) above g(x) between x=a and x=b.]}
+\end{center}
+
+The area $A$ is given by:
+\[
+A = \int_a^b (\text{Upper function} - \text{Lower function}) dx = \int_a^b (f(x) - g(x)) dx
+\]
+This formula arises because $\int_a^b f(x) dx$ gives the signed area under $f$, and $\int_a^b g(x) dx$ gives the signed area under $g$. Subtracting removes the area below $g$, leaving the area between $f$ and $g$.
+
+\subsection{Handling Intersections}
+
+What if the curves cross, so $f(x) \ge g(x)$ on some parts of $[a, b]$ and $g(x) \ge f(x)$ on others?
+
+\begin{center}
+\textit{[Sketch showing f(x) and g(x) crossing one or more times between x=a and x=b.]}
+\end{center}
+
+In this case, we must:
+1.  Find all intersection points $c_1, c_2, \dots$ between $a$ and $b$ by solving $f(x) = g(x)$.
+2.  Split the interval $[a, b]$ into subintervals based on these intersection points.
+3.  Determine which function is upper and which is lower on each subinterval.
+4.  Integrate (Upper - Lower) over each subinterval and sum the results.
+
+Alternatively, the total area is always given by integrating the absolute difference:
+\[
+A = \int_a^b |f(x) - g(x)| dx
+\]
+However, to evaluate this integral, you still need to perform the steps above to remove the absolute value by splitting the integral where $f(x)-g(x)$ changes sign.
+
+\begin{example}
+Find the area of the region enclosed by $y = x^2$ and $y = 3x$.
+
+First, find intersection points: $x^2 = 3x \implies x^2 - 3x = 0 \implies x(x-3) = 0$. Intersections are at $x=0$ and $x=3$.
+Second, determine which function is upper on $[0, 3]$. Let's test $x=1$: $y=1^2=1$ and $y=3(1)=3$. So, $y=3x$ is the upper function on $[0, 3]$.
+Third, set up the integral:
+\begin{align*} A &= \int_0^3 (\text{Upper} - \text{Lower}) dx \\ &= \int_0^3 (3x - x^2) dx \\ &= \left[ \frac{3x^2}{2} - \frac{x^3}{3} \right]_0^3 \\ &= \left( \frac{3(3^2)}{2} - \frac{3^3}{3} \right) - \left( \frac{3(0^2)}{2} - \frac{0^3}{3} \right) \\ &= \left( \frac{27}{2} - \frac{27}{3} \right) - (0) \\ &= \frac{27}{2} - 9 = \frac{27 - 18}{2} = \frac{9}{2} = 4.5 \end{align*}
+The area enclosed is 4.5 square units.
+
+\begin{remark}[Alternative Geometric View]
+As noted in the lecture, one could also view this area as the area of the triangle under $y=3x$ from $x=0$ to $x=3$ (Area = $\frac{1}{2} \times \text{base} \times \text{height} = \frac{1}{2} \times 3 \times (3\times 3) = \frac{27}{2}$) minus the area under the parabola $y=x^2$ from $x=0$ to $x=3$ ($\int_0^3 x^2 dx = [\frac{x^3}{3}]_0^3 = \frac{27}{3} = 9$). The result is $\frac{27}{2} - 9 = \frac{9}{2} = 4.5$.
+\end{remark}
+\end{example}
+
+\begin{example}
+Find the area of the region in the **fourth quadrant** bounded by the x-axis ($y=0$), the curve $f(x) = 4-x^2$, and the curve $g(x) = x^2 - 2x - 8$. (Implicitly also bounded by the y-axis since we start in Q4).
+
+Let's visualize the situation:
+*   $f(x) = 4-x^2$ is a downward-opening parabola, roots at $x=\pm 2$, vertex at $(0, 4)$.
+*   $g(x) = x^2 - 2x - 8 = (x-4)(x+2)$ is an upward-opening parabola, roots at $x=4$ and $x=-2$, vertex at $x=1$ ($y=1-2-8=-9$).
+*   Fourth Quadrant means $x \ge 0$ and $y \le 0$.
+
+Find intersections of $f$ and $g$:
+$4-x^2 = x^2 - 2x - 8 \implies 2x^2 - 2x - 12 = 0 \implies x^2 - x - 6 = 0 \implies (x-3)(x+2) = 0$. Intersections at $x=3$ and $x=-2$.
+
+The region of interest is bounded by $x=0$ (y-axis), $y=0$ (x-axis), and parts of the parabolas. Let's see where the parabolas are in Q4:
+*   $f(x)=4-x^2$ is positive between $x=0$ and $x=2$, so it's not bounding the region from below in Q4 there. It hits the x-axis at $x=2$. For $x>2$, $f(x)$ is negative.
+*   $g(x)=x^2-2x-8$ is negative between its roots $x=-2$ and $x=4$. In Q4 ($x \ge 0$), $g(x)$ is negative for $x \in [0, 4)$.
+
+Sketching the region:
+*   From $x=0$ to $x=2$: The region is bounded above by $y=0$ (x-axis) and below by $g(x)=x^2-2x-8$.
+*   From $x=2$ to $x=3$: The region is bounded above by $f(x)=4-x^2$ (which is now negative) and below by $g(x)=x^2-2x-8$. (Note: $f(x) \ge g(x)$ in this interval, as $f(3)=-5$ and $g(3)=9-6-8=-5$, they meet; for $x=2.5$, $f(2.5)=4-6.25=-2.25$, $g(2.5)=6.25-5-8=-6.75$, so $f$ is indeed above $g$).
+
+The region needs to be split into two parts for integration:
+1.  Area $A_1$ from $x=0$ to $x=2$. Upper curve is $y=0$, lower is $g(x)$.
+2.  Area $A_2$ from $x=2$ to $x=3$. Upper curve is $f(x)$, lower is $g(x)$.
+
+Calculate $A_1$:
+\begin{align*} A_1 &= \int_0^2 (\text{Upper} - \text{Lower}) dx = \int_0^2 (0 - (x^2-2x-8)) dx \\ &= \int_0^2 (-x^2 + 2x + 8) dx \\ &= \left[ -\frac{x^3}{3} + x^2 + 8x \right]_0^2 \\ &= \left( -\frac{2^3}{3} + 2^2 + 8(2) \right) - (0) \\ &= -\frac{8}{3} + 4 + 16 = 20 - \frac{8}{3} = \frac{60-8}{3} = \frac{52}{3} \end{align*}
+(Note: The transcript calculated this as $8+2x-x^2$ which seems to be $-(g(x))$, giving $20 - 8/3 = 52/3$. Let's re-evaluate the transcript integral: $\int_0^2 (8+2x-x^2) dx = [8x+x^2-x^3/3]_0^2 = (16+4-8/3)-0 = 20-8/3 = 52/3$. Okay, my calculation matches the result derived from the transcript's integrand, even if the sign description was slightly different).
+
+Calculate $A_2$:
+\begin{align*} A_2 &= \int_2^3 (\text{Upper} - \text{Lower}) dx = \int_2^3 (f(x) - g(x)) dx \\ &= \int_2^3 ((4-x^2) - (x^2-2x-8)) dx \\ &= \int_2^3 (-2x^2 + 2x + 12) dx \\ &= \left[ -\frac{2x^3}{3} + x^2 + 12x \right]_2^3 \\ &= \left( -\frac{2(3^3)}{3} + 3^2 + 12(3) \right) - \left( -\frac{2(2^3)}{3} + 2^2 + 12(2) \right) \\ &= \left( -\frac{54}{3} + 9 + 36 \right) - \left( -\frac{16}{3} + 4 + 24 \right) \\ &= (-18 + 9 + 36) - (-\frac{16}{3} + 28) \\ &= 27 - (28 - \frac{16}{3}) = -1 + \frac{16}{3} = \frac{-3+16}{3} = \frac{13}{3} \end{align*}
+
+Total Area $A = A_1 + A_2 = \frac{52}{3} + \frac{13}{3} = \frac{65}{3}$.
+
+\begin{remark}
+When asked to calculate area, the final answer must be non-negative. If you get a negative result, double-check which function is upper and which is lower in each interval. Getting the order wrong, e.g., calculating $\int (g-f)$ when $f \ge g$, will result in the negative of the correct area for that segment.
+\end{remark}
+
+\begin{remark}[Drawing Functions]
+While sketching graphs is extremely helpful for setting up area problems, you might encounter problems where sketching is difficult or impractical. In such cases, you rely purely on analysis: find intersection points algebraically ($f(x)=g(x)$) and test values within the resulting intervals to determine which function is larger ($f(x) > g(x)$ or $g(x) > f(x)$). For most standard course problems involving polynomials, exponentials, logs, trig functions, sketching should be feasible.
+\end{remark}
+\end{example}
+
+
+\section{Looking Ahead}
+
+We have established the fundamental connection between differentiation and integration and developed tools to calculate definite integrals, which represent signed areas. Our next topic will extend these ideas to **Improper Integrals**. These involve integrals where either the interval of integration is infinite (e.g., $\int_a^\infty f(x) dx$) or the integrand becomes unbounded within the interval (e.g., $\int_0^1 \frac{1}{\sqrt{x}} dx$).
+
+\end{document}

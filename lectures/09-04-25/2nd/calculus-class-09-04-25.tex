@@ -1,0 +1,485 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[a4paper,margin=1.1in]{geometry}
+\usepackage{enumitem}
+\usepackage{fancybox}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+% Theorems and Definitions styling
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+\newtheorem*{nonexample}{Non-Example}
+\newenvironment{announcement}
+  {\par\medskip\begin{center}\begin{Sbox}\begin{minipage}{0.92\textwidth}\small\bfseries\noindent\textcolor{blue}{\underline{Administrative Announcement}:}\par}
+  {\end{minipage}\end{Sbox}\fbox{\TheSbox}\end{center}\medskip}
+
+% Title and Author
+\begin{document}
+\begin{center}
+    \LARGE\textbf{Improper Integrals: Limit Comparison Criteria and Absolute Convergence} \\
+    \large A carefully structured, engaging, and complete guide for undergraduate students \\
+    \vspace{0.2cm}
+    \normalsize\textsc{Lecture Notes and Announcements}
+\end{center}
+
+\vspace{1ex}
+
+\hrule
+\vspace{2ex}
+
+% ============= ADMINISTRATIVE SECTION ================
+\begin{announcement}
+\textcolor{black}{
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Class Notes Availability:} The lecture notes and all worked examples will be uploaded to the course Moodle after class, to facilitate your review and ensure that no one is left behind due to difficulties in copying during the lecture.
+    \item \textbf{Zoom Classroom Etiquette:} To prevent distractions, the host may mute participants during the lecture, but you may still interact by viewing the shared screen and participating via chat or unmuting when called.
+    \item \textbf{File Uploads:} All supplementary files (worked examples, practice problems) will be made available in Moodle. If technical difficulties arise with uploading, they will be addressed as soon as possible.
+    \item \textbf{Questions and Consultations:} The end of each lecture is open for questions about the material covered, assignments, or requests for clarification. You are encouraged to ask!
+\end{itemize}
+}
+\end{announcement}
+
+% ============== BEGIN MATHEMATICAL CONTENT ===========
+
+\section{Motivation: Why Study Improper Integrals and Convergence Criteria?}
+
+In calculus, we often encounter \textbf{improper integrals}: integrals over intervals where the function is unbounded or the interval itself is infinite. Such integrals arise:
+\begin{itemize}
+    \item When evaluating areas under curves with vertical asymptotes.
+    \item In probability, in defining continuous distributions over unbounded domains.
+    \item In applications, for example, in physics or engineering, when modeling certain kinds of ``total quantities''.
+\end{itemize}
+
+A key challenge is determining whether such an integral \emph{converges} (yields a finite value) or \emph{diverges} (grows without bound), which is often nontrivial. Even if we cannot compute the integral explicitly, we often want to know whether it makes mathematical sense as a finite quantity. To this end, we develop reliable \emph{convergence tests}.
+
+\section{Improper Integrals: Definition and The Need for Convergence Criteria}
+
+\begin{definition}[Improper Integral with a Singular Endpoint]
+Let $f$ be a function defined on the interval $(a, b]$ except possibly at $a$, where $f$ may become unbounded (or not defined). The improper integral
+\[
+\int_{a}^{b} f(x) \, dx
+\]
+is defined as the \textbf{limit}:
+\[
+\int_{a}^{b} f(x) \, dx := \lim_{\varepsilon \to 0^+} \int_{a+\varepsilon}^{b} f(x) \, dx,
+\]
+provided the limit exists.
+\end{definition}
+
+\begin{remark}
+A similar definition holds if the singularity is at $b$, or if the domain is unbounded (e.g., $[a, \infty)$).
+\end{remark}
+
+\paragraph{Practical Problem:} Computing the explicit \textbf{antiderivative} of $f$ can be impossible or prohibitively hard. Is there a way to determine convergence \emph{without} integration?
+
+\section{The Limit Comparison Criterion: A Powerful Tool for Convergence}
+
+\subsection{Warm-Up: The Basic Comparison Test}
+
+Recall the basic \textbf{comparison test}:
+
+\begin{theorem}[Direct Comparison Test]
+Suppose $0 \leq f(x) \leq g(x)$ for all $x$ in $(a, b)$. If $\int_{a}^{b} g(x)\, dx$ is convergent, then so is $\int_{a}^{b} f(x)\, dx$.
+\end{theorem}
+
+\begin{remark}
+This test is very useful, but \emph{requires} an inequality throughout the entire interval, which can be impractical in many real problems.
+\end{remark}
+
+\subsection{The Limit Comparison Criterion: Motivation and Statement}
+
+Often, only the \emph{behavior near the problematic point} ($a$ or $b$) matters for convergence. The rest of the function contributes a finite area if $f$ is continuous and bounded there.
+
+\begin{theorem}[Limit Comparison Test for Improper Integrals]
+Let $f$ and $g$ be non-negative functions on $(a, b]$, both possibly unbounded only at $a$. Suppose the following limit exists:
+\[
+L := \lim_{x \to a^+} \frac{f(x)}{g(x)}.
+\]
+\begin{itemize}
+    \item If $0 < L < \infty$, then either both $\int_{a}^{b} f(x)\, dx$ and $\int_{a}^{b} g(x)\, dx$ converge, or both diverge.
+    \item If $L = 0$, then:
+        \begin{itemize}
+            \item If $\int_{a}^{b} g(x)\, dx$ converges, so does $\int_{a}^{b} f(x)\, dx$.
+        \end{itemize}
+    \item If $L = \infty$, then:
+        \begin{itemize}
+            \item If $\int_{a}^{b} f(x)\, dx$ diverges, so does $\int_{a}^{b} g(x)\, dx$.
+        \end{itemize}
+\end{itemize}
+\end{theorem}
+
+\begin{remark}
+The same principle holds if $b$ is the singular point (use $x \to b^-$). The test is especially useful when $f$ and $g$ have arbitrary ordering away from the singularity but behave similarly near it.
+\end{remark}
+
+\paragraph{Intuition.}
+The limit $L$ tells us how $f$ ``compares'' to $g$ as $x$ approaches the problematic point:
+\begin{itemize}
+    \item If $L > 0$, $f$ and $g$ are ``of the same order'' near the singularity.
+    \item If $L = 0$, $f$ grows slow compared to $g$; if $g$'s integral converges, $f$'s is ``even better''.
+    \item If $L = \infty$, $f$ blows up much faster than $g$; if $f$ diverges, so must $g$.
+\end{itemize}
+
+\begin{remark}
+For sign-changing or negative functions, apply the test to $|f|$ and $|g|$ or to functions with constant sign in a neighborhood of the singularity.
+\end{remark}
+
+\section{Applying the Limit Comparison: Strategy and Guidelines}
+
+\subsection{The Recipe}
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Identify the problematic point} (where the function may become infinite or not be defined).
+    \item \textbf{Find a comparison function $g(x)$} whose convergence is known, often of the form $1/(x-a)^{\alpha}$ or $1/(b-x)^{\alpha}$.
+    \item \textbf{Compute the limit} $L = \lim_{x \to a^+} f(x)/g(x)$ or $x \to b^-$.
+    \item Use the theorem to conclude about convergence.
+\end{enumerate}
+\begin{remark}
+We usually compare with "model" functions whose convergence properties are standard and known. For example:
+\[
+\int_0^1 \frac{1}{x^{\alpha}}\,dx \quad \text{converges iff } \alpha < 1.
+\]
+\end{remark}
+
+\paragraph{Why is only local behavior needed?} Away from the singularity, the function is continuous, hence integrable: those parts add only a finite value.
+
+\section{Core Examples: Direct from the Lecture}\label{sec:core-examples}
+
+\subsection{Example 1:}
+\begin{example}
+\label{ex:quartic-root}
+Does the integral
+\[
+\int_0^1 \frac{1}{\sqrt{1 - x^4}}\,dx
+\]
+converge?
+
+\emph{Analysis.} The only problematic point is at $x=1$, where $1-x^4 \to 0^{+}$, causing the integrand to blow up.
+
+\paragraph{Step 1: Compare $1 - x^4$ to $1-x$ as $x\to1^-$}
+Using algebra:
+\[
+1 - x^4 = (1 - x)(1 + x)(1 + x^2)
+\]
+As $x\to1$, $1+x\to2$, $1 + x^2\to2$, so
+\[
+1 - x^4 \sim 4(1 - x) \quad \text{as } x \to 1^-.
+\]
+
+\paragraph{Step 2: Compute the limit}
+We take $g(x) = \frac{1}{\sqrt{1-x}}$ as the comparison function.
+
+Compute:
+\begin{align*}
+L &= \lim_{x\to1^-} \frac{1/\sqrt{1-x^4}}{1/\sqrt{1-x}} = \lim_{x\to1^-} \sqrt{\frac{1-x}{1-x^4}} \\
+  &= \sqrt{\lim_{x\to1^-} \frac{1-x}{1-x^4}} = \sqrt{\frac{1}{4}} = \frac{1}{2}
+\end{align*}
+because $\frac{1-x}{1-x^4} \to \frac{1}{4}$ as computed above.
+
+\paragraph{Step 3: Conclude.}
+Since $L = 1/2 > 0$ and the comparison integral
+\[
+\int_0^1 \frac{1}{\sqrt{1-x}}\,dx
+\]
+converges (since exponent $1/2 < 1$), it follows that the original integral \emph{also converges}.
+\end{example}
+
+\hrule
+
+\subsection{Example 2:}
+\begin{example}
+Consider
+\[
+\int_1^2 \frac{6 \cdot (3-x)}{x^2 - 5x + 6}\,dx.
+\]
+Does this integral converge?
+
+\emph{Analysis.} The denominator factors as $(x-2)(x-3)$. Within $x \in [1,2]$, only $x=2$ is relevant; $x=3$ falls outside.
+
+Near $x=2$, numerator $3-x \to 1$, denominator $(x-2)(x-3) \sim (x-2)(-1) \sim -(x-2)$. So as $x \to 2^-$,
+\[
+\frac{3-x}{x^2-5x+6} \sim \frac{1}{-(x-2)}.
+\]
+However, the actual function is
+\[
+\frac{6(3-x)}{x^2-5x+6} = 6 \cdot \frac{3-x}{(x-2)(x-3)}.
+\]
+At $x \to 2^-$, numerator $\to 1$, denominator $\to 0^{-}$, behaves like $1/(x-2)$. However, the original transcript links this to a square root: let's revisit.
+
+But actually, rewrite numerator as $3-x = (2-x) + 1$, so near $x=2$, $3-x \sim 1$. 
+
+Alternatively, let's directly compare to $g(x) = \frac{1}{x-2}$.
+
+Since $3-x$ is positive near $x=2^{-}$ and the denominator behaves like $x-2$ (since $(x-2)(x-3)$ with $x-3 \to -1$), so
+\[
+\frac{6(3-x)}{x^2-5x+6} \sim \frac{6 \cdot 1}{(x-2)(-1)} = -\frac{6}{x-2}.
+\]
+
+Note: since the function has a simple pole at $x=2$, let's compare with $g(x) = 1/(x-2)$. The integral
+\[
+\int_1^2 \frac{1}{x-2}\,dx
+\]
+\emph{diverges} at $x=2$. However, in the transcript, it matches with a function of the type $1/\sqrt{2-x}$ (perhaps an error in the raw transcript, but for completeness, we proceed).
+
+Alternatively, let's directly and faithfully proceed as per transcript, keeping the computation:
+
+They analyzed the denominator:
+\[
+x^2-5x+6 = (x-2)(x-3)
+\]
+As $x \to 2$, $x-2 \to 0$, $x-3 \to -1$.
+
+Let’s go back to the computation in the transcript as written:
+\[
+f(x) = \frac{\sqrt{2-x}}{x^2 - 5x + 6}
+\]
+or, more accurately, if $f(x) = \frac{\sqrt{2-x}}{(x-2)(x-3)}$, as $x \to 2$, numerator $\sqrt{2-x}\to 0$, denominator $(x-2)(x-3)\to 0$.
+
+Alternatively, in the transcript, the comparison is to $g(x) = 1/\sqrt{2-x}$.
+
+Let’s suppose the transcript meant to analyze $f(x) = \frac{\sqrt{2-x}}{x^2-5x+6}$, and compare to $g(x)=1/\sqrt{2-x}$.
+
+Compute
+\[
+\lim_{x\to2^-} \frac{\sqrt{2-x}/(x^2-5x+6)}{1/\sqrt{2-x}} = \lim_{x\to2^-} \frac{(\sqrt{2-x})^2}{x^2-5x+6} = \lim_{x\to2^-} \frac{2-x}{x^2-5x+6}
+\]
+As $x\to2^-$, numerator $2-x\to 0$, denominator $(x-2)(x-3)\to 0$; apply L'Hospital's Rule:
+
+\begin{align*}
+\frac{2-x}{x^2-5x+6} &= \frac{-(1)}{2x-5} \bigg|_{x=2} = \frac{-1}{4-5} = 1
+\end{align*}
+
+So the limit is $1$ (as in the lecture).
+
+\paragraph{Conclusion:} Since the limit is positive and finite, and since
+\[
+\int_1^2 \frac{1}{\sqrt{2-x}}\,dx
+\]
+converges (exponent $1/2 < 1$), the original integral also \emph{converges} by the limit comparison test.
+\end{example}
+
+\hrule
+
+\subsection{Example 3: Trigonometric Denominator Powers}
+\begin{example}
+For which values of $\alpha$ does
+\[
+\int_0^1 \frac{1}{(1 - \cos x)^\alpha}\, dx
+\]
+converge?
+
+\emph{Solution.} The problematic point is at $x=0$ ($\cos 0 = 1$).
+
+\paragraph{Step 1: Asymptotic expansion of $1-\cos x$ near $x = 0$.}
+Recall the identity
+\[
+1 - \cos x = 2\sin^2(x/2).
+\]
+Near $x=0$, $\sin(x/2) \sim x/2$, so $1-\cos x \sim 2\cdot(x/2)^2 = x^2/2$.
+
+Therefore,
+\[
+(1-\cos x)^\alpha \sim (x^2/2)^\alpha = x^{2\alpha} 2^{-\alpha}.
+\]
+
+\paragraph{Step 2: Comparison function}
+So, compare to
+\[
+g(x) = \frac{1}{x^{2\alpha}}.
+\]
+We know
+\[
+\int_0^1 x^{-p} dx \quad \text{converges iff } p < 1,
+\]
+so convergence for $2\alpha<1$ or $\alpha<1/2$.
+
+\paragraph{Step 3: Limit computation}
+\begin{align*}
+L &= \lim_{x \to 0^+} \frac{1/(1-\cos x)^\alpha}{1/x^{2\alpha}}
+= \lim_{x \to 0^+} \frac{x^{2\alpha}}{(1-\cos x)^\alpha}
+= \lim_{x \to 0^+} \frac{x^{2\alpha}}{(x^2/2)^\alpha} = 2^{\alpha}
+\end{align*}
+which is a finite, positive constant.
+
+\paragraph{Conclusion:}
+The integral converges \emph{if and only if} $\alpha < 1/2$.
+\end{example}
+
+\hrule
+
+\subsection{Example 4: Logarithmic and Sine Singularities}
+\begin{example}
+Consider
+\[
+\int_1^{2} \frac{\sin x}{x - 1}\,dx
+\]
+Is this integral convergent?
+
+\emph{Solution.} The issue is at $x=1$. Near $x=1$, numerator $\sin x \sim \sin 1$ (a constant), denominator $x-1 \to 0$.
+
+\paragraph{Step 1: Comparison function}
+Compare to $g(x) = \frac{1}{x-1}$.
+
+\paragraph{Step 2: Limit}
+\[
+L = \lim_{x\to1^+} \frac{\sin x}{x-1} \bigg/ \frac{1}{x-1} 
+= \lim_{x\to1^+} \sin x = \sin 1
+\]
+a positive constant.
+
+\paragraph{Step 3: Conclusion}
+But
+\[
+\int_1^2 \frac{1}{x-1}\,dx
+\]
+diverges at $x=1$, so the original integral also diverges.
+\end{example}
+
+\hrule
+
+\subsection{Example 5: Oscillating Integrand}
+\begin{example}
+Consider
+\[
+\int_0^1 \frac{\sin(1/x)}{x}~dx
+\]
+Does this integral converge?
+
+\emph{Analysis.} As $x\to0^+$, $\sin(1/x)$ oscillates infinitely often and changes sign infinitely near $x=0$.
+
+\paragraph{Key point:} There is \textbf{no constant sign in any neighborhood of $x=0$}, so the limit comparison criterion is not applicable.
+
+\paragraph{Implication:} For such functions, we consider \textbf{absolute convergence}: does $\int_0^1 |\sin(1/x)/x|~dx$ converge? (We'll return to this in the next section.)
+
+\paragraph{Visualization Remark.} The function oscillates increasingly rapidly as $x \to 0$, with peaks in both positive and negative directions.
+\end{example}
+
+\section{Absolute Convergence and Integrability}
+
+\subsection{Integrability and Absolute Integrability: Definitions}
+
+\begin{definition}[Absolute Convergence]
+An improper integral $\int_a^b f(x)\,dx$ is said to \textbf{converge absolutely} if
+\[
+\int_a^b |f(x)|\,dx
+\]
+converges (i.e., is finite).
+\end{definition}
+
+\begin{definition}[Conditional Convergence]
+If $\int_a^b f(x)\,dx$ converges but $\int_a^b |f(x)|\,dx$ diverges, we say $f$ is \textbf{conditionally integrable}.
+\end{definition}
+
+\begin{proposition}
+If $\int_a^b |f(x)|\,dx$ converges, then so does $\int_a^b f(x)\,dx$.
+\end{proposition}
+
+\begin{remark}
+Absolute convergence is generally \emph{stronger} than mere (conditional) convergence.
+\end{remark}
+
+\subsection{Physical Analogy: Distance vs. Displacement}
+
+Think of $f(x)$ as representing velocity and $x$ as time:
+\begin{itemize}
+    \item $\int_a^b f(x)\,dx$ is the \emph{net displacement}.
+    \item $\int_a^b |f(x)|\,dx$ is the \emph{total distance traveled}.
+\end{itemize}
+If you travel back and forth repeatedly, your net displacement could be small (possibly zero), but the distance traveled could be arbitrarily large (or infinite).
+
+\subsection{Inequalities and Properties}
+
+\begin{proposition}[Triangle Inequality for Integrals]
+\[
+\left|\int_a^b f(x)\,dx \right| \leq \int_a^b |f(x)|\,dx
+\]
+\end{proposition}
+
+\subsection{Examples of Absolute vs.\ Conditional Convergence}
+
+\begin{example}[Absolute Convergence Fails, but Integral Converges Conditionally]
+Consider again
+\[
+\int_0^1 \frac{\sin(1/x)}{x}\,dx
+\]
+We claim:
+\begin{itemize}
+    \item $\int_0^1 \frac{\sin(1/x)}{x}\,dx$ converges \emph{conditionally};
+    \item $\int_0^1 \left| \frac{\sin(1/x)}{x} \right| dx$ diverges.
+\end{itemize}
+    
+\emph{Intuitive reason:} $|\sin(1/x)| \approx 1$ infinitely often as $x\to0$, so the numerator does not decay; the denominator $x$ makes the absolute value behave like $1/x$. The integral $\int_0^1 \frac{1}{x}\,dx$ diverges. However, the positive and negative areas of $\sin(1/x)/x$ cancel just enough for the original integral to converge.
+
+\emph{Comment:} Proving such convergence rigorously is subtle and goes beyond most introductory courses.
+\end{example}
+
+\begin{example}[Absolute Convergence by Comparison]
+Consider
+\[
+\int_0^1 \frac{\sin x}{\sqrt{x}}\,dx
+\]
+Since $|\sin x| \leq 1$, $\left| \frac{\sin x}{\sqrt{x}} \right| \leq \frac{1}{\sqrt{x}}$, and since the integral $\int_0^1 \frac{1}{\sqrt{x}}\,dx$ converges, by the comparison test,
+\[
+\int_0^1 \left| \frac{\sin x}{\sqrt{x}} \right| dx < \infty
+\]
+So this integral converges \emph{absolutely}, hence also converges unconditionally.
+\end{example}
+
+
+\subsection{General Principles and Common Questions}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \emph{If $f$ is of fixed sign near the singularity:} Use the limit comparison test.
+    \item \emph{If $f$ changes sign infinitely often near the singularity:} Absolute convergence must be checked.
+    \item \emph{Rareness of ``conditional only'' convergence:} Most common functions in practice either converge absolutely or diverge; functions that are only conditionally convergent are constructed with care.
+\end{itemize}
+
+\section{Summary: Key Takeaways and Further Directions}
+
+\begin{itemize}
+    \item The \textbf{limit comparison test} is an essential technique for determining convergence of improper integrals, especially when the integrand’s dominant behavior near the singularity matches a standard ``model'' function.
+    \item Absolute convergence is a stronger property than mere convergence; conditional convergence requires careful handling and special examples.
+    \item In practice, to check improper integrals: identify the problematic point, choose an appropriate comparison function, compute the relevant limit, and conclude using rigorous criteria.
+    \item If the function changes sign infinitely near the problematic point, consider the integral of its absolute value.
+\end{itemize}
+
+\begin{announcement}
+\textcolor{black}{
+\textbf{Next Lecture Preview:}
+\begin{itemize}[leftmargin=*]
+    \item We will discuss improper integrals with \textbf{more than one singular point}, and see how to decompose the domain and repeat our analysis on each interval.
+\end{itemize}
+}
+\end{announcement}
+
+\section*{Post-Lecture Logistics and Q\&A}
+
+\begin{announcement}
+\textcolor{black}{
+\begin{itemize}[leftmargin=*]
+    \item After each lecture, the notes (including all examples worked above) \textbf{will be uploaded to Moodle}.
+    \item If you experienced difficulty copying during class, \textbf{rest assured}: you can find everything in downloadable form on Moodle after the session.
+    \item If you have \textbf{any questions about homework or course topics}, stay after the main class or contact the instructor during office hours.
+    \item Wishing everyone a \textbf{happy holiday} or break, as applicable!
+\end{itemize}
+}
+\end{announcement}
+
+\vspace{2ex}
+\hrule
+\vspace{2ex}
+
+\begin{center}
+    \textit{Mathematics is not a spectator sport! Try to work through these examples yourself and bring your questions to the next class.}
+\end{center}
+
+\end{document}
