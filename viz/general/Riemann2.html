@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Darboux Integral Visualization</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+    #controls {
+      margin: 20px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #000;
+    }
+    #info {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="functionSelect">Select Function: </label>
+    <select id="functionSelect">
+      <option value="linear">f(x) = x</option>
+      <option value="quadratic">f(x) = x²</option>
+      <option value="sine">f(x) = sin(πx)</option>
+    </select>
+    <br><br>
+    <label for="numIntervals">Number of Subintervals (n): </label>
+    <input type="range" id="numIntervals" min="1" max="50" value="5">
+    <span id="nValue">5</span>
+  </div>
+  <div id="info"></div>
+  <script>
+    let a = 0; // Interval start
+    let b = 2; // Interval end
+    let n = 5; // Initial number of subintervals
+    let selectedFunction = 'linear';
+    let f;
+
+    function setup() {
+      createCanvas(600, 400).parent('controls');
+      updateFunction();
+      select('#functionSelect').changed(updateFunction);
+      select('#numIntervals').input(updateN);
+    }
+
+    function updateFunction() {
+      selectedFunction = select('#functionSelect').value();
+      if (selectedFunction === 'linear') {
+        f = x => x;
+      } else if (selectedFunction === 'quadratic') {
+        f = x => x * x;
+      } else if (selectedFunction === 'sine') {
+        f = x => Math.sin(Math.PI * x);
+      }
+      redraw();
+    }
+
+    function updateN() {
+      n = parseInt(select('#numIntervals').value());
+      select('#nValue').html(n);
+      redraw();
+    }
+
+    function draw() {
+      background(255);
+      drawAxes();
+      drawFunction();
+      let { upperSum, lowerSum } = drawDarbouxSums();
+      updateInfo(upperSum, lowerSum);
+    }
+
+    function drawAxes() {
+      stroke(0);
+      strokeWeight(2);
+      // X-axis
+      line(50, 350, 550, 350);
+      // Y-axis
+      line(50, 50, 50, 350);
+      // Labels
+      textSize(12);
+      textAlign(CENTER);
+      text('x', 550, 360);
+      text('y', 40, 50);
+      text('0', 45, 365);
+      // X-axis ticks
+      for (let x = a; x <= b; x += 0.5) {
+        let px = map(x, a, b, 50, 550);
+        line(px, 350, px, 355);
+        text(x.toFixed(1), px, 370);
+      }
+    }
+
+    function drawFunction() {
+      stroke(0, 0, 255);
+      strokeWeight(2);
+      noFill();
+      beginShape();
+      for (let px = 50; px <= 550; px += 1) {
+        let x = map(px, 50, 550, a, b);
+        let y = f(x);
+        let py = map(y, -1, 3, 350, 50); // Adjust range for visibility
+        vertex(px, py);
+      }
+      endShape();
+    }
+
+    function drawDarbouxSums() {
+      let dx = (b - a) / n;
+      let upperSum = 0;
+      let lowerSum = 0;
+
+      for (let i = 0; i < n; i++) {
+        let x0 = a + i * dx;
+        let x1 = x0 + dx;
+        // Sample points to approximate sup and inf
+        let samples = [];
+        for (let x = x0; x <= x1; x += dx / 100) {
+          samples.push(f(x));
+        }
+        let Mi = Math.max(...samples);
+        let mi = Math.min(...samples);
+
+        // Map to pixel coordinates
+        let px0 = map(x0, a, b, 50, 550);
+        let px1 = map(x1, a, b, 50, 550);
+        let pyMi = map(Mi, -1, 3, 350, 50);
+        let pymi = map(mi, -1, 3, 350, 50);
+
+        // Draw upper sum rectangle (semi-transparent red)
+        fill(255, 0, 0, 100);
+        noStroke();
+        rect(px0, pyMi, px1 - px0, 350 - pyMi);
+
+        // Draw lower sum rectangle (semi-transparent green)
+        fill(0, 255, 0, 100);
+        rect(px0, pymi, px1 - px0, 350 - pymi);
+
+        upperSum += Mi * dx;
+        lowerSum += mi * dx;
+      }
+
+      // Draw function again to overlay rectangles
+      drawFunction();
+      return { upperSum, lowerSum };
+    }
+
+    function updateInfo(upperSum, lowerSum) {
+      let diff = upperSum - lowerSum;
+      let info = `Upper Sum (U(f, P)): ${upperSum.toFixed(4)}<br>` +
+                 `Lower Sum (L(f, P)): ${lowerSum.toFixed(4)}<br>` +
+                 `Difference: ${diff.toFixed(4)}`;
+      select('#info').html(info);
+    }
+  </script>
+</body>
+</html>
