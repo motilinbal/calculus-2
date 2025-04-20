@@ -5,12 +5,14 @@ import './App.css';
 // Import all your visualizations here
 import DarbouxIntegralVisualization from '../library/Riemann1.jsx';
 import DarbouxVisualizer from '../library/Riemann2.jsx';
+import TriangleInequalityVisualization from '../library/triangle_inequality.jsx';
 
 
 // Add new visualizations to this object as you create them
 const visualizations = {
   'Darboux Integral': DarbouxIntegralVisualization,
   'Darboux Visualizer': DarbouxVisualizer,
+  'Triangle Inequality': TriangleInequalityVisualization,
   // Add more visualizations as you get them, for example:
   // 'Taylor Series': TaylorSeriesVisualization,
   // 'Fourier Transform': FourierTransformVisualization,
