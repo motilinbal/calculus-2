@@ -1,0 +1,388 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Improper Integrals II: Multiple Singularities and Infinite Intervals},
+    pdfpagemode=FullScreen,
+    }
+
+\linespread{1.1}
+
+% Theorem Environments
+\newtheoremstyle{mytheoremstyle}
+  {\topsep} % Space above
+  {\topsep} % Space below
+  {\itshape} % Body font
+  {} % Indent amount
+  {\bfseries} % Theorem head font
+  {.} % Punctuation after theorem head
+  {.5em} % Space after theorem head
+  {} % Theorem head spec (can be left empty, meaning `normal')
+
+\newtheoremstyle{mydefinitionstyle}
+  {\topsep} % Space above
+  {\topsep} % Space below
+  {\normalfont} % Body font
+  {} % Indent amount
+  {\bfseries} % Theorem head font
+  {.} % Punctuation after theorem head
+  {.5em} % Space after theorem head
+  {} % Theorem head spec (can be left empty, meaning `normal')
+
+\theoremstyle{mytheoremstyle}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{criterion}[theorem]{Criterion}
+
+\theoremstyle{mydefinitionstyle}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+
+% Custom command for absolute value
+\newcommand{\abs}[1]{\left|#1\right|}
+
+% For administrative notes - visually separated using fbox and parbox
+\newenvironment{adminnote}
+  {\par\medskip\noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{\textbf{Administrative Note:}\itshape\par\medskip}}} % Start environment
+  {\end{parbox}\medskip} % End environment
+
+\title{Improper Integrals II: Multiple Singularities and Infinite Intervals}
+\author{Lecture Notes}
+\date{\today} % Or specify date if needed
+
+% \sloppy % Removed for now
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+These notes extend our study of improper integrals. We first review the convergence criteria for integrals with a single singularity at an endpoint, focusing on comparison tests. We then generalize to integrals over finite intervals with multiple points of discontinuity or unboundedness. Finally, we introduce and analyze improper integrals over infinite intervals, establishing convergence criteria and exploring key examples, including integrals over the entire real line $(-\infty, \infty)$. Throughout, we emphasize the importance of comparison tests, particularly with functions of the form $1/x^\alpha$.
+\end{abstract}
+
+\section{Review: Improper Integrals with Endpoint Singularities}
+
+Let's briefly recall our main tools for determining the convergence of improper integrals where the function $f(x)$ is potentially unbounded near one endpoint of a finite interval $[a, b]$.
+
+Suppose $f$ is continuous on $[a, b)$ but potentially unbounded as $x \to b^-$. The improper integral is defined as:
+\[ \int_a^b f(x) \, dx = \lim_{t \to b^-} \int_a^t f(x) \, dx \]
+Similarly, if $f$ is continuous on $(a, b]$ but potentially unbounded as $x \to a^+$, we define:
+\[ \int_a^b f(x) \, dx = \lim_{t \to a^+} \int_t^b f(x) \, dx \]
+The integral \emph{converges} if the corresponding limit exists and is finite; otherwise, it \emph{diverges}.
+
+While direct computation via antiderivatives is possible sometimes, often we only need to determine convergence or divergence without finding the exact value. Our primary tools for this are the **Comparison Tests**.
+
+\subsection{Key Comparison Functions and Criteria}
+For a singularity at the left endpoint $a$, we often compare with functions of the form $\frac{1}{(x-a)^\alpha}$. Recall the fundamental result:
+\[ \int_a^c \frac{dx}{(x-a)^\alpha} \quad \text{converges if and only if } \alpha < 1 \quad (\text{for } c > a) \]
+Similarly, for a singularity at the right endpoint $b$, we compare with $\frac{1}{(b-x)^\alpha}$:
+\[ \int_c^b \frac{dx}{(b-x)^\alpha} \quad \text{converges if and only if } \alpha < 1 \quad (\text{for } c < b) \]
+
+\begin{criterion}[Limit Comparison Test (LCT) for Endpoint Singularities]
+Let $f(x)$ and $g(x)$ be positive functions on $(a, b]$. Suppose the singularity is at $x=a$. If
+\[ L = \lim_{x \to a^+} \frac{f(x)}{g(x)} \]
+exists and $0 < L < \infty$, then
+\[ \int_a^b f(x) \, dx \quad \text{converges if and only if} \quad \int_a^b g(x) \, dx \quad \text{converges.} \]
+A similar statement holds for singularities at $x=b$ (using the limit as $x \to b^-$).
+
+\textbf{Important Cases:}
+\begin{itemize}
+    \item If $L=0$: If $\int_a^b g(x) \, dx$ converges, then $\int_a^b f(x) \, dx$ converges.
+    \item If $L=\infty$: If $\int_a^b g(x) \, dx$ diverges, then $\int_a^b f(x) \, dx$ diverges.
+\end{itemize}
+\end{criterion}
+
+In practice, when analyzing a singularity at $a$, we choose $g(x) = \frac{C}{(x-a)^\alpha}$ such that $f(x)$ "behaves like" $g(x)$ near $a$. We find the appropriate $\alpha$ to make the limit $L$ finite and non-zero, then check if $\alpha < 1$. The same logic applies near $b$ using $g(x) = \frac{C}{(b-x)^\alpha}$. This principle works for the vast majority (99\%) of cases we encounter.
+
+\section{Integrals with Multiple Singularities in Finite Intervals}
+
+What if an integral $\int_a^b f(x) \, dx$ has potential problems not just at the endpoints $a$ or $b$, but also at one or more points $x_1, x_2, \dots, x_k$ inside the interval $(a, b)$? These could be points where $f$ is undefined or unbounded.
+
+\textbf{Strategy:} The core idea is simple: break the interval $[a, b]$ into smaller pieces such that each piece contains at most one "problem point", located at one of its endpoints.
+
+Suppose we have problematic points $p_1 < p_2 < \dots < p_m$ within $[a, b]$ (these could include $a$, $b$, and points $x_i$ inside). We choose intermediate points $c_1, c_2, \dots, c_{m-1}$ such that $p_i < c_i < p_{i+1}$. Then we split the original integral:
+\[ \int_a^b f(x) \, dx = \int_a^{p_1 \text{ or } c_0} \dots + \int_{c_i}^{p_{i+1}} \dots + \int_{p_j}^{c_j} \dots + \int_{c_{m-1}}^b f(x) \, dx \]
+More formally, pick points $c_0, c_1, \dots, c_k$ such that $a = c_0 < c_1 < \dots < c_k = b$, where the set $\{c_1, \dots, c_{k-1}\}$ includes all the interior problematic points $x_1, \dots, x_k$. We often choose midpoints, but any division works. For instance, if the problems are at $a, x_1, \dots, x_k, b$:
+\begin{align*} \int_a^b f(x) \, dx = \int_a^{\frac{a+x_1}{2}} f(x) \, dx &+ \int_{\frac{a+x_1}{2}}^{x_1} f(x) \, dx + \int_{x_1}^{\frac{x_1+x_2}{2}} f(x) \, dx + \dots \\ &+ \int_{\frac{x_{k-1}+x_k}{2}}^{x_k} f(x) \, dx + \int_{x_k}^{\frac{x_k+b}{2}} f(x) \, dx + \int_{\frac{x_k+b}{2}}^b f(x) \, dx \end{align*}
+(Adjust logic if $a$ or $b$ are not problematic). This ensures each resulting integral has at most one singularity, located at an endpoint.
+
+\begin{definition}[Convergence with Multiple Singularities]
+The integral $\int_a^b f(x) \, dx$ with multiple problematic points converges if and only if \textbf{all} the integrals in the chosen partition converge. If even one of these sub-integrals diverges, the original integral diverges.
+\end{definition}
+
+\begin{remark}
+The convergence or divergence, and the value of the integral if it converges, \textbf{does not depend} on how we choose the intermediate points $c_i$ to split the interval. Different choices might yield different values for the sub-integrals, but their sum (if they all converge) will be the same.
+\end{remark}
+
+To show divergence, it's sufficient to find just \emph{one} sub-interval where the integral diverges.
+
+\begin{example}[Original Example 1]
+Determine the convergence of $\int_0^1 \frac{dx}{\sqrt{x(1-x)}}$.
+
+\textbf{Solution:}
+The potential problems are at the endpoints $x=0$ (where $\sqrt{x} \to 0$) and $x=1$ (where $\sqrt{1-x} \to 0$). The function is positive on $(0, 1)$. We split the interval, say at $x=1/2$:
+\[ \int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \int_0^{1/2} \frac{dx}{\sqrt{x}\sqrt{1-x}} + \int_{1/2}^1 \frac{dx}{\sqrt{x}\sqrt{1-x}} \]
+We analyze each piece using the Limit Comparison Test (LCT).
+
+\emph{Piece 1: Near $x=0$.}
+Let $f(x) = \frac{1}{\sqrt{x}\sqrt{1-x}}$. As $x \to 0^+$, the term $\sqrt{1-x} \to \sqrt{1} = 1$. So, $f(x)$ behaves like $\frac{1}{\sqrt{x}}$. Let $g(x) = \frac{1}{\sqrt{x}} = \frac{1}{x^{1/2}}$.
+\[ L_0 = \lim_{x \to 0^+} \frac{f(x)}{g(x)} = \lim_{x \to 0^+} \frac{1/\left(\sqrt{x}\sqrt{1-x}\right)}{1/\sqrt{x}} = \lim_{x \to 0^+} \frac{\sqrt{x}}{\sqrt{x}\sqrt{1-x}} = \lim_{x \to 0^+} \frac{1}{\sqrt{1-x}} = 1 \]
+Since $0 < L_0 < \infty$, the integral $\int_0^{1/2} f(x) \, dx$ converges if and only if $\int_0^{1/2} g(x) \, dx = \int_0^{1/2} \frac{dx}{x^{1/2}}$ converges. The latter converges because $\alpha = 1/2 < 1$. Thus, the first piece converges.
+
+\emph{Piece 2: Near $x=1$.}
+As $x \to 1^-$, the term $\sqrt{x} \to \sqrt{1} = 1$. So, $f(x)$ behaves like $\frac{1}{\sqrt{1-x}}$. Let $h(x) = \frac{1}{\sqrt{1-x}} = \frac{1}{(1-x)^{1/2}}$.
+\[ L_1 = \lim_{x \to 1^-} \frac{f(x)}{h(x)} = \lim_{x \to 1^-} \frac{1/\left(\sqrt{x}\sqrt{1-x}\right)}{1/\sqrt{1-x}} = \lim_{x \to 1^-} \frac{\sqrt{1-x}}{\sqrt{x}\sqrt{1-x}} = \lim_{x \to 1^-} \frac{1}{\sqrt{x}} = 1 \]
+Since $0 < L_1 < \infty$, the integral $\int_{1/2}^1 f(x) \, dx$ converges if and only if $\int_{1/2}^1 h(x) \, dx = \int_{1/2}^1 \frac{dx}{(1-x)^{1/2}}$ converges. The latter converges because $\alpha = 1/2 < 1$. Thus, the second piece converges.
+
+Since both pieces converge, the original integral $\int_0^1 \frac{dx}{\sqrt{x(1-x)}}$ \textbf{converges}.
+\end{example}
+
+\begin{example}[Original Example 2 - Corrected Analysis]
+Determine the convergence of $\int_0^2 \frac{dx}{\sqrt[3]{x(x-1)(x-2)^2}}$.
+(Note: The transcript seemed to contain a potential misreading or miscalculation regarding the behavior near $x=2$. We analyze the function as written.)
+
+\textbf{Solution:}
+The integrand is $f(x) = \frac{1}{\left(x(x-1)(x-2)^2\right)^{1/3}}$. The potential problematic points within or at the boundary of $[0, 2]$ are $x=0$, $x=1$, and $x=2$, where the denominator approaches zero. The function changes sign around $x=1$. For convergence tests like LCT, we typically consider $|f(x)|$.
+We split the integral to isolate each singularity:
+\[ \int_0^2 f(x) \, dx = \int_0^{0.5} f(x) \, dx + \int_{0.5}^1 f(x) \, dx + \int_1^{1.5} f(x) \, dx + \int_{1.5}^2 f(x) \, dx \]
+We analyze the absolute convergence of each piece using LCT comparing $|f(x)|$ with a suitable positive function $g(x)$. If $\int |f(x)| dx$ converges, then $\int f(x) dx$ converges.
+
+\emph{Near $x=0$:}
+$|f(x)| = \frac{1}{|\left(x(x-1)(x-2)^2\right)^{1/3}|} = \frac{1}{(|x||x-1||x-2|^2)^{1/3}}$.
+As $x \to 0^+$, $|f(x)| \approx \frac{1}{(x \cdot 1 \cdot 4)^{1/3}} = \frac{1}{\sqrt[3]{4} x^{1/3}}$.
+Compare with $g_0(x) = \frac{1}{x^{1/3}}$.
+\[ L_0 = \lim_{x \to 0^+} \frac{|f(x)|}{g_0(x)} = \lim_{x \to 0^+} \frac{1/(|x||x-1||x-2|^2)^{1/3}}{1/x^{1/3}} = \lim_{x \to 0^+} \frac{x^{1/3}}{(x \cdot |x-1| \cdot (x-2)^2)^{1/3}} = \frac{1}{(1 \cdot 1 \cdot 4)^{1/3}} = \frac{1}{\sqrt[3]{4}} \]
+Since $0 < L_0 < \infty$ and $\int_0^{0.5} g_0(x) dx$ converges ($\alpha=1/3<1$), the integral $\int_0^{0.5} |f(x)| dx$ converges. Thus, $\int_0^{0.5} f(x) dx$ converges.
+
+\emph{Near $x=1$:}
+As $x \to 1$, $|f(x)| \approx \frac{1}{(1 \cdot |x-1| \cdot 1^2)^{1/3}} = \frac{1}{|x-1|^{1/3}}$.
+Compare with $g_1(x) = \frac{1}{|x-1|^{1/3}}$.
+\[ L_1 = \lim_{x \to 1} \frac{|f(x)|}{g_1(x)} = \lim_{x \to 1} \frac{1/(|x||x-1||x-2|^2)^{1/3}}{1/|x-1|^{1/3}} = \lim_{x \to 1} \frac{|x-1|^{1/3}}{(|x||x-1||x-2|^2)^{1/3}} = \frac{1}{(1 \cdot 1 \cdot 1)^{1/3}} = 1 \]
+Since $0 < L_1 < \infty$ and $\int \frac{dx}{|x-1|^{1/3}}$ converges around $x=1$ (split into $\int_{0.5}^1 \frac{dx}{(1-x)^{1/3}}$ and $\int_1^{1.5} \frac{dx}{(x-1)^{1/3}}$, both convergent with $\alpha=1/3<1$), the integrals $\int_{0.5}^1 |f(x)| dx$ and $\int_1^{1.5} |f(x)| dx$ converge. Thus, $\int_{0.5}^1 f(x) dx$ and $\int_1^{1.5} f(x) dx$ converge.
+
+\emph{Near $x=2$:}
+As $x \to 2$, $|f(x)| \approx \frac{1}{(2 \cdot 1 \cdot (x-2)^2)^{1/3}} = \frac{1}{\sqrt[3]{2} |x-2|^{2/3}}$.
+Compare with $g_2(x) = \frac{1}{|x-2|^{2/3}}$.
+\[ L_2 = \lim_{x \to 2} \frac{|f(x)|}{g_2(x)} = \lim_{x \to 2} \frac{1/(|x||x-1||x-2|^2)^{1/3}}{1/|x-2|^{2/3}} = \lim_{x \to 2} \frac{|x-2|^{2/3}}{(|x||x-1||x-2|^2)^{1/3}} = \frac{1}{(2 \cdot 1 \cdot 1)^{1/3}} = \frac{1}{\sqrt[3]{2}} \]
+Since $0 < L_2 < \infty$ and $\int \frac{dx}{|x-2|^{2/3}}$ converges around $x=2$ (split into $\int_{1.5}^2 \frac{dx}{(2-x)^{2/3}}$, convergent with $\alpha=2/3<1$), the integral $\int_{1.5}^2 |f(x)| dx$ converges. Thus, $\int_{1.5}^2 f(x) dx$ converges.
+
+\textbf{Conclusion:} Since all four pieces of the partitioned integral converge, the original integral $\int_0^2 \frac{dx}{\sqrt[3]{x(x-1)(x-2)^2}}$ \textbf{converges}.
+
+\begin{remark}[Correction Note]
+As noted before, the original lecture seemed to incorrectly conclude divergence based on the $x=2$ singularity. The analysis shows the exponent there is $\alpha=2/3 < 1$, leading to convergence.
+\end{remark}
+\end{example} % Correctly closing the example environment
+
+\section{Improper Integrals over Infinite Intervals}
+
+We now shift our focus to integrals where the interval of integration itself is infinite. This is sometimes called an improper integral of Type II (though terminology varies).
+
+Consider integrating a function $f(x)$ over $[a, \infty)$. Geometrically, we are asking about the area under the curve $y=f(x)$ from $x=a$ extending infinitely to the right. Here, the "width" is infinite, while the "height" $f(x)$ might approach zero, stay constant, or even grow.
+
+\begin{definition}[Integral over $[a, \infty)$]
+Let $f(x)$ be integrable on $[a, t]$ for all $t > a$. The improper integral of $f$ over $[a, \infty)$ is defined as:
+\[ \int_a^\infty f(x) \, dx = \lim_{t \to \infty} \int_a^t f(x) \, dx \]
+The integral \emph{converges} if this limit exists and is finite; otherwise, it \emph{diverges}.
+\end{definition}
+
+Similarly, we define integrals over $(-\infty, b]$ and $(-\infty, \infty)$.
+
+\begin{definition}[\texorpdfstring{Integral over $(-\infty, b]$}{Integral over (-inf, b]}]
+Let $f(x)$ be integrable on $[t, b]$ for all $t < b$.
+\[ \int_{-\infty}^b f(x) \, dx = \lim_{t \to -\infty} \int_t^b f(x) \, dx \]
+Converges if the limit is finite, diverges otherwise.
+\end{definition}
+
+\begin{definition}[\texorpdfstring{Integral over $(-\infty, \infty)$}{Integral over (-inf, inf)}]
+Let $f(x)$ be integrable on $[a, b]$ for all $a < b$. Choose any real number $c$. The integral over $(-\infty, \infty)$ is defined as:
+\[ \int_{-\infty}^\infty f(x) \, dx = \int_{-\infty}^c f(x) \, dx + \int_c^\infty f(x) \, dx \]
+This integral converges if and only if \textbf{both} integrals on the right-hand side converge. The choice of $c$ does not affect convergence or the final value (if convergent).
+Equivalently, convergence means the existence of the double limit:
+\[ \lim_{\substack{s \to -\infty \\ t \to \infty}} \int_s^t f(x) \, dx \]
+where $s$ and $t$ approach their limits independently.
+\end{definition}
+
+\begin{example}[Original Example 3: A Convergent Integral]
+Calculate $\int_0^\infty \frac{dx}{1+x^2}$.
+
+\textbf{Solution:}
+By definition:
+\[ \int_0^\infty \frac{dx}{1+x^2} = \lim_{t \to \infty} \int_0^t \frac{dx}{1+x^2} \]
+The antiderivative is $\arctan(x)$.
+\[ \lim_{t \to \infty} [\arctan(x)]_0^t = \lim_{t \to \infty} (\arctan(t) - \arctan(0)) \]
+We know $\arctan(t) \to \pi/2$ as $t \to \infty$, and $\arctan(0) = 0$.
+\[ \lim_{t \to \infty} (\arctan(t) - 0) = \frac{\pi}{2} \]
+The integral converges to $\pi/2$.
+
+\textbf{Geometric Interpretation:} The function $y = 1/(1+x^2)$ starts at height 1 at $x=0$ and decreases towards 0 as $x \to \infty$. Although the region under the curve from $x=0$ to $x=\infty$ has infinite width, its area is finite ($\pi/2$). This contrasts with singularities like $\int_0^1 (1/x) dx$ where the interval width is finite, but the infinite height leads to infinite area.
+\end{example}
+
+\subsection{Comparison Tests for Infinite Intervals}
+
+Just as with endpoint singularities, calculating the limit might be difficult or impossible. We need comparison tests. The key comparison functions are again powers of $x$.
+
+\textbf{Key Comparison Integrals:} Consider $\int_a^\infty \frac{dx}{x^\alpha}$ where $a > 0$. (We need $a>0$ to avoid a potential singularity at $x=0$).
+
+Let's calculate its convergence: Assume $\alpha \ne 1$.
+\begin{align*} \int_a^\infty \frac{dx}{x^\alpha} &= \lim_{t \to \infty} \int_a^t x^{-\alpha} \, dx \\ &= \lim_{t \to \infty} \left[ \frac{x^{1-\alpha}}{1-\alpha} \right]_a^t \\ &= \lim_{t \to \infty} \left( \frac{t^{1-\alpha}}{1-\alpha} - \frac{a^{1-\alpha}}{1-\alpha} \right) \end{align*}
+Now, the limit depends on the sign of the exponent $1-\alpha$:
+\begin{itemize}
+    \item If $1-\alpha > 0$ (i.e., $\alpha < 1$): $t^{1-\alpha} \to \infty$. The integral diverges.
+    \item If $1-\alpha < 0$ (i.e., $\alpha > 1$): $t^{1-\alpha} = \frac{1}{t^{\alpha-1}} \to 0$. The limit is $0 - \frac{a^{1-\alpha}}{1-\alpha} = \frac{a^{1-\alpha}}{\alpha-1}$. The integral converges.
+\end{itemize}
+Now consider the case $\alpha = 1$:
+\[ \int_a^\infty \frac{dx}{x} = \lim_{t \to \infty} [\ln x]_a^t = \lim_{t \to \infty} (\ln t - \ln a) = \infty \]
+The integral diverges.
+
+\begin{theorem}[Convergence of $\int_a^\infty \frac{dx}{x^\alpha}$]
+For any $a > 0$, the integral
+\[ \int_a^\infty \frac{dx}{x^\alpha} \quad \text{converges if and only if } \alpha > 1. \]
+If it converges, its value is $\frac{a^{1-\alpha}}{\alpha-1}$.
+\end{theorem}
+
+\begin{remark}[Crucial Distinction]
+Notice the condition is $\alpha > 1$ for convergence at infinity, whereas it was $\alpha < 1$ for convergence at an endpoint singularity.
+\textbf{Intuition:}
+\begin{itemize}
+    \item Near an endpoint singularity (e.g., $x=0$): $f(x)$ needs to approach infinity "slowly enough" (like $1/x^{1/2}$) for the area to be finite. $1/x^2$ goes up too fast.
+    \item Near infinity: $f(x)$ needs to approach zero "fast enough" (like $1/x^2$) for the infinite width to be compensated. $1/x^{1/2}$ goes down too slowly.
+    \item The case $\alpha=1$ ($1/x$) is the borderline divergence case for both scenarios.
+\end{itemize}
+\end{remark}
+
+\begin{criterion}[Limit Comparison Test (LCT) for Infinite Intervals]
+Let $f(x)$ and $g(x)$ be positive functions for $x \ge a$. If
+\[ L = \lim_{x \to \infty} \frac{f(x)}{g(x)} \]
+exists and $0 < L < \infty$, then
+\[ \int_a^\infty f(x) \, dx \quad \text{converges if and only if} \quad \int_a^\infty g(x) \, dx \quad \text{converges.} \]
+The same special cases for $L=0$ and $L=\infty$ apply as before. (If $f$ changes sign, apply this to $|f(x)|$).
+\end{criterion}
+
+\begin{proposition}[Necessary Condition for Convergence]
+If $\int_a^\infty f(x) \, dx$ converges, then it must be the case that $\lim_{x \to \infty} f(x) = 0$.
+
+\textbf{Warning:} This condition is necessary but \textbf{not sufficient}. Just because $\lim_{x \to \infty} f(x) = 0$ does not guarantee convergence (e.g., $\int_1^\infty \frac{1}{x} dx$ diverges, yet $1/x \to 0$). However, if the limit is not zero, or does not exist, the integral *must* diverge.
+\end{proposition}
+
+\begin{example}[Original Example 4: Divergence from Necessary Condition]
+Does $\int_1^\infty \sin(x) \, dx$ converge?
+
+\textbf{Solution:}
+Consider the limit of the integrand: $\lim_{x \to \infty} \sin(x)$. This limit does not exist (the function oscillates between -1 and 1). Since the limit is not 0, the necessary condition for convergence fails. Therefore, the integral $\int_1^\infty \sin(x) \, dx$ \textbf{diverges}.
+
+Alternatively, using the definition:
+\[ \int_1^\infty \sin(x) \, dx = \lim_{t \to \infty} \int_1^t \sin(x) \, dx = \lim_{t \to \infty} [-\cos(x)]_1^t = \lim_{t \to \infty} (-\cos(t) - (-\cos(1))) = \lim_{t \to \infty} (\cos(1) - \cos(t)) \]
+Since $\lim_{t \to \infty} \cos(t)$ does not exist, the limit defining the integral does not exist. The integral diverges.
+\end{example}
+
+\begin{example}[Original Example 5: Using LCT at Infinity]
+Determine the convergence of $\int_7^\infty \frac{x^6+2x}{x^8+5} dx$.
+
+\textbf{Solution:}
+The integrand $f(x) = \frac{x^6+2x}{x^8+5}$ is positive for $x \ge 7$.
+As $x \to \infty$, the numerator behaves like $x^6$ and the denominator behaves like $x^8$. So, $f(x)$ behaves like $\frac{x^6}{x^8} = \frac{1}{x^2}$.
+Let's compare with $g(x) = \frac{1}{x^2}$.
+\begin{align*} L &= \lim_{x \to \infty} \frac{f(x)}{g(x)} = \lim_{x \to \infty} \frac{(x^6+2x)/(x^8+5)}{1/x^2} \\ &= \lim_{x \to \infty} \frac{x^2(x^6+2x)}{x^8+5} \\ &= \lim_{x \to \infty} \frac{x^8+2x^3}{x^8+5} \\ &= \lim_{x \to \infty} \frac{1 + 2/x^5}{1 + 5/x^8} \quad (\text{dividing numerator and denominator by } x^8) \\ &= \frac{1+0}{1+0} = 1 \end{align*}
+Since $0 < L < \infty$, the integral $\int_7^\infty f(x) \, dx$ converges if and only if $\int_7^\infty g(x) \, dx = \int_7^\infty \frac{1}{x^2} dx$ converges.
+The latter integral converges because $\alpha = 2 > 1$.
+Therefore, the original integral $\int_7^\infty \frac{x^6+2x}{x^8+5} dx$ \textbf{converges}.
+\end{example}
+
+\subsection{Integrals over $(-\infty, \infty)$}
+
+Recall that $\int_{-\infty}^\infty f(x) \, dx$ converges if and only if both $\int_{-\infty}^c f(x) \, dx$ and $\int_c^\infty f(x) \, dx$ converge for some (any) $c$.
+
+\begin{example}[Original Example 6: Integral over $\mathbb{R}$]
+Calculate $\int_{-\infty}^\infty \frac{dx}{1+x^2}$.
+
+\textbf{Solution:}
+We split the integral, for instance at $c=0$:
+\[ \int_{-\infty}^\infty \frac{dx}{1+x^2} = \int_{-\infty}^0 \frac{dx}{1+x^2} + \int_0^\infty \frac{dx}{1+x^2} \]
+We already calculated the second integral: $\int_0^\infty \frac{dx}{1+x^2} = \pi/2$.
+For the first integral:
+\begin{align*} \int_{-\infty}^0 \frac{dx}{1+x^2} &= \lim_{s \to -\infty} \int_s^0 \frac{dx}{1+x^2} \\ &= \lim_{s \to -\infty} [\arctan(x)]_s^0 \\ &= \lim_{s \to -\infty} (\arctan(0) - \arctan(s)) \\ &= 0 - (-\pi/2) = \pi/2 \end{align*}
+Since both pieces converge, the original integral converges, and its value is $\pi/2 + \pi/2 = \pi$.
+
+Alternatively, using the antiderivative $F(x) = \arctan(x)$:
+\[ \int_{-\infty}^\infty \frac{dx}{1+x^2} = F(\infty) - F(-\infty) = \lim_{t \to \infty} \arctan(t) - \lim_{s \to -\infty} \arctan(s) = \frac{\pi}{2} - \left(-\frac{\pi}{2}\right) = \pi \]
+\end{example}
+
+\begin{remark}[Odd Functions and Principal Value]
+If $f(x)$ is an odd function ($f(-x) = -f(x)$) and continuous everywhere, then for any finite $a > 0$, $\int_{-a}^a f(x) \, dx = 0$.
+What about $\int_{-\infty}^\infty f(x) \, dx$?
+If the integral \textbf{converges} in the proper sense (meaning both $\int_0^\infty f(x) dx$ and $\int_{-\infty}^0 f(x) dx$ converge), then its value must indeed be 0.
+However, the integral might diverge even if the limit $\lim_{t \to \infty} \int_{-t}^t f(x) \, dx$ exists (and equals 0). This limit is called the \textbf{Cauchy Principal Value} (P.V.). Convergence of the integral requires the independent limits $\int_0^\infty$ and $\int_{-\infty}^0$ to exist.
+
+Consider $f(x) = x$. It's odd.
+\[ \text{P.V.} \int_{-\infty}^\infty x \, dx = \lim_{t \to \infty} \int_{-t}^t x \, dx = \lim_{t \to \infty} \left[ \frac{x^2}{2} \right]_{-t}^t = \lim_{t \to \infty} \left( \frac{t^2}{2} - \frac{(-t)^2}{2} \right) = \lim_{t \to \infty} (0) = 0 \]
+However, $\int_0^\infty x \, dx = \lim_{t \to \infty} [x^2/2]_0^t = \infty$ (diverges), and $\int_{-\infty}^0 x \, dx = \lim_{s \to -\infty} [x^2/2]_s^0 = -\infty$ (diverges). Since the two halves diverge, the integral $\int_{-\infty}^\infty x \, dx$ \textbf{diverges}, even though its principal value is 0. Note also that $f(x)=x$ does not satisfy the necessary condition $\lim_{x\to\pm\infty} f(x)=0$.
+\end{remark}
+
+\section{Mixed Improper Integrals}
+
+Sometimes an integral might have issues both from infinite limits and from singularities within the interval.
+
+\textbf{Strategy:} Break the integral into enough pieces so that each piece has \emph{only one} type of problem: either an infinite limit of integration or a singularity at one endpoint. The original integral converges if and only if all pieces converge.
+
+\begin{example}[Original Example 8: Infinite Interval and Interior Singularities]
+Determine the convergence of $\int_1^\infty \frac{dx}{\sqrt{|x^2-5x+6|}}$.
+
+\textbf{Solution:}
+The integrand is $f(x) = \frac{1}{\sqrt{|(x-2)(x-3)|}}$.
+Problems:
+\begin{enumerate}
+    \item Potential singularity at $x=2$.
+    \item Potential singularity at $x=3$.
+    \item Infinite interval of integration $[1, \infty)$.
+\end{enumerate}
+We need to split the interval to isolate these issues. A possible partition is:
+\[ \int_1^\infty f(x) dx = \int_1^2 f(x) dx + \int_2^{2.5} f(x) dx + \int_{2.5}^3 f(x) dx + \int_3^4 f(x) dx + \int_4^\infty f(x) dx \]
+(We chose intermediate points 2.5 and 4 arbitrarily). Now we analyze each piece, considering absolute convergence.
+
+\emph{Piece 1: $\int_1^2 |f(x)| dx$.} Singularity at $x=2$.
+Near $x=2^-$, $|f(x)| = \frac{1}{\sqrt{|x-2||x-3|}}$. As $x \to 2^-$, $|x-3| \to 1$. So $|f(x)| \approx \frac{1}{\sqrt{|x-2|}} = \frac{1}{\sqrt{2-x}}$. Compare with $g(x) = \frac{1}{\sqrt{2-x}}$. LCT limit is 1. Since $\alpha = 1/2 < 1$, this piece converges.
+
+\emph{Piece 2: $\int_2^{2.5} |f(x)| dx$.} Singularity at $x=2$.
+Near $x=2^+$, $|f(x)| \approx \frac{1}{\sqrt{|x-2|}} = \frac{1}{\sqrt{x-2}}$. Compare with $g(x) = \frac{1}{\sqrt{x-2}}$. LCT limit is 1. Since $\alpha = 1/2 < 1$, this piece converges.
+
+\emph{Piece 3: $\int_{2.5}^3 |f(x)| dx$.} Singularity at $x=3$.
+Near $x=3^-$, $|f(x)| = \frac{1}{\sqrt{|x-2||x-3|}}$. As $x \to 3^-$, $|x-2| \to 1$. So $|f(x)| \approx \frac{1}{\sqrt{|x-3|}} = \frac{1}{\sqrt{3-x}}$. Compare with $g(x) = \frac{1}{\sqrt{3-x}}$. LCT limit is 1. Since $\alpha = 1/2 < 1$, this piece converges.
+
+\emph{Piece 4: $\int_3^4 |f(x)| dx$.} Singularity at $x=3$.
+Near $x=3^+$, $|f(x)| \approx \frac{1}{\sqrt{|x-3|}} = \frac{1}{\sqrt{x-3}}$. Compare with $g(x) = \frac{1}{\sqrt{x-3}}$. LCT limit is 1. Since $\alpha = 1/2 < 1$, this piece converges.
+
+\emph{Piece 5: $\int_4^\infty f(x) dx$.} Infinite interval. Note $f(x)$ is positive here.
+As $x \to \infty$, $x^2-5x+6 \approx x^2$. So $\sqrt{|x^2-5x+6|} \approx \sqrt{x^2} = x$. The function $f(x)$ behaves like $1/x$.
+Use LCT. Compare $f(x) = \frac{1}{\sqrt{x^2-5x+6}}$ with $g(x) = \frac{1}{x}$.
+\begin{align*} L &= \lim_{x \to \infty} \frac{f(x)}{g(x)} = \lim_{x \to \infty} \frac{1/\sqrt{x^2-5x+6}}{1/x} \\ &= \lim_{x \to \infty} \frac{x}{\sqrt{x^2-5x+6}} = \lim_{x \to \infty} \sqrt{\frac{x^2}{x^2-5x+6}} = 1 \end{align*}
+Since $0 < L < \infty$, the integral $\int_4^\infty f(x) dx$ converges or diverges together with $\int_4^\infty g(x) dx = \int_4^\infty \frac{1}{x} dx$.
+The integral $\int_4^\infty \frac{1}{x} dx$ diverges because $\alpha = 1$.
+Therefore, the fifth piece diverges.
+
+\textbf{Conclusion:} Since one of the pieces ($\int_4^\infty f(x) dx$) diverges, the original integral $\int_1^\infty \frac{dx}{\sqrt{|x^2-5x+6|}}$ \textbf{diverges}.
+It was sufficient to identify the behavior at infinity ($1/x$) to see the divergence.
+\end{example}
+
+% Placeholder for administrative notes, if any were identified as relevant course logistics.
+% The transcript contained phrases like "before Passover" and mentions of exercise sheets
+% or uploads ("she didn't upload it for me"), but these seem conversational or personal rather
+% than formal announcements meant for the whole class.
+% If specific course admin details were present, they would be listed here.
+% Example:
+% \begin{adminnote}
+%   Please check the course website for the updated exercise sheet for this topic.
+%   Reminder: Homework 3 is due next Tuesday.
+% \end{adminnote}
+
+\end{document}

@@ -1,0 +1,563 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{framed}
+
+% Handle PDF strings with math content
+\pdfstringdefDisableCommands{%
+  \def\infty{infinity}%
+}
+
+% Define theorem-like environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question} % For student questions mentioned
+\newtheorem{warning}[theorem]{Warning} % Add warning environment
+
+% Custom environment for administrative notes
+\newenvironment{adminnote}{%
+    \begin{framed}\noindent\textbf{Administrative Notes:}\begin{itemize}}{%
+    \end{itemize}\end{framed}}
+
+\newcommand{\dx}{\, dx} % Differential dx
+\newcommand{\R}{\mathbb{R}} % Real numbers
+
+\title{Lecture Notes: Improper Integrals}
+\author{Undergraduate Mathematics Educator} % Placeholder
+\date{Based on Lecture Transcript} % Placeholder
+
+\begin{document}
+
+%\maketitle % Optional: Title page
+
+\noindent\textit{Welcome back, everyone! I hope you had a refreshing break. It's good to take a pause sometimes. Now, let's dive back into our exploration of calculus.}
+
+\begin{adminnote}
+    \item \textbf{Lecture Format Reminder:} Please note that some previous lectures might have been delivered via Zoom, but the material remains part of the course content.
+    \item \textbf{Notebook Uploads:} A student asked about when the lecture notebooks might be uploaded. I'll check on the status and any technical issues that might have caused delays before the break and provide an update.
+    \item \textbf{Homework 2, Problem 4 Clarification:} A question came up regarding Homework 2, Problem 4, specifically about whether proving convergence was strictly required, mentioning a potential comment from Dr.\ H. Please ensure you follow the instructions given in the assignment sheet. If there's ambiguity, feel free to ask during office hours or on the forum. Typically, if a question asks about convergence, a justification (proof or counterexample/argument for divergence) is needed.
+\end{adminnote}
+
+\section{Review and Motivation: From Definite to Improper Integrals}
+
+Let's start by briefly recalling our journey with integration so far.
+
+\begin{enumerate}
+    \item \textbf{Indefinite Integrals:} We began with the concept of the antiderivative (or primitive function), denoted $\int f(x) \dx$. This represents the family of functions whose derivative is $f(x)$.
+    \item \textbf{Definite Integrals:} We then developed the definite integral, $\int_a^b f(x) \dx$, rigorously defined using Riemann sums (upper sums, lower sums, ensuring the supremum of lower sums equals the infimum of upper sums for integrable functions). The definite integral represents the signed area under the curve $y=f(x)$ over a finite interval $[a, b]$.
+    \item \textbf{The Fundamental Theorem of Calculus (Newton-Leibniz):} This crucial theorem connects the two concepts, providing a powerful tool for calculating definite integrals: If $F'(x) = f(x)$, then $\int_a^b f(x) \dx = F(b) - F(a)$.
+\end{enumerate}
+
+Everything seemed well-defined and elegant. However, the definition of the definite integral relies on two key assumptions:
+\begin{itemize}
+    \item The interval of integration $[a, b]$ is finite.
+    \item The function $f(x)$ is bounded on $[a, b]$. (Recall that continuity on $[a, b]$ implies boundedness and integrability).
+\end{itemize}
+
+But what happens if one or both of these conditions are violated? Consider this scenario:
+
+\begin{example}[Motivation: A Problematic Integral]
+    What is the meaning of $\int_0^5 \frac{1}{x} \dx$?
+    Here, the interval $[0, 5]$ seems finite, but the function $f(x) = 1/x$ is *unbounded* as $x$ approaches 0 from the right ($x \to 0^+$). The function "explodes" at $x=0$. Our standard definition of the definite integral doesn't apply directly.
+\end{example}
+
+This leads us to the question: Can we extend the concept of integration to handle such cases? Can we assign a meaningful value (perhaps a finite number, perhaps infinity) to integrals over infinite intervals or integrals of functions with vertical asymptotes within or at the boundary of the interval?
+
+The answer is yes, and this leads us to the concept of **Improper Integrals**. Instead of giving up, we carefully extend the definition using limits.
+
+\section{Improper Integrals of Type I: Infinite Discontinuities}
+
+Let's first address the issue of infinite discontinuities within a finite interval.
+
+\begin{definition}[Improper Integral: Infinite Discontinuity at Endpoint]
+    Suppose $f(x)$ is continuous on the interval $(a, b]$ and has an infinite discontinuity at $x=a$ (i.e., $\lim_{x \to a^+} |f(x)| = \infty$). We define the improper integral of $f$ over $[a, b]$ as:
+    \[
+    \int_a^b f(x) \dx = \lim_{t \to a^+} \int_t^b f(x) \dx
+    \]
+    provided this limit exists and is finite. If the limit exists and is finite, we say the improper integral **converges**. Otherwise, we say it **diverges**.
+
+    Similarly, if $f(x)$ is continuous on $[a, b)$ and has an infinite discontinuity at $x=b$, we define:
+    \[
+    \int_a^b f(x) \dx = \lim_{t \to b^-} \int_a^t f(x) \dx
+    \]
+    provided this limit exists and is finite.
+\end{definition}
+
+\begin{remark}
+    The key idea is to "avoid" the problematic point $a$ by integrating over $[t, b]$ where $t > a$. Since $f$ is continuous (and thus integrable) on $[t, b]$, the integral $\int_t^b f(x) \dx$ is a standard definite integral for any such $t$. We then examine what happens to the value of this integral as $t$ gets arbitrarily close to $a$.
+\end{remark}
+
+\begin{example}[Revisiting the Motivating Example]
+    Let's evaluate $\int_0^5 \frac{1}{x} \dx$ using the definition.
+    The discontinuity is at $x=0$. So, we consider:
+    \begin{align*} \int_0^5 \frac{1}{x} \dx &= \lim_{t \to 0^+} \int_t^5 \frac{1}{x} \dx \\ &= \lim_{t \to 0^+} \left[ \ln|x| \right]_t^5 \\ &= \lim_{t \to 0^+} (\ln|5| - \ln|t|) \\ &= \lim_{t \to 0^+} (\ln 5 - \ln t) \end{align*}
+    Since $\lim_{t \to 0^+} \ln t = -\infty$, the limit becomes $\ln 5 - (-\infty) = +\infty$.
+    Because the limit is not finite, the improper integral $\int_0^5 \frac{1}{x} \dx$ **diverges**.
+\end{example}
+
+\begin{definition}[Infinite Discontinuity within the Interval]
+    If $f(x)$ has an infinite discontinuity at $c$, where $a < c < b$, we define:
+    \[
+    \int_a^b f(x) \dx = \int_a^c f(x) \dx + \int_c^b f(x) \dx
+    \]
+    The integral on the left converges *if and only if* both integrals on the right converge (using the previous definitions). If either $\int_a^c f(x) \dx$ or $\int_c^b f(x) \dx$ diverges, then $\int_a^b f(x) \dx$ diverges.
+\end{definition}
+
+\subsection{The p-Integral Test (Finite Interval)}
+
+A fundamental class of examples involves functions of the form $1/x^\alpha$.
+
+\begin{theorem}[p-Integral Test at 0]
+    Let $a > 0$. The improper integral
+    \[
+    \int_0^a \frac{1}{x^\alpha} \dx
+    \]
+    converges if and only if $\alpha < 1$. It diverges if $\alpha \ge 1$.
+\end{theorem}
+\begin{proof}
+    We assume $\alpha > 0$ (otherwise it's not improper at 0).
+    If $\alpha = 1$, we saw this diverges (it's $\ln x$).
+    If $\alpha \neq 1$:
+    \begin{align*} \int_0^a \frac{1}{x^\alpha} \dx &= \lim_{t \to 0^+} \int_t^a x^{-\alpha} \dx \\ &= \lim_{t \to 0^+} \left[ \frac{x^{-\alpha+1}}{-\alpha+1} \right]_t^a \\ &= \lim_{t \to 0^+} \frac{1}{1-\alpha} \left( a^{1-\alpha} - t^{1-\alpha} \right) \end{align*}
+    Now, consider the limit of $t^{1-\alpha}$ as $t \to 0^+$:
+    \begin{itemize}
+        \item If $1-\alpha > 0$ (i.e., $\alpha < 1$), then $\lim_{t \to 0^+} t^{1-\alpha} = 0$. The integral converges to $\frac{a^{1-\alpha}}{1-\alpha}$.
+        \item If $1-\alpha < 0$ (i.e., $\alpha > 1$), then $\lim_{t \to 0^+} t^{1-\alpha} = \infty$. The integral diverges.
+    \end{itemize}
+    Combining the cases, the integral converges iff $\alpha < 1$.
+\end{proof}
+
+\section{Absolute and Conditional Convergence}
+
+Sometimes, especially with oscillating functions, calculating the integral directly is difficult, but we might still want to know if it converges. This motivates the concept of absolute convergence.
+
+\begin{definition}[Absolute Convergence]
+    We say the improper integral $\int_a^b f(x) \dx$ **converges absolutely** if the integral of the absolute value, $\int_a^b |f(x)| \dx$, converges.
+\end{definition}
+
+\begin{remark}
+    The term "absolutely" refers to the absolute value, not certainty.
+\end{remark}
+
+Why is this useful? Because of the following fundamental theorem:
+
+\begin{theorem}[Absolute Convergence Implies Convergence]
+    If the improper integral $\int_a^b |f(x)| \dx$ converges, then the improper integral $\int_a^b f(x) \dx$ also converges.
+\end{theorem}
+
+\begin{proof} (Sketch)
+    The idea is that $0 \le f(x) + |f(x)| \le 2|f(x)|$. If $\int_a^b |f(x)| \dx$ converges, then $\int_a^b 2|f(x)| \dx$ converges. By a comparison principle (which we'll formalize soon), $\int_a^b (f(x) + |f(x)|) \dx$ converges. Since $\int_a^b f(x) \dx = \int_a^b (f(x) + |f(x)|) \dx - \int_a^b |f(x)| \dx$, and both integrals on the right converge, their difference also converges.
+\end{proof}
+
+This theorem is powerful because it allows us to determine the convergence of an integral (which might involve tricky cancellations, like functions oscillating between positive and negative values) by examining the convergence of an integral of a *non-negative* function ($|f(x)|$). Integrals of non-negative functions are often easier to handle, particularly with comparison tests.
+
+\begin{example}[Using Absolute Convergence] \label{ex:sin_sqrtx}
+    Does the integral $\int_0^1 \frac{\sin(1/x)}{\sqrt{x}} \dx$ converge?
+    \begin{itemize}
+        \item \textbf{Problem Point:} The potential issue is at $x=0$. The term $1/x$ inside the sine oscillates wildly, and we divide by $\sqrt{x}$ which goes to 0. Direct integration looks daunting.
+        \item \textbf{Check Absolute Convergence:} Let's consider $\int_0^1 \left| \frac{\sin(1/x)}{\sqrt{x}} \right| \dx$.
+        \item \textbf{Comparison:} We know that $|\sin(\theta)| \le 1$ for any $\theta$. Therefore, for $x \in (0, 1]$,
+          \[
+          \left| \frac{\sin(1/x)}{\sqrt{x}} \right| = \frac{|\sin(1/x)|}{\sqrt{x}} \le \frac{1}{\sqrt{x}}
+          \]
+        \item \textbf{Known Integral:} We know that $\int_0^1 \frac{1}{\sqrt{x}} \dx = \int_0^1 \frac{1}{x^{1/2}} \dx$ converges (by the p-integral test, since $\alpha = 1/2 < 1$).
+        \item \textbf{Conclusion (via Comparison Test - Informal for now):} Since $0 \le \left| \frac{\sin(1/x)}{\sqrt{x}} \right| \le \frac{1}{\sqrt{x}}$ and the integral of the larger function converges, we expect the integral $\int_0^1 \left| \frac{\sin(1/x)}{\sqrt{x}} \right| \dx$ to converge. (We will formalize this comparison test shortly).
+        \item \textbf{Final Conclusion:} Since the integral converges absolutely, the original integral $\int_0^1 \frac{\sin(1/x)}{\sqrt{x}} \dx$ **converges** by the theorem.
+    \end{itemize}
+    Note: We assumed $f(x) = \frac{\sin(1/x)}{\sqrt{x}}$ is integrable on any $[t, 1]$ for $t \in (0, 1)$. This holds because it's continuous on $(0, 1]$.
+\end{example}
+
+The converse of the theorem is not true: an integral can converge, but not absolutely.
+
+\begin{definition}[Conditional Convergence]
+    An improper integral $\int_a^b f(x) \dx$ **converges conditionally** if it converges, but the integral $\int_a^b |f(x)| \dx$ diverges.
+\end{definition}
+
+\begin{example}[Conditional Convergence - Mentioned]
+    The integral $\int_1^\infty \frac{\sin x}{x} \dx$ is a classic example of conditional convergence (we'll see Type II integrals soon). Another example mentioned in the lecture, though the proof is quite involved (approx. 2 pages!) and omitted, is:
+    \[
+    \int_0^1 \frac{\cos(1/x)}{x} \dx
+    \]
+    This integral can be shown to converge conditionally. We won't delve into the proof now, but it's important to be aware that this distinction exists. Conditional convergence often arises from careful cancellations in oscillating functions. We will revisit this concept more significantly when we discuss infinite series.
+\end{example}
+
+\section{Comparison Tests for Convergence}
+
+As hinted in Example \ref{ex:sin_sqrtx}, comparing an unknown integral to a known one is a powerful technique, especially when direct computation is hard.
+
+\begin{theorem}[Direct Comparison Test for Improper Integrals]
+    Let $f$ and $g$ be functions that are integrable on $[t, b]$ for all $t \in (a, b)$ (or $[a, t]$ for all $t \in (a, b)$ if the singularity is at $b$). Assume $0 \le f(x) \le g(x)$ for all $x$ in $(a, b]$.
+    \begin{enumerate}
+        \item If $\int_a^b g(x) \dx$ converges, then $\int_a^b f(x) \dx$ converges.
+        \item If $\int_a^b f(x) \dx$ diverges, then $\int_a^b g(x) \dx$ diverges.
+    \end{enumerate}
+    (Analogous statements hold if the singularity is at $b$).
+\end{theorem}
+
+\begin{remark}
+    The condition $0 \le f(x) \le g(x)$ is crucial. The test requires non-negative functions. This is why checking absolute convergence first is often helpful, as $|f(x)|$ is always non-negative.
+\end{remark}
+
+Finding a suitable function $g(x)$ for direct comparison and proving the inequality $f(x) \le g(x)$ can sometimes be tricky. The Limit Comparison Test is often easier to apply.
+
+\begin{theorem}[Limit Comparison Test (LCT) for Improper Integrals]
+    Let $f$ and $g$ be positive functions on $(a, b]$ (or $[a, b)$), integrable on $[t, b]$ (or $[a, t]$) for appropriate $t$. Suppose that
+    \[
+    L = \lim_{x \to a^+} \frac{f(x)}{g(x)} \quad (\text{or } \lim_{x \to b^-} \frac{f(x)}{g(x)} \text{ if singularity is at } b)
+    \]
+    \begin{enumerate}
+        \item If $L$ is a finite positive number ($0 < L < \infty$), then the integrals $\int_a^b f(x) \dx$ and $\int_a^b g(x) \dx$ either both converge or both diverge.
+        \item If $L = 0$ and $\int_a^b g(x) \dx$ converges, then $\int_a^b f(x) \dx$ converges.
+        \item If $L = \infty$ and $\int_a^b g(x) \dx$ diverges, then $\int_a^b f(x) \dx$ diverges.
+    \end{enumerate}
+\end{theorem}
+
+\begin{remark}
+    The most useful case is (1). The intuition is that if the limit $L$ is finite and positive, then for $x$ close to the problematic point, $f(x)$ is roughly a constant multiple ($L$) of $g(x)$, so they should behave similarly in terms of convergence. The LCT essentially automates the comparison by focusing on the functions' asymptotic behavior near the singularity.
+\end{remark}
+
+\section{Handling Multiple Problematic Points}
+
+What if an integral has issues at *both* endpoints, or perhaps an issue inside the interval as well?
+
+\begin{question}[Yehuda's Question Paraphrased]
+    We've focused on integrals with a single problematic point (usually an endpoint). Real-world problems, however, can present multiple challenges simultaneously. How do we handle an integral like $\int_a^b f(x) \dx$ if $f(x)$ has issues at both $x=a$ and $x=b$, or even at some point $c$ inside $(a, b)$?
+\end{question}
+
+The strategy, much like tackling multiple problems in life, is to break it down and deal with each issue separately.
+
+\textbf{Strategy:} If an integral $\int_a^b f(x) \dx$ has multiple problematic points (say, at $a$, $b$, and perhaps $c_1, c_2, \dots$ inside), we split the interval $[a, b]$ into subintervals such that each resulting integral has *only one* problematic point (typically at an endpoint of the subinterval).
+
+For example, if the problems are only at $a$ and $b$, we choose any convenient point $d$ between $a$ and $b$ (e.g., $d = (a+b)/2$) and write:
+\[
+\int_a^b f(x) \dx = \int_a^d f(x) \dx + \int_d^b f(x) \dx
+\]
+The original integral $\int_a^b f(x) \dx$ converges **if and only if** *both* of the integrals on the right-hand side converge independently. If even one of them diverges, the original integral diverges.
+
+\begin{example}[Two Problematic Endpoints] \label{ex:sqrt_x_1-x}
+    Determine the convergence of $\int_0^1 \frac{1}{\sqrt{x(1-x)}} \dx$.
+    \begin{itemize}
+        \item \textbf{Problem Points:} The denominator $\sqrt{x(1-x)}$ becomes 0 (leading to an infinite discontinuity) at $x=0$ and at $x=1$. Both endpoints are problematic.
+        \item \textbf{Split the Interval:} Choose a point inside, say $d=1/2$. We examine the convergence of the two resulting integrals separately:
+          \[
+          \int_0^1 \frac{1}{\sqrt{x(1-x)}} \dx = \underbrace{\int_0^{1/2} \frac{1}{\sqrt{x(1-x)}} \dx}_{I_1} + \underbrace{\int_{1/2}^1 \frac{1}{\sqrt{x(1-x)}} \dx}_{I_2}
+          \]
+        \item \textbf{Analyze $I_1 = \int_0^{1/2} \frac{1}{\sqrt{x(1-x)}} \dx$:} The only problem is at $x=0$. Let $f(x) = \frac{1}{\sqrt{x(1-x)}}$. Near $x=0$, the $(1-x)$ term is close to 1, so $f(x)$ behaves like $\frac{1}{\sqrt{x}}$. Let's use LCT with $g(x) = \frac{1}{\sqrt{x}}$.
+          \[
+          L_1 = \lim_{x \to 0^+} \frac{f(x)}{g(x)} = \lim_{x \to 0^+} \frac{1/\sqrt{x(1-x)}}{1/\sqrt{x}} = \lim_{x \to 0^+} \frac{\sqrt{x}}{\sqrt{x(1-x)}} = \lim_{x \to 0^+} \frac{1}{\sqrt{1-x}} = 1
+          \]
+          Since $L_1 = 1$ (which is finite and positive) and $\int_0^{1/2} g(x) \dx = \int_0^{1/2} \frac{1}{\sqrt{x}} \dx$ converges (p-integral, $\alpha=1/2 < 1$), the LCT tells us that $I_1$ **converges**.
+        \item \textbf{Analyze $I_2 = \int_{1/2}^1 \frac{1}{\sqrt{x(1-x)}} \dx$:} The only problem is at $x=1$. Let $f(x)$ be the same integrand. Near $x=1$, the $x$ term is close to 1, so $f(x)$ behaves like $\frac{1}{\sqrt{1-x}}$. Let's use LCT with $g(x) = \frac{1}{\sqrt{1-x}}$.
+          \[
+          L_2 = \lim_{x \to 1^-} \frac{f(x)}{g(x)} = \lim_{x \to 1^-} \frac{1/\sqrt{x(1-x)}}{1/\sqrt{1-x}} = \lim_{x \to 1^-} \frac{\sqrt{1-x}}{\sqrt{x(1-x)}} = \lim_{x \to 1^-} \frac{1}{\sqrt{x}} = 1
+          \]
+          We need to know if $\int_{1/2}^1 g(x) \dx = \int_{1/2}^1 \frac{1}{\sqrt{1-x}} \dx$ converges. Let $u=1-x$, $du=-dx$. When $x=1/2$, $u=1/2$. When $x \to 1^-$, $u \to 0^+$.
+          \[ \int_{1/2}^1 \frac{1}{\sqrt{1-x}} \dx = \int_{1/2}^0 \frac{1}{\sqrt{u}} (-du) = \int_0^{1/2} \frac{1}{\sqrt{u}} du \]
+          This is a convergent p-integral ($\alpha=1/2 < 1$). Since $L_2 = 1$ (finite and positive) and $\int_{1/2}^1 g(x) \dx$ converges, the LCT tells us that $I_2$ **converges**.
+        \item \textbf{Overall Conclusion:} Since both $I_1$ and $I_2$ converge, the original integral $\int_0^1 \frac{1}{\sqrt{x(1-x)}} \dx$ **converges**.
+    \end{itemize}
+\end{example}
+
+\begin{remark}[On Direct vs. Limit Comparison]
+    A student asked if direct comparison could be used in the previous example, for instance, by noting $1-x < 1$ for $x \in (0, 1)$, so $\sqrt{x(1-x)} < \sqrt{x}$, which implies $\frac{1}{\sqrt{x(1-x)}} > \frac{1}{\sqrt{x}}$. While this inequality is true, it goes in the "wrong" direction for proving convergence (showing $f(x)$ is *larger* than something whose integral converges doesn't help). To use direct comparison for convergence, you need $f(x) \le g(x)$ where $\int g(x) dx$ converges. For the second integral near $x=1$, one might argue $\sqrt{x(1-x)} < \sqrt{1-x}$ (since $\sqrt{x}<1$ for $x \in (1/2, 1)$), which gives $\frac{1}{\sqrt{x(1-x)}} > \frac{1}{\sqrt{1-x}}$. Again, this doesn't directly help prove convergence. While sometimes direct comparison is possible with more manipulation, the LCT is often more straightforward as it automatically handles the constant factors that might make direct inequalities awkward.
+\end{remark}
+
+\begin{example}[Divergence with Two Problem Points and Sign Issues] \label{ex:x2-5x+6}
+    Determine the convergence of $I = \int_2^3 \frac{dx}{x^2 - 5x + 6}$.
+    \begin{itemize}
+        \item \textbf{Factor and Identify Problems:} $x^2 - 5x + 6 = (x-2)(x-3)$. The integrand $f(x) = \frac{1}{(x-2)(x-3)}$ has infinite discontinuities at $x=2$ and $x=3$.
+        \item \textbf{Split the Interval:} Choose $d=2.5$.
+          \[ I = \underbrace{\int_2^{2.5} \frac{dx}{(x-2)(x-3)}}_{I_1} + \underbrace{\int_{2.5}^3 \frac{dx}{(x-2)(x-3)}}_{I_2} \]
+        \item \textbf{Address Non-Negativity for Comparison Tests:} Wait! The comparison tests require the functions to be non-negative (or at least non-positive). Let's check the sign of $f(x)$ on the intervals:
+          \begin{itemize}
+              \item On $(2, 2.5)$: $x-2 > 0$ and $x-3 < 0$. So, $(x-2)(x-3) < 0$, and $f(x) < 0$.
+              \item On $(2.5, 3)$: $x-2 > 0$ and $x-3 < 0$. So, $(x-2)(x-3) < 0$, and $f(x) < 0$.
+          \end{itemize}
+          Since the integrand is negative on both intervals, we can't directly apply the LCT as stated (for positive functions). However, we know that $\int f(x) \dx$ converges if and only if $\int -f(x) \dx$ converges. So, we can analyze the convergence of the integrals of $-f(x)$, which *will* be positive. Let's focus on $I_2$.
+        \item \textbf{Analyze $I_2$ (Modified):} Consider the convergence of $\int_{2.5}^3 -f(x) \dx = \int_{2.5}^3 \frac{-1}{(x-2)(x-3)} \dx = \int_{2.5}^3 \frac{1}{(x-2)(3-x)} \dx$.
+          The problem is at $x=3$. Let $h(x) = \frac{1}{(x-2)(3-x)}$. Near $x=3$, the term $x-2$ is close to $3-2=1$, so $h(x)$ behaves like $\frac{1}{3-x}$. Let's use LCT with $g(x) = \frac{1}{3-x}$.
+          \[
+          L = \lim_{x \to 3^-} \frac{h(x)}{g(x)} = \lim_{x \to 3^-} \frac{1/((x-2)(3-x))}{1/(3-x)} = \lim_{x \to 3^-} \frac{1}{x-2} = \frac{1}{3-2} = 1
+          \]
+          Now, does $\int_{2.5}^3 g(x) \dx = \int_{2.5}^3 \frac{1}{3-x} \dx$ converge? Let $u=3-x$, $du=-dx$. When $x=2.5, u=0.5$. When $x \to 3^-, u \to 0^+$.
+          \[ \int_{2.5}^3 \frac{1}{3-x} \dx = \int_{0.5}^0 \frac{1}{u}(-du) = \int_0^{0.5} \frac{1}{u} du \]
+          This is a p-integral with $\alpha=1$, which **diverges**.
+          Since $L=1$ (finite and positive) and $\int_{2.5}^3 g(x) \dx$ diverges, the LCT tells us that $\int_{2.5}^3 h(x) \dx = \int_{2.5}^3 \frac{1}{(x-2)(3-x)} \dx$ **diverges**.
+        \item \textbf{Conclusion for $I_2$:} Since $\int_{2.5}^3 -f(x) \dx$ diverges, the original second integral $I_2 = \int_{2.5}^3 f(x) \dx$ also **diverges**.        \item \textbf{Overall Conclusion:} Since one of the component integrals ($I_2$) diverges, we don't even need to check $I_1$. The original integral $I = \int_2^3 \frac{dx}{x^2 - 5x + 6}$ **diverges**.
+    \end{itemize}
+\end{example}
+
+\begin{remark}[Definition of Convergence with Splitting]
+    It's crucial to remember the definition: when we split an integral $\int_a^b f = \int_a^d f + \int_d^b f$, the original integral converges *only if both pieces converge*. It's not possible for one piece to diverge to $+\infty$ and the other to $-\infty$ and have them "cancel out" to yield a convergent integral in this context. If any piece diverges, the whole thing diverges. This differs from contexts like Cauchy Principal Value, which is a different concept.
+\end{remark}
+
+\section{Improper Integrals of Type II: Infinite Intervals}
+
+Now we turn to the second main reason an integral might be improper: the interval of integration itself is infinite. Examples include intervals like $[a, \infty)$, $(-\infty, b]$, or $(-\infty, \infty)$.
+
+\begin{definition}[Improper Integral on $[a, \infty)$]
+    Let $f(x)$ be continuous on the interval $[a, \infty)$. We define the improper integral of $f$ over $[a, \infty)$ as:
+    \[
+    \int_a^\infty f(x) \dx = \lim_{t \to \infty} \int_a^t f(x) \dx
+    \]
+    provided this limit exists and is finite. If the limit exists and is finite, we say the improper integral **converges**. Otherwise, we say it **diverges**.
+\end{definition}
+
+\begin{definition}[{Improper Integral on $(-\infty, b]$}]
+    Similarly, if $f(x)$ is continuous on $(-\infty, b]$, we define:
+    \[
+    \int_{-\infty}^b f(x) \dx = \lim_{t \to -\infty} \int_t^b f(x) \dx
+    \]
+    provided this limit exists and is finite.
+\end{definition}
+
+\begin{remark}
+    The idea is analogous to Type I: we integrate over a finite interval $[a, t]$ (where $f$ is integrable) and then see what happens as the interval length grows indefinitely ($t \to \infty$). Visually, for $f(x) \ge 0$, we are asking if the area under the curve over the infinite interval $[a, \infty)$ is finite.
+\end{remark}
+
+\begin{remark}[Important Precondition]
+    The definitions above assume $f(x)$ is continuous (and thus integrable) on every finite interval $[a, t]$ (or $[t, b]$). If $f(x)$ *also* has an infinite discontinuity within the interval (e.g., if we consider $\int_0^\infty \frac{1}{x^2} dx$, which has problems at $x=0$ and at $\infty$), we must combine techniques: split the integral to isolate each problem type. For instance, $\int_0^\infty \frac{1}{x^2} dx = \int_0^1 \frac{1}{x^2} dx + \int_1^\infty \frac{1}{x^2} dx$. Both resulting integrals must converge for the original to converge.
+\end{remark}
+
+\begin{example}[Convergent Type II Integral] \label{ex:1/x^2_infty}
+    Does $\int_1^\infty \frac{1}{x^2} \dx$ converge?
+    \begin{align*} \int_1^\infty \frac{1}{x^2} \dx &= \lim_{t \to \infty} \int_1^t x^{-2} \dx \\ &= \lim_{t \to \infty} \left[ \frac{x^{-1}}{-1} \right]_1^t \\ &= \lim_{t \to \infty} \left[ -\frac{1}{x} \right]_1^t \\ &= \lim_{t \to \infty} \left( -\frac{1}{t} - \left(-\frac{1}{1}\right) \right) \\ &= \lim_{t \to \infty} \left( 1 - \frac{1}{t} \right) \end{align*}
+    As $t \to \infty$, $1/t \to 0$. The limit is $1 - 0 = 1$.
+    Since the limit is finite, the integral $\int_1^\infty \frac{1}{x^2} \dx$ **converges** (and its value is 1).
+\end{example}
+
+\begin{example}[Divergent Type II Integral] \label{ex:cos_infty}
+    Does $\int_0^\infty \cos(x) \dx$ converge?
+    \begin{align*} \int_0^\infty \cos(x) \dx &= \lim_{t \to \infty} \int_0^t \cos(x) \dx \\ &= \lim_{t \to \infty} \left[ \sin(x) \right]_0^t \\ &= \lim_{t \to \infty} (\sin(t) - \sin(0)) \\ &= \lim_{t \to \infty} \sin(t) \end{align*}
+    Does this limit exist? Intuitively, the sine function oscillates endlessly between -1 and 1 as $t \to \infty$; it never settles down to a single value. Therefore, the limit does not exist.
+    To prove this rigorously, we can use the Heine definition of limits.
+
+    \textbf{Recall: Heine Definition of Limit $\lim_{x\to\infty} f(x) = L$}
+    The limit $\lim_{x\to\infty} f(x) = L$ exists if and only if for *every* sequence $(x_n)$ such that $x_n \to \infty$ as $n \to \infty$, we have $\lim_{n\to\infty} f(x_n) = L$.
+    To show a limit *does not* exist, it suffices to find two sequences, both tending to $\infty$, for which the function values tend to different limits (or one doesn't tend to any limit).
+
+    \textbf{Applying Heine to $\lim_{t \to \infty} \sin(t)$:}
+    \begin{itemize}
+        \item Consider the sequence $x_n = 2n\pi$. As $n \to \infty$, $x_n \to \infty$.
+          Then $f(x_n) = \sin(x_n) = \sin(2n\pi) = 0$. So $\lim_{n\to\infty} f(x_n) = 0$.
+        \item Consider the sequence $y_n = \frac{\pi}{2} + 2n\pi$. As $n \to \infty$, $y_n \to \infty$.
+          Then $f(y_n) = \sin(y_n) = \sin(\frac{\pi}{2} + 2n\pi) = 1$. So $\lim_{n\to\infty} f(y_n) = 1$.
+    \end{itemize}
+    Since we found two sequences tending to $\infty$ for which $\sin(t)$ approaches different limits (0 and 1), the limit $\lim_{t \to \infty} \sin(t)$ **does not exist**.
+    Therefore, the integral $\int_0^\infty \cos(x) \dx$ **diverges**.
+\end{example}
+
+\subsection{The p-Integral Test (Infinite Interval)}
+
+Just as we had a test for $\int_0^a \frac{1}{x^\alpha} dx$, we have a corresponding test for infinite intervals. Notice how the condition changes!
+
+\begin{theorem}[p-Integral Test at $\infty$]
+    Let $b > 0$. The improper integral
+    \[
+    \int_b^\infty \frac{1}{x^\alpha} \dx
+    \]
+    converges if and only if $\alpha > 1$. It diverges if $\alpha \le 1$.
+\end{theorem}
+\begin{proof} (Exercise - Recommended!)
+    The proof is very similar to the $\int_0^a$ case, but now you take the limit as $t \to \infty$.
+    Calculate $\lim_{t \to \infty} \int_b^t x^{-\alpha} \dx = \lim_{t \to \infty} \left[ \frac{x^{1-\alpha}}{1-\alpha} \right]_b^t$ (for $\alpha \neq 1$).
+    Analyze the limit of $t^{1-\alpha}$ as $t \to \infty$.
+    \begin{itemize}
+        \item If $1-\alpha < 0$ (i.e., $\alpha > 1$), then $t^{1-\alpha} \to 0$. The integral converges.
+        \item If $1-\alpha > 0$ (i.e., $\alpha < 1$), then $t^{1-\alpha} \to \infty$. The integral diverges.
+    \end{itemize}
+    Also handle the case $\alpha = 1$ separately ($\int \frac{1}{x} dx = \ln|x|$, which diverges as $t \to \infty$).
+    You will find convergence occurs precisely when $\alpha > 1$.
+\end{proof}
+
+\begin{remark}[Comparing p-Tests]
+    It's crucial to distinguish the conditions:
+    \begin{itemize}
+        \item $\int_0^a \frac{1}{x^\alpha} \dx$ (problem at 0) converges iff $\alpha < 1$.
+        \item $\int_b^\infty \frac{1}{x^\alpha} \dx$ (problem at $\infty$) converges iff $\alpha > 1$.
+    \end{itemize}
+    Intuitively, for convergence near 0, the function can't grow too quickly ($1/x^\alpha$ needs $\alpha < 1$). For convergence at $\infty$, the function must decay sufficiently quickly ($1/x^\alpha$ needs $\alpha > 1$). The case $\alpha=1$ ($1/x$) is the borderline case that diverges in both scenarios.
+\end{remark}
+
+\subsection{Integrals over $(-\infty, \infty)$}
+
+How do we handle integrals over the entire real line?
+
+\begin{definition}[Improper Integral on $(-\infty, \infty)$]
+    Let $f(x)$ be continuous on $(-\infty, \infty)$. We define the improper integral over $\R$ by splitting the interval at an arbitrary point $d$ (often $d=0$ is convenient):
+    \[
+    \int_{-\infty}^\infty f(x) \dx = \int_{-\infty}^d f(x) \dx + \int_d^\infty f(x) \dx
+    \]
+    The integral $\int_{-\infty}^\infty f(x) \dx$ converges **if and only if** *both* integrals on the right-hand side converge independently (using the Type II definitions). If either part diverges, the whole integral diverges.
+\end{definition}
+
+\begin{remark}
+    The choice of the splitting point $d$ does not affect whether the integral converges or diverges (though it would affect the value if we were calculating it).
+\end{remark}
+
+\subsection{A Useful Criterion using Antiderivatives}
+
+There's a convenient way to check convergence for Type II integrals if we can find an antiderivative, *provided the function has no other discontinuities*.
+
+\begin{proposition}[Convergence Criterion via Antiderivative Limits] \label{prop:antideriv_limits}
+    Let $f(x)$ be continuous on $[a, \infty)$. Let $F(x)$ be an antiderivative of $f(x)$. Then
+    \[ \int_a^\infty f(x) \dx \text{ converges} \quad \iff \quad \lim_{x \to \infty} F(x) \text{ exists and is finite.} \]
+    Similarly, let $f(x)$ be continuous on $(-\infty, \infty)$. Let $F(x)$ be an antiderivative. Then
+    \[ \int_{-\infty}^\infty f(x) \dx \text{ converges} \quad \iff \quad \lim_{x \to \infty} F(x) \text{ and } \lim_{x \to -\infty} F(x) \text{ both exist and are finite.} \]
+\end{proposition}
+
+\begin{proof} (Idea for $[a, \infty)$ case)
+    $\int_a^\infty f(x) \dx = \lim_{t \to \infty} \int_a^t f(x) \dx = \lim_{t \to \infty} (F(t) - F(a))$.
+    Since $F(a)$ is a finite constant, this limit exists and is finite if and only if $\lim_{t \to \infty} F(t)$ exists and is finite.
+\end{proof}
+
+\begin{remark}[Notation]
+    The limit $\lim_{x \to \infty} F(x)$ is sometimes denoted $F(\infty)$, and $\lim_{x \to -\infty} F(x)$ as $F(-\infty)$, when these limits exist. Using this notation, the second part of the proposition says $\int_{-\infty}^\infty f(x) dx$ converges iff $F(\infty)$ and $F(-\infty)$ are both finite. The value (if convergent) is then $F(\infty) - F(-\infty)$.
+\end{remark}
+
+\begin{warning}[Crucial Condition]
+    This proposition relies heavily on the assumption that $f(x)$ is continuous on the relevant interval (e.g., on $[a, t]$ for all $t>a$ in the first case, or on all of $\R$ in the second case). If $f(x)$ has *other* discontinuities (Type I problems), you cannot simply use the limits of the antiderivative at $\pm \infty$. You must split the integral to isolate *all* problematic points first.
+\end{warning}
+
+\begin{example}[Using Antiderivative Limits]
+    Check convergence of $\int_{-\infty}^\infty e^x \dx$.
+    An antiderivative is $F(x) = e^x$.
+    We check the limits:
+    \begin{itemize}
+        \item $\lim_{x \to \infty} F(x) = \lim_{x \to \infty} e^x = \infty$.
+        \item $\lim_{x \to -\infty} F(x) = \lim_{x \to -\infty} e^x = 0$.
+    \end{itemize}
+    Since the limit as $x \to \infty$ is not finite, the integral $\int_{-\infty}^\infty e^x \dx$ **diverges**. (We only needed one limit to be non-finite to conclude divergence).
+\end{example}
+
+\begin{example}[Using Antiderivative Limits II]
+    Check convergence of $\int_{-\infty}^\infty x e^{-x^2} \dx$. (Corrected from transcript likely $xe^{-x}$ example which has antiderivative issues).
+    Let $f(x) = xe^{-x^2}$. An antiderivative can be found using substitution $u=-x^2$, $du=-2x dx$:
+    $F(x) = \int x e^{-x^2} dx = \int e^u (-\frac{1}{2} du) = -\frac{1}{2} e^u = -\frac{1}{2} e^{-x^2}$.
+    Now check limits:
+    \begin{itemize}
+        \item $\lim_{x \to \infty} F(x) = \lim_{x \to \infty} -\frac{1}{2} e^{-x^2} = \lim_{x \to \infty} -\frac{1}{2e^{x^2}} = 0$. (Finite)
+        \item $\lim_{x \to -\infty} F(x) = \lim_{x \to -\infty} -\frac{1}{2} e^{-x^2} = \lim_{x \to -\infty} -\frac{1}{2e^{x^2}} = 0$. (Finite)
+    \end{itemize}
+    Since both limits exist and are finite, the integral $\int_{-\infty}^\infty x e^{-x^2} \dx$ **converges**. (Its value is $F(\infty) - F(-\infty) = 0 - 0 = 0$).
+
+    \textit{Let's analyze the example likely intended in the transcript: $\int_{-\infty}^\infty x e^{-x} \dx$.}
+    An antiderivative (found using integration by parts) is $F(x) = \int x e^{-x} dx = -xe^{-x} - e^{-x} = -e^{-x}(x+1)$.
+    Check limits:
+    \begin{itemize}
+        \item $\lim_{x \to \infty} F(x) = \lim_{x \to \infty} -e^{-x}(x+1) = \lim_{x \to \infty} -\frac{x+1}{e^x}$. This is an $\frac{\infty}{\infty}$ form. Using L'Hopital's rule: $\lim_{x \to \infty} -\frac{1}{e^x} = 0$. (Finite)
+        \item $\lim_{x \to -\infty} F(x) = \lim_{x \to -\infty} -e^{-x}(x+1)$. As $x \to -\infty$, $-x \to \infty$, so $e^{-x} \to \infty$. Also $x+1 \to -\infty$. The limit is of the form $-(\infty)(-\infty) = \infty$. (Not finite)
+    \end{itemize}
+    Since the limit as $x \to -\infty$ is not finite, the integral $\int_{-\infty}^\infty x e^{-x} \dx$ **diverges**. Notice that even though the limit at $+\infty$ was finite, the divergence at $-\infty$ was sufficient to make the whole integral diverge. Always check both ends!
+\end{example}
+
+\section{Comparison Tests for Type II Integrals}
+
+The comparison tests work just as well for integrals over infinite intervals, provided the functions satisfy the non-negativity condition on $[a, \infty)$.
+
+\begin{theorem}[Direct Comparison Test on $[a, \infty)$]
+    Let $f$ and $g$ be continuous on $[a, \infty)$. Assume $0 \le f(x) \le g(x)$ for all $x \ge a$.
+    \begin{enumerate}
+        \item If $\int_a^\infty g(x) \dx$ converges, then $\int_a^\infty f(x) \dx$ converges.
+        \item If $\int_a^\infty f(x) \dx$ diverges, then $\int_a^\infty g(x) \dx$ diverges.
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Limit Comparison Test (LCT) on $[a, \infty)$]
+    Let $f$ and $g$ be positive continuous functions on $[a, \infty)$. Suppose that
+    \[
+    L = \lim_{x \to \infty} \frac{f(x)}{g(x)}
+    \]
+    \begin{enumerate}
+        \item If $L$ is a finite positive number ($0 < L < \infty$), then the integrals $\int_a^\infty f(x) \dx$ and $\int_a^\infty g(x) \dx$ either both converge or both diverge.
+        \item If $L = 0$ and $\int_a^\infty g(x) \dx$ converges, then $\int_a^\infty f(x) \dx$ converges.
+        \item If $L = \infty$ and $\int_a^\infty g(x) \dx$ diverges, then $\int_a^\infty f(x) \dx$ diverges. (Corrected logic from transcript interpretation: If $L=\infty$, $f$ grows faster than $g$. If the 'smaller' one $\int g$ diverges, the 'larger' one $\int f$ must also diverge.)
+    \end{enumerate}
+\end{theorem}
+
+\begin{remark}
+    Again, case (1) where $0 < L < \infty$ is the most commonly used. The strategy is typically to identify the "dominant terms" in the numerator and denominator of $f(x)$ for large $x$ to guess a simpler function $g(x)$ (often a p-integral form $1/x^\alpha$) that $f(x)$ behaves like as $x \to \infty$.
+\end{remark}
+
+\begin{example}[LCT for Convergence] \label{ex:poly_ratio_conv}
+    Determine the convergence of $\int_1^\infty \frac{x^6 + 2x^3}{2x^8 + 1} \dx$.
+    \begin{itemize}
+        \item \textbf{Check Conditions:} The integrand $f(x) = \frac{x^6 + 2x^3}{2x^8 + 1}$ is positive and continuous for $x \ge 1$.
+        \item \textbf{Choose Comparison Function:} For large $x$, $f(x)$ behaves like $\frac{x^6}{2x^8} = \frac{1}{2x^2}$. Let's use LCT with $g(x) = \frac{1}{x^2}$.
+        \item \textbf{Calculate Limit:}
+          \begin{align*} L = \lim_{x \to \infty} \frac{f(x)}{g(x)} &= \lim_{x \to \infty} \frac{(x^6 + 2x^3)/(2x^8 + 1)}{1/x^2} \\ &= \lim_{x \to \infty} \frac{x^2(x^6 + 2x^3)}{2x^8 + 1} \\ &= \lim_{x \to \infty} \frac{x^8 + 2x^5}{2x^8 + 1} \\ &= \lim_{x \to \infty} \frac{1 + 2/x^3}{2 + 1/x^8} \quad (\text{dividing by } x^8) \\ &= \frac{1+0}{2+0} = \frac{1}{2} \end{align*}
+        \item \textbf{Known Integral:} The integral $\int_1^\infty g(x) \dx = \int_1^\infty \frac{1}{x^2} \dx$ converges (p-integral, $\alpha=2 > 1$).
+        \item \textbf{Conclusion:} Since $L = 1/2$ (which is finite and positive) and $\int_1^\infty g(x) \dx$ converges, the LCT tells us that the original integral $\int_1^\infty \frac{x^6 + 2x^3}{2x^8 + 1} \dx$ **converges**.
+    \end{itemize}
+\end{example}
+
+\begin{example}[LCT for Divergence] \label{ex:poly_ratio_div}
+    Determine the convergence of $\int_1^\infty \frac{x^{2/3}}{x^{5/3} + 1} \dx$.
+    \begin{itemize}
+        \item \textbf{Check Conditions:} The integrand $f(x) = \frac{x^{2/3}}{x^{5/3} + 1}$ is positive and continuous for $x \ge 1$.
+        \item \textbf{Choose Comparison Function:} For large $x$, $f(x)$ behaves like $\frac{x^{2/3}}{x^{5/3}} = x^{2/3 - 5/3} = x^{-1} = \frac{1}{x}$. Let's use LCT with $g(x) = \frac{1}{x}$.
+        \item \textbf{Calculate Limit:}
+          \begin{align*} L = \lim_{x \to \infty} \frac{f(x)}{g(x)} &= \lim_{x \to \infty} \frac{x^{2/3}/(x^{5/3} + 1)}{1/x} \\ &= \lim_{x \to \infty} \frac{x \cdot x^{2/3}}{x^{5/3} + 1} \\ &= \lim_{x \to \infty} \frac{x^{5/3}}{x^{5/3} + 1} \\ &= \lim_{x \to \infty} \frac{1}{1 + 1/x^{5/3}} \quad (\text{dividing by } x^{5/3}) \\ &= \frac{1}{1+0} = 1 \end{align*}
+        \item \textbf{Known Integral:} The integral $\int_1^\infty g(x) \dx = \int_1^\infty \frac{1}{x} \dx$ diverges (p-integral, $\alpha=1$).
+        \item \textbf{Conclusion:} Since $L = 1$ (which is finite and positive) and $\int_1^\infty g(x) \dx$ diverges, the LCT tells us that the original integral $\int_1^\infty \frac{x^{2/3}}{x^{5/3} + 1} \dx$ **diverges**.
+    \end{itemize}
+\end{example}
+
+\section{Absolute and Conditional Convergence for Type II Integrals}
+
+The concepts of absolute and conditional convergence extend directly to integrals over infinite intervals.
+
+\begin{definition}[Absolute/Conditional Convergence on $[a, \infty)$]
+    Let $f$ be continuous on $[a, \infty)$.
+    \begin{itemize}
+        \item The integral $\int_a^\infty f(x) \dx$ **converges absolutely** if $\int_a^\infty |f(x)| \dx$ converges.
+        \item The integral $\int_a^\infty f(x) \dx$ **converges conditionally** if $\int_a^\infty f(x) \dx$ converges but $\int_a^\infty |f(x)| \dx$ diverges.
+    \end{itemize}
+    (Analogous definitions hold for $(-\infty, b]$ and $(-\infty, \infty)$).
+\end{definition}
+
+The key theorem still holds:
+
+\begin{theorem}[Absolute Convergence Implies Convergence on $[a, \infty)$]
+    If $\int_a^\infty |f(x)| \dx$ converges, then $\int_a^\infty f(x) \dx$ converges.
+\end{theorem}
+
+\begin{example}[Absolute Convergence on $[1, \infty)$] \label{ex:sin/x^2_infty}
+    Does the integral $\int_1^\infty \frac{\sin(x)}{x^2} \dx$ converge?
+    \begin{itemize}
+        \item \textbf{Check Absolute Convergence:} Consider $\int_1^\infty \left| \frac{\sin(x)}{x^2} \right| \dx$.
+        \item \textbf{Comparison:} We know $|\sin(x)| \le 1$. Therefore, for $x \ge 1$,
+          \[ 0 \le \left| \frac{\sin(x)}{x^2} \right| = \frac{|\sin(x)|}{x^2} \le \frac{1}{x^2} \]
+        \item \textbf{Known Integral:} The integral $\int_1^\infty \frac{1}{x^2} \dx$ converges (p-integral, $\alpha=2 > 1$).
+        \item \textbf{Conclusion (Direct Comparison):} Since $0 \le \left| \frac{\sin(x)}{x^2} \right| \le \frac{1}{x^2}$ and $\int_1^\infty \frac{1}{x^2} \dx$ converges, the Direct Comparison Test implies that $\int_1^\infty \left| \frac{\sin(x)}{x^2} \right| \dx$ converges.
+        \item \textbf{Final Conclusion:} Since the integral converges absolutely, the original integral $\int_1^\infty \frac{\sin(x)}{x^2} \dx$ **converges**.
+    \end{itemize}
+\end{example}
+
+\section{Looking Ahead: Infinite Series}
+
+We have spent considerable time extending the concept of integration to handle infinite discontinuities and infinite intervals. This careful treatment using limits is essential.
+
+Our next major topic will shift focus slightly, but the ideas of limits, convergence, and divergence will remain central. We will move from continuous sums (integrals) to discrete infinite sums, known as **Infinite Series**.
+
+What does it mean to sum an infinite number of terms, like $1 + \frac{1}{4} + \frac{1}{9} + \frac{1}{16} + \dots = \sum_{n=1}^\infty \frac{1}{n^2}$? Just as with improper integrals, we will need a precise definition based on limits (specifically, limits of partial sums). We will explore questions like:
+\begin{itemize}
+    \item When does an infinite sum converge to a finite value?
+    \item How can we test series for convergence or divergence? (We will see tests analogous to the comparison tests for integrals).
+    \item How are series related back to functions? (This will lead us to the incredibly important concepts of Taylor and Maclaurin series).
+\end{itemize}
+The study of sequences, which we covered earlier, will become fundamentally important again as we define and analyze the convergence of series. So, keep those concepts fresh! It's going to be an exciting journey.
+
+\textit{Have a good week!}
+
+\end{document}
