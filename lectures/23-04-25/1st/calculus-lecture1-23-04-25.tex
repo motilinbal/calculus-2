@@ -1,0 +1,552 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{cancel} % Added package for \cancel command
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc} % Generally recommended for input encoding
+\usepackage[T1]{fontenc} % Recommended for font encoding
+\usepackage{lmodern} % Provides scalable, modern fonts
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Lecture Notes: Introduction to Infinite Series}, % Add metadata
+    pdfauthor={Undergraduate Mathematics Educator}
+}
+
+% Theorem Environments Setup
+\theoremstyle{plain} % Italicized text, extra space above/below
+\newtheorem{theorem}{Theorem}[section] % Number theorems within sections (e.g., Theorem 1.1, 1.2)
+\newtheorem{lemma}[theorem]{Lemma} % Use the same counter as theorem
+\newtheorem{proposition}[theorem]{Proposition} % Use the same counter as theorem
+\newtheorem{corollary}[theorem]{Corollary} % Use the same counter as theorem
+
+\theoremstyle{definition} % Upright text, extra space above/below
+\newtheorem{definition}[theorem]{Definition} % Use the same counter as theorem
+\newtheorem{example}[theorem]{Example} % Use the same counter as theorem
+\newtheorem{note}[theorem]{Note} % Use the same counter as theorem
+\newtheorem{question}[theorem]{Question} % Use the same counter as theorem
+
+\theoremstyle{remark} % Upright text, no extra space above/below
+\newtheorem{remark}[theorem]{Remark} % Use the same counter as theorem
+\newtheorem{warning}[theorem]{Warning} % Define warning environment
+\newtheorem*{proofsketch}{Proof Sketch} % Unnumbered proof sketch
+
+% Custom environment for administrative notes (visually separated)
+\newenvironment{adminnote}
+  {\par\medskip\noindent\begin{center}\rule{\linewidth}{0.4pt}\end{center}\par\medskip\noindent\textbf{Administrative Notes:}\begin{itemize}}
+  {\end{itemize}\par\medskip\noindent\begin{center}\rule{\linewidth}{0.4pt}\end{center}\par\medskip}
+
+% Custom Math Macros
+\newcommand{\R}{\mathbb{R}} % Real numbers
+\newcommand{\N}{\mathbb{N}} % Natural numbers
+\newcommand{\abs}[1]{\left|#1\right|} % Absolute value
+\newcommand{\dx}{\,\mathrm{d}x} % Differential dx for integrals
+
+\title{Lecture Notes: Introduction to Infinite Series}
+\author{Undergraduate Mathematics Educator} % Placeholder for instructor name
+\date{\today} % Automatically inserts the current date
+
+\begin{document}
+\maketitle
+
+\begin{adminnote}
+    \item \textbf{New Topic:} We are beginning a new major topic today: Infinite Series. This builds upon our understanding of sequences and limits.
+    \item \textbf{Lecture Notes:} These notes aim to provide a clear, structured version of the lecture material. I may occasionally send out supplementary materials.
+    \item \textbf{Office Hours/Questions:} Please remember that office hours are available for questions. Don't hesitate to ask questions during or after the lecture as well.
+    \item \textbf{Classroom Logistics:} Please let me know if classroom supplies like markers run low.
+    \item \textbf{Context from Lecture Discussion:}
+        \begin{itemize}
+            \item The concept of a geometric series sum should be familiar from previous studies (e.g., high school). We will rigorously define and use it.
+            \item A question arose about using the Squeeze Theorem for series sums. While the idea of bounding is related (especially in comparison tests), directly applying the Squeeze Theorem to find the *exact sum* is less common than for sequence limits. Comparison tests are more typical for determining convergence.
+            \item There was discussion about the nature of series vs. sequences. A key goal with series is to understand the behavior of the infinite sum (convergence, divergence, value if convergent) based on the properties of the terms $a_n$.
+            \item Series form a crucial foundation for upcoming topics like Power Series, which are essential for approximating functions and solving various problems.
+            \item A brief discussion occurred at the end regarding potential errors in past materials or exercises. Please always bring any suspected errors or points of confusion to my attention or the TA's attention promptly. We aim for accuracy, but mistakes can happen.
+        \end{itemize}
+\end{adminnote}
+
+\section{Introduction: The Idea of Infinite Sums}
+
+We are familiar with adding up a finite number of terms. But what happens if we try to add up infinitely many numbers? For example, does an expression like
+\[ 1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dotsb \]
+have a meaningful value? This is the central question behind the study of **infinite series**.
+
+Intuitively, we might think about approaching such a sum step-by-step by adding more and more terms:
+\begin{itemize}
+    \item Sum 1 term: $1$
+    \item Sum 2 terms: $1 + \frac{1}{2} = 1.5$
+    \item Sum 3 terms: $1 + \frac{1}{2} + \frac{1}{4} = 1.75$
+    \item Sum 4 terms: $1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} = 1.875$
+\end{itemize}
+These finite sums, called partial sums, seem to be getting closer and closer to a specific number (in this case, 2). This idea of using the limit of these finite partial sums is precisely how we rigorously define the sum of an infinite series.
+
+\begin{definition}[Infinite Series and Partial Sums]
+Let $\{a_n\}_{n=1}^\infty$ be a sequence of real numbers.
+\begin{enumerate}
+    \item The **infinite series** (or simply **series**) associated with the sequence $\{a_n\}$ is the formal sum denoted by
+    \[ \sum_{n=1}^{\infty} a_n = a_1 + a_2 + a_3 + \dotsb \]
+    The numbers $a_n$ are called the **terms** of the series.
+    \item For each $N \in \N$, the $N$-th **partial sum** of the series is the finite sum of the first $N$ terms:
+    \[ S_N = \sum_{n=1}^{N} a_n = a_1 + a_2 + \dots + a_N \]
+    \item The sequence $\{S_N\}_{N=1}^\infty$ formed by these partial sums is called the **sequence of partial sums**.
+    \item We say the infinite series $\sum_{n=1}^{\infty} a_n$ **converges** if its sequence of partial sums $\{S_N\}$ converges to a finite limit $S \in \R$. That is, if
+    \[ \lim_{N \to \infty} S_N = S \]
+    exists and is finite. In this case, $S$ is called the **sum** of the series, and we write
+    \[ \sum_{n=1}^{\infty} a_n = S \]
+    \item If the limit $\lim_{N \to \infty} S_N$ does not exist, or if it is infinite ($\infty$ or $-\infty$), we say the series **diverges**.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Series vs. Sequences]
+It's crucial to distinguish between the sequence of terms $\{a_n\}$ and the sequence of partial sums $\{S_N\}$. The convergence of the *series* $\sum a_n$ is defined by the convergence of the *sequence* $\{S_N\}$.
+
+Interestingly, any sequence $\{b_n\}_{n=1}^\infty$ can be viewed as the sequence of partial sums for some series. If we define $a_1 = b_1$ and $a_n = b_n - b_{n-1}$ for $n \ge 2$, then the $N$-th partial sum of the series $\sum a_n$ is
+\begin{align*} S_N &= \sum_{n=1}^N a_n = a_1 + a_2 + \dots + a_N \\ &= b_1 + (b_2 - b_1) + (b_3 - b_2) + \dots + (b_N - b_{N-1}) \\ &= b_N \quad \text{(This is a telescoping sum!)} \end{align*}
+So, studying series convergence is equivalent to studying sequence convergence, but the focus shifts. With series, we want to understand the limiting behavior of the sum ($S = \lim S_N$) by analyzing properties of the individual terms $a_n$.
+\end{remark}
+
+\section{Fundamental Examples}
+
+Calculating the limit of partial sums directly is often difficult. However, there are a few crucial types of series where we can compute $S_N$ explicitly and find its limit.
+
+\subsection{Geometric Series}
+
+Perhaps the most important and frequently encountered type of series.
+
+\begin{definition}[Geometric Series]
+A series of the form
+\[ \sum_{n=1}^{\infty} a r^{n-1} = a + ar + ar^2 + ar^3 + \dotsb \]
+where $a$ is the first term and $r$ is the **common ratio**, is called a **geometric series**. We typically assume $a \neq 0$, as the series is trivially convergent to 0 if $a=0$.
+\end{definition}
+
+Let's analyze its convergence by examining the partial sums $S_N = a + ar + \dots + ar^{N-1}$. We recall the standard formula for this finite geometric sum (derived by considering $S_N - rS_N$):
+\[ S_N = a \frac{1 - r^N}{1 - r} \quad \text{provided } r \neq 1 \]
+If $r=1$, then $S_N = a + a + \dots + a = Na$. Since $a \neq 0$, $\lim_{N \to \infty} Na = \pm \infty$, so the series diverges if $r=1$.
+
+Now consider $r \neq 1$. The convergence of the series depends on the limit of $S_N$ as $N \to \infty$, which hinges on the behavior of the $r^N$ term:
+\begin{itemize}
+    \item If $\abs{r} < 1$: In this case, $\lim_{N \to \infty} r^N = 0$. Therefore, the sequence of partial sums converges to
+    \[ \lim_{N \to \infty} S_N = \lim_{N \to \infty} a \frac{1 - r^N}{1 - r} = a \frac{1 - 0}{1 - r} = \frac{a}{1 - r} \]
+    The series converges, and its sum is $\frac{a}{1 - r}$.
+    \item If $\abs{r} > 1$: Here, $\abs{r^N} \to \infty$ as $N \to \infty$. The limit $\lim_{N \to \infty} S_N$ does not exist (it's infinite). The series diverges.
+    \item If $r = -1$: The sequence $r^N = (-1)^N$ alternates between $1$ and $-1$. The sequence of partial sums $S_N = a\frac{1-(-1)^N}{1 - (-1)} = a\frac{1-(-1)^N}{2}$ alternates between $a$ (when $N$ is odd) and $0$ (when $N$ is even). Since it does not approach a single value, the limit does not exist, and the series diverges.
+\end{itemize}
+
+We summarize this fundamental result:
+
+\begin{theorem}[Convergence of Geometric Series]
+The geometric series $\sum_{n=1}^{\infty} a r^{n-1}$ (with $a \neq 0$)
+\begin{itemize}
+    \item converges if $\abs{r} < 1$, and its sum is $S = \frac{a}{1 - r}$.
+    \item diverges if $\abs{r} \ge 1$.
+\end{itemize}
+\end{theorem}
+
+\begin{example}[Original Example 1: $\sum 1/2^n$]
+Consider the series $\frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dotsb = \sum_{n=1}^{\infty} \frac{1}{2^n}$.
+This is a geometric series. To match the standard form $\sum a r^{n-1}$, we can write it as $\sum_{n=1}^{\infty} \frac{1}{2} \left(\frac{1}{2}\right)^{n-1}$.
+Here, the first term is $a = 1/2$ and the common ratio is $r = 1/2$.
+Since $\abs{r} = 1/2 < 1$, the series converges by the theorem.
+Its sum is $S = \frac{a}{1-r} = \frac{1/2}{1 - 1/2} = \frac{1/2}{1/2} = 1$.
+
+\textit{Alternative calculation via partial sums (as done in lecture):}
+The terms are $a_n = 1/2^n$.
+The $N$-th partial sum is $S_N = \frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^N}$.
+We can factor out $1/2$: $S_N = \frac{1}{2} \left( 1 + \frac{1}{2} + \dots + \left(\frac{1}{2}\right)^{N-1} \right)$.
+The sum in the parenthesis is a finite geometric sum $1+q+\dots+q^{k}$ with first term 1, ratio $q=1/2$, and $k=N-1$ terms (or rather, highest power $N-1$). Its sum is $\frac{1-q^{(N-1)+1}}{1-q} = \frac{1-(1/2)^N}{1-1/2}$.
+\[ S_N = \frac{1}{2} \cdot \frac{1 - (1/2)^N}{1 - 1/2} = \frac{1}{2} \cdot \frac{1 - (1/2)^N}{1/2} = 1 - \left(\frac{1}{2}\right)^N \]
+Now, we take the limit as $N \to \infty$:
+\[ \lim_{N \to \infty} S_N = \lim_{N \to \infty} \left( 1 - \frac{1}{2^N} \right) = 1 - 0 = 1 \]
+The sum is indeed 1, matching the formula. This confirms our intuitive idea from the introduction.
+\end{example}
+
+\begin{remark}[Index Shifts]
+Be careful with the starting index and the formula. For example, $\sum_{n=0}^{\infty} ar^n = a + ar + \dots = \frac{a}{1-r}$ if $|r|<1$. The series $\sum_{n=k}^{\infty} ar^n = ar^k + ar^{k+1} + \dots$ is also geometric with first term $ar^k$ and ratio $r$. Its sum is $\frac{ar^k}{1-r}$ if $|r|<1$.
+The specific sum $\sum_{n=1}^{\infty} r^n = r + r^2 + \dots$ (starting term $a=r$) converges to $\frac{r}{1-r}$ for $|r|<1$.
+\end{remark}
+
+\subsection{Telescoping Series}
+
+Another class of series where we can sometimes find the sum explicitly involves internal cancellations in the partial sums.
+
+\begin{example}[Original Example 2: $\sum 1/(n(n+1))$]
+Consider the series $\sum_{n=1}^{\infty} \frac{1}{n(n+1)}$.
+The terms are $a_n = \frac{1}{n(n+1)}$. Let's find the partial sum $S_N$.
+First, we use the technique of partial fraction decomposition on the term $a_n$:
+\[ \frac{1}{n(n+1)} = \frac{A}{n} + \frac{B}{n+1} \]
+To find $A$ and $B$, we multiply by the common denominator $n(n+1)$:
+\[ 1 = A(n+1) + Bn \]
+Setting $n=0$ gives $1 = A(1) + B(0) \implies A=1$.
+Setting $n=-1$ gives $1 = A(0) + B(-1) \implies B=-1$.
+So, the general term can be rewritten as $a_n = \frac{1}{n} - \frac{1}{n+1}$.
+
+Now let's write out the $N$-th partial sum $S_N$ using this form:
+\begin{align*} S_N &= \sum_{n=1}^N a_n = \sum_{n=1}^N \left( \frac{1}{n} - \frac{1}{n+1} \right) \\ &= \left( \frac{1}{1} - \frac{1}{2} \right) && (n=1 \text{ term}) \\ &+ \left( \frac{1}{2} - \frac{1}{3} \right) && (n=2 \text{ term}) \\ &+ \left( \frac{1}{3} - \frac{1}{4} \right) && (n=3 \text{ term}) \\ &+ \dotsb \\ &+ \left( \frac{1}{N} - \frac{1}{N+1} \right) && (n=N \text{ term}) \end{align*}
+Notice the beautiful cancellation pattern: the second part of each term ($-\frac{1}{n+1}$) cancels exactly with the first part of the next term ($+\frac{1}{n+1}$).
+\[ S_N = \frac{1}{1} \cancel{- \frac{1}{2}} \cancel{+ \frac{1}{2}} \cancel{- \frac{1}{3}} \cancel{+ \frac{1}{3}} - \dotsb \cancel{- \frac{1}{N}} \cancel{+ \frac{1}{N}} - \frac{1}{N+1} \]
+After all the cancellations, only the first part of the very first term ($\frac{1}{1}$) and the second part of the very last term ($-\frac{1}{N+1}$) remain.
+\[ S_N = 1 - \frac{1}{N+1} \]
+This phenomenon, where intermediate terms collapse like sections of an old-fashioned spyglass or telescope, is why such series are called **telescoping**.
+
+Finally, we find the sum of the infinite series by taking the limit of the partial sums:
+\[ \lim_{N \to \infty} S_N = \lim_{N \to \infty} \left( 1 - \frac{1}{N+1} \right) = 1 - 0 = 1 \]
+Thus, the series converges and its sum is $\sum_{n=1}^{\infty} \frac{1}{n(n+1)} = 1$.
+\end{example}
+
+\section{Fundamental Properties and Conditions for Convergence}
+
+Calculating $S_N$ explicitly is rare. We need tests to determine if a series converges without necessarily finding the sum.
+
+\subsection{The Necessary Condition for Convergence (The \texorpdfstring{$n$}{n}-th Term Test)}
+
+A basic sanity check: If the terms $a_n$ don't even shrink towards zero, how can their infinite sum possibly be finite?
+
+\begin{theorem}[$n$-th Term Test for Divergence]
+If the series $\sum_{n=1}^{\infty} a_n$ converges, then the sequence of its terms must converge to zero, i.e., $\lim_{n \to \infty} a_n = 0$.
+
+Equivalently, stated in its most useful form (the contrapositive):
+If $\lim_{n \to \infty} a_n \neq 0$, or if $\lim_{n \to \infty} a_n$ does not exist, then the series $\sum_{n=1}^{\infty} a_n$ must diverge.
+\end{theorem}
+
+\begin{proof}
+Suppose $\sum_{n=1}^{\infty} a_n$ converges to a finite sum $S$. By definition, this means the sequence of partial sums $\{S_N\}$ converges to $S$, so $\lim_{N \to \infty} S_N = S$.
+Since $S_N \to S$, it must also be true that the sequence shifted by one index, $S_{N-1}$, also converges to $S$ as $N \to \infty$ (more formally, as $N-1 \to \infty$). So, $\lim_{N \to \infty} S_{N-1} = S$.
+Now, observe that for $N \ge 2$, the $N$-th term $a_N$ can be isolated as the difference between consecutive partial sums:
+\[ a_N = (a_1 + \dots + a_{N-1} + a_N) - (a_1 + \dots + a_{N-1}) = S_N - S_{N-1} \]
+Using the difference rule for limits of sequences:
+\[ \lim_{N \to \infty} a_N = \lim_{N \to \infty} (S_N - S_{N-1}) = \lim_{N \to \infty} S_N - \lim_{N \to \infty} S_{N-1} = S - S = 0 \]
+Thus, convergence of the series necessitates that its terms approach zero.
+\end{proof}
+
+\begin{warning}
+This test is crucial, but easily misinterpreted.
+The condition $\lim_{n \to \infty} a_n = 0$ is **necessary** for convergence, but it is **not sufficient**.
+If $\lim a_n = 0$, the series *might* converge, or it *might* diverge. The test only tells us that if $\lim a_n \neq 0$, the series *definitely* diverges. You cannot use $\lim a_n = 0$ to conclude convergence.
+\end{warning}
+
+\subsection{The Tail of a Series}
+
+If a series converges to $S$, the sum consists of the first $N$ terms ($S_N$) plus the rest, often called the tail or remainder.
+
+\begin{definition}[Tail / Remainder]
+If a series $\sum_{n=1}^{\infty} a_n$ converges to $S$, the **$N$-th tail** or **$N$-th remainder** of the series is defined as the sum of all terms *after* the $N$-th term:
+\[ R_N = S - S_N = \sum_{n=N+1}^{\infty} a_n = a_{N+1} + a_{N+2} + a_{N+3} + \dotsb \]
+Note that $R_N$ is itself an infinite series.
+\end{definition}
+
+The behavior of the tail provides another way to characterize convergence. Intuitively, for the total sum to be finite, the sum of the terms far out (the tail) must become vanishingly small.
+
+\begin{theorem}[Convergence and Tails]
+The series $\sum_{n=1}^{\infty} a_n$ converges if and only if its sequence of tails converges to zero, i.e., $\lim_{N \to \infty} R_N = 0$.
+\end{theorem}
+
+\begin{proof}
+($\Rightarrow$) Assume $\sum a_n$ converges to a finite sum $S$. Then by definition of series convergence, $\lim_{N \to \infty} S_N = S$. By definition of the tail, $R_N = S - S_N$. Using limit arithmetic:
+\[ \lim_{N \to \infty} R_N = \lim_{N \to \infty} (S - S_N) = S - \lim_{N \to \infty} S_N = S - S = 0 \]
+
+($\Leftarrow$) Assume $\lim_{N \to \infty} R_N = 0$. For any $N$, the full sum $S$ (if it exists) can be thought of as $S = S_N + R_N$. This means $S_N = S - R_N$. Let $S = a_1 + R_0 = S_1 + R_1 = S_N + R_N$ for all $N$. If $R_N \to 0$, does this imply $S$ must be finite?
+Consider $R_N = \sum_{n=N+1}^\infty a_n$. If $R_N \to 0$, it means the series defining $R_N$ converges (to 0 as $N \to \infty$). Since $S_N = a_1 + \dots + a_N$ is always finite, and $S = S_N + R_N$, if $R_N \to 0$, then $\lim_{N \to \infty} S_N$ must exist and be finite. More formally, the sequence $S_N$ is Cauchy because $S_M - S_N = R_N - R_M$ for $M>N$, and since $R_N \to 0$, $R_N$ is a Cauchy sequence, implying $S_N$ is also Cauchy, hence convergent to some finite $S$. Then $\lim S_N = S$.
+\end{proof}
+
+This theorem reinforces the idea that for convergence, the contribution from terms far out in the series must diminish to zero.
+
+\section{The Harmonic Series and p-Series}
+
+Now we revisit the most famous counterexample to the converse of the $n$-th Term Test.
+
+\begin{definition}[Harmonic Series]
+The series
+\[ \sum_{n=1}^{\infty} \frac{1}{n} = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4 + \dotsb} \]
+is called the **harmonic series**.
+\end{definition}
+
+We observe that the terms $a_n = 1/n$ satisfy $\lim_{n \to \infty} a_n = 0$. Does the harmonic series converge?
+
+\begin{theorem}
+The harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$ diverges.
+\end{theorem}
+
+\begin{proof}[Proof using Tail Estimation (as in lecture)]
+We will show that the tails $R_N = \sum_{n=N+1}^\infty \frac{1}{n}$ do not approach 0.
+Consider a specific block of terms within the tail $R_N$, namely the terms from index $N+1$ up to index $2N$:
+\[ \frac{1}{N+1} + \frac{1}{N+2} + \dots + \frac{1}{2N} \]
+There are exactly $(2N) - (N+1) + 1 = N$ terms in this block.
+Each term in this block is greater than or equal to the last (smallest) term, which is $\frac{1}{2N}$.
+Therefore, the sum of this block satisfies:
+\[ \left( \frac{1}{N+1} + \frac{1}{N+2} + \dots + \frac{1}{2N} \right) \ge \underbrace{\frac{1}{2N} + \frac{1}{2N} + \dots + \frac{1}{2N}}_{N \text{ times}} = N \cdot \left( \frac{1}{2N} \right) = \frac{1}{2} \]
+The full tail $R_N = \sum_{n=N+1}^\infty \frac{1}{n}$ includes this block (and all subsequent terms are positive). Thus, for any $N \ge 1$,
+\[ R_N = \left( \frac{1}{N+1} + \dots + \frac{1}{2N} \right) + \left( \frac{1}{2N+1} + \dots \right) \ge \frac{1}{2} + (\text{positive terms}) \ge \frac{1}{2} \]
+Since the tails $R_N$ are always bounded below by $1/2$, they cannot possibly converge to 0.
+Therefore, by the theorem on convergence and tails, the harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$ must diverge.
+\end{proof}
+
+This is a fundamentally important result: the terms $1/n$ go to zero, but they do so *too slowly* for their infinite sum to be finite.
+
+The harmonic series is the archetype ($p=1$) of a broader, crucial family of series:
+
+\begin{definition}[p-Series]
+A series of the form
+\[ \sum_{n=1}^{\infty} \frac{1}{n^p} = 1 + \frac{1}{2^p} + \frac{1}{3^p} + \dotsb \]
+where $p$ is a constant, is called a **p-series**.
+\end{definition}
+
+\begin{theorem}[Convergence of p-Series]
+The p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$
+\begin{itemize}
+    \item converges if $p > 1$.
+    \item diverges if $p \le 1$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+If $p \le 0$, then $\lim_{n \to \infty} \frac{1}{n^p} = \lim_{n \to \infty} n^{-p} \neq 0$ (it's either $\infty$ or 1). So the series diverges by the $n$-th Term Test.
+If $p > 0$, the terms $1/n^p \to 0$. We need a different test. We will use the Integral Test in Section \ref{sec:integral-test} to prove convergence for $p>1$ and divergence for $0 < p \le 1$. The case $p=1$ (harmonic series) divergence was proven above.
+\end{proof}
+
+\begin{remark}[Behavior of Positive Series]
+For a series $\sum a_n$ where all terms $a_n \ge 0$, the sequence of partial sums $S_N = S_{N-1} + a_N$ is non-decreasing ($S_N \ge S_{N-1}$). From the Monotone Convergence Theorem for sequences, a non-decreasing sequence either converges to a finite limit (if it is bounded above) or diverges to $\infty$ (if it is unbounded).
+Therefore, a series of non-negative terms either converges to a finite sum $S$, or diverges to $\infty$. There is no possibility of oscillation for the partial sums. Consequently, its tails $R_N$ will either converge to 0 (if the series converges) or $R_N = \infty$ for all $N$ (if the series diverges to $\infty$). The tails cannot converge to a finite non-zero limit in this case.
+\end{remark}
+
+\section{Types of Convergence for Series with Mixed Signs}
+
+When a series contains both positive and negative terms, the cancellation between terms can play a critical role in convergence. This leads to a finer distinction in the types of convergence.
+
+\begin{definition}[Absolute and Conditional Convergence]
+Let $\sum_{n=1}^{\infty} a_n$ be an infinite series.
+\begin{enumerate}
+    \item The series $\sum a_n$ is said to converge **absolutely** (or be **absolutely convergent**) if the associated series of absolute values, $\sum_{n=1}^{\infty} \abs{a_n}$, converges.
+    \item The series $\sum a_n$ is said to converge **conditionally** (or be **conditionally convergent**) if the original series $\sum a_n$ converges, but the series of absolute values $\sum \abs{a_n}$ diverges.
+\end{enumerate}
+\end{definition}
+
+Why is this distinction important? Absolute convergence is a stronger condition, implying that the convergence does not rely on delicate cancellations between positive and negative terms.
+
+\begin{theorem}[Absolute Convergence Implies Convergence]
+If a series $\sum_{n=1}^{\infty} a_n$ converges absolutely, then it converges.
+\end{theorem}
+
+\begin{proofsketch}
+We want to show that if $\sum |a_n|$ converges, then $\sum a_n$ must also converge.
+Consider the relationship $0 \le a_n + |a_n| \le 2|a_n|$.
+If $\sum |a_n|$ converges, then by the arithmetic rules for series, $\sum 2|a_n|$ also converges.
+By a comparison test (introduced later), since $a_n + |a_n|$ is non-negative and bounded above by the terms of a convergent series $2|a_n|$, the series $\sum (a_n + |a_n|)$ must also converge.
+Now, we can express the original term $a_n$ as $a_n = (a_n + |a_n|) - |a_n|$.
+Since both $\sum (a_n + |a_n|)$ and $\sum |a_n|$ converge, their difference must also converge by the arithmetic rules for series:
+\[ \sum a_n = \sum \left( (a_n + |a_n|) - |a_n| \right) = \sum (a_n + |a_n|) - \sum |a_n| \]
+Therefore, $\sum a_n$ converges.
+
+(Alternative using tails: Convergence of $\sum |a_n|$ implies its tails $\sum_{k=N+1}^\infty |a_k| \to 0$. By the triangle inequality for finite sums, which extends to convergent infinite sums, $|\sum_{k=N+1}^\infty a_k| \le \sum_{k=N+1}^\infty |a_k|$. Since the right side goes to 0 as $N \to \infty$, the absolute value of the tails of $\sum a_n$ also go to 0. This means the tails $R_N = \sum_{k=N+1}^\infty a_k$ must go to 0, implying convergence of $\sum a_n$.)
+\end{proofsketch}
+
+Conditional convergence is fascinating. It means the series converges, but only just barely – the convergence relies entirely on the cancellation effects. If you were to make all terms positive, the sum would explode to infinity.
+
+\begin{example}[Original Example 3: A Conditionally Convergent Series]
+Consider the series constructed in the lecture, which interleaves positive and negative terms from the harmonic series:
+\[ 1 - 1 + \frac{1}{2} - \frac{1}{2} + \frac{1}{3} - \frac{1}{3} + \dotsb \]
+Let's determine its convergence type rigorously.
+The terms $a_n$ can be formally described as:
+\[ a_n = \begin{cases} 1/k & \text{if } n = 2k-1 \text{ (odd)} \\ -1/k & \text{if } n = 2k \text{ (even)} \end{cases} \quad \text{for } k=1, 2, 3, \dots \]
+\begin{enumerate}
+    \item \textbf{Check Absolute Convergence:} We examine the series $\sum_{n=1}^{\infty} \abs{a_n}$.
+    \begin{align*} \sum_{n=1}^{\infty} \abs{a_n} &= \abs{1} + \abs{-1} + \abs{1/2} + \abs{-1/2} + \abs{1/3} + \abs{-1/3} + \dotsb \\ &= 1 + 1 + \frac{1}{2} + \frac{1}{2} + \frac{1}{3} + \frac{1}{3} + \dotsb \\ &= (1+\frac{1}{2}+\frac{1}{3}+\dotsb) + (1+\frac{1}{2}+\frac{1}{3}+\dotsb) \\ &= 2 \sum_{k=1}^{\infty} \frac{1}{k} \end{align*}
+    Since $\sum 1/k$ is the divergent harmonic series, the series of absolute values $2 \sum 1/k$ also diverges. Thus, the original series does not converge absolutely.
+
+    \item \textbf{Check Convergence of the Original Series:} We examine the sequence of partial sums $S_N$.
+    Let's look at the partial sums at even indices, $N=2k$:
+    \[ S_{2k} = (1-1) + (\frac{1}{2}-\frac{1}{2}) + \dots + (\frac{1}{k}-\frac{1}{k}) = 0 + 0 + \dots + 0 = 0 \]
+    The subsequence of even partial sums converges to 0: $\lim_{k \to \infty} S_{2k} = 0$.
+    Now consider the partial sums at odd indices, $N=2k-1$:
+    \[ S_{2k-1} = S_{2k-2} + a_{2k-1} \]
+    For $k=1$, $S_1 = a_1 = 1$.
+    For $k \ge 2$, $S_{2k-2}=0$, so $S_{2k-1} = 0 + a_{2k-1} = \frac{1}{k}$.
+    The subsequence of odd partial sums is $\{1, 1/2, 1/3, 1/4, \dots\}$. This converges to 0: $\lim_{k \to \infty} S_{2k-1} = \lim_{k \to \infty} \frac{1}{k} = 0$.
+    Since both the even and odd subsequences of partial sums converge to the same limit (0), the entire sequence of partial sums converges to 0.
+    \[ \lim_{N \to \infty} S_N = 0 \]
+    Therefore, the original series converges (and its sum is 0).
+\end{enumerate}
+Conclusion: Since $\sum a_n$ converges but $\sum \abs{a_n}$ diverges, the series $\sum a_n$ converges conditionally.
+
+\textit{Analogy (from lecture):} Imagine a business tracking daily profit/loss ($a_n$). Conditional convergence is like the scenario where the net balance ($S_N$) settles towards a finite value (here, 0) over many days. However, the total money changing hands (total earnings + total expenses, related to $\sum |a_n|$) grows infinitely large. The stable balance is achieved only because large earnings are carefully offset by large expenses. Absolute convergence would mean the total volume of transactions is also finite.
+\end{example}
+
+\section{Arithmetic of Convergent Series}
+
+Convergent series behave nicely with respect to basic arithmetic operations, mirroring the limit laws for sequences.
+
+\begin{theorem}[Linearity of Convergent Series]
+Suppose $\sum_{n=1}^{\infty} a_n$ converges to $A$ and $\sum_{n=1}^{\infty} b_n$ converges to $B$. Let $c$ be any real constant. Then:
+\begin{enumerate}
+    \item The series $\sum_{n=1}^{\infty} (a_n + b_n)$ converges, and its sum is $A + B$.
+    \item The series $\sum_{n=1}^{\infty} (a_n - b_n)$ converges, and its sum is $A - B$.
+    \item The series $\sum_{n=1}^{\infty} (c \cdot a_n)$ converges, and its sum is $c \cdot A$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+These properties follow directly from the limit laws for sequences applied to the sequences of partial sums. Let $S_N = \sum_{n=1}^N a_n$ and $T_N = \sum_{n=1}^N b_n$. We are given $\lim_{N \to \infty} S_N = A$ and $\lim_{N \to \infty} T_N = B$.
+\begin{enumerate}
+    \item The $N$-th partial sum of $\sum (a_n + b_n)$ is $U_N = \sum_{n=1}^N (a_n + b_n)$. By the properties of finite sums, $U_N = \sum_{n=1}^N a_n + \sum_{n=1}^N b_n = S_N + T_N$. By the sum rule for sequence limits, $\lim_{N \to \infty} U_N = \lim_{N \to \infty} (S_N + T_N) = A + B$.
+    \item Similarly, the $N$-th partial sum of $\sum (a_n - b_n)$ is $V_N = S_N - T_N$. By the difference rule for sequence limits, $\lim_{N \to \infty} V_N = \lim_{N \to \infty} (S_N - T_N) = A - B$.
+    \item The $N$-th partial sum of $\sum (c a_n)$ is $W_N = \sum_{n=1}^N c a_n = c \sum_{n=1}^N a_n = c S_N$. By the constant multiple rule for sequence limits, $\lim_{N \to \infty} W_N = \lim_{N \to \infty} (c S_N) = c A$.
+\end{enumerate}
+\end{proof}
+
+\begin{warning}
+It is crucial that the individual series $\sum a_n$ and $\sum b_n$ converge *before* applying these rules. As shown below, it's possible for two divergent series to sum to a convergent one.
+\end{warning}
+
+\begin{example}[Original Example 4: Divergent Series Summing to Convergent]
+Let $a_n = 1$ for all $n$. The series $\sum a_n = 1+1+1+\dots$ clearly diverges (since $\lim a_n = 1 \neq 0$).
+Let $b_n = -1$ for all $n$. The series $\sum b_n = -1-1-1-\dots$ also diverges (since $\lim b_n = -1 \neq 0$).
+However, consider the series $\sum (a_n + b_n)$. The terms are $a_n + b_n = 1 + (-1) = 0$ for all $n$.
+The series $\sum (a_n + b_n) = \sum 0 = 0+0+0+\dots$ is trivially convergent with sum 0.
+This demonstrates that we cannot generally split a series $\sum(a_n+b_n)$ into $\sum a_n + \sum b_n$ unless we know beforehand that $\sum a_n$ and $\sum b_n$ converge individually.
+\end{example}
+
+\begin{corollary}
+If $\sum a_n$ converges and $\sum b_n$ diverges, then their sum $\sum (a_n + b_n)$ must diverge.
+\end{corollary}
+\begin{proof}
+Assume, for contradiction, that $\sum (a_n + b_n)$ converges to some sum $C$. We are given that $\sum a_n$ converges to $A$. By the linearity rules (specifically, the difference rule), the series $\sum ((a_n + b_n) - a_n)$ must converge to $C-A$. But $\sum ((a_n + b_n) - a_n) = \sum b_n$. This implies $\sum b_n$ converges, which contradicts our initial assumption that $\sum b_n$ diverges. Therefore, our assumption that $\sum(a_n+b_n)$ converges must be false.
+\end{proof}
+
+\begin{example}[Original Example 5: Arithmetic Calculation]
+Determine if the series $\sum_{n=1}^{\infty} \frac{2 \cdot 3^n - 3 \cdot 2^n}{4^n}$ converges, and if so, find its sum.
+
+We attempt to use the linearity rules to split the series:
+\[ \sum_{n=1}^{\infty} \frac{2 \cdot 3^n - 3 \cdot 2^n}{4^n} \overset{?}{=} \sum_{n=1}^{\infty} \frac{2 \cdot 3^n}{4^n} - \sum_{n=1}^{\infty} \frac{3 \cdot 2^n}{4^n} \]
+\[ = \sum_{n=1}^{\infty} 2 \left(\frac{3}{4}\right)^n - \sum_{n=1}^{\infty} 3 \left(\frac{2}{4}\right)^n \]
+\[ = 2 \sum_{n=1}^{\infty} \left(\frac{3}{4}\right)^n - 3 \sum_{n=1}^{\infty} \left(\frac{1}{2}\right)^n \]
+Now we must check if the individual series converge.
+\begin{itemize}
+    \item $\sum_{n=1}^{\infty} (\frac{3}{4})^n$: This is a geometric series with first term $a=3/4$ and common ratio $r = 3/4$. Since $|r|=3/4 < 1$, it converges. Its sum is $\frac{\text{first term}}{1-r} = \frac{3/4}{1-3/4} = \frac{3/4}{1/4} = 3$.
+    \item $\sum_{n=1}^{\infty} (\frac{1}{2})^n$: This is a geometric series with first term $a=1/2$ and common ratio $r = 1/2$. Since $|r|=1/2 < 1$, it converges. Its sum is $\frac{\text{first term}}{1-r} = \frac{1/2}{1-1/2} = \frac{1/2}{1/2} = 1$.
+\end{itemize}
+Since both individual geometric series converge, the application of the linearity rules was valid. The sum of the original series is:
+\[ 2 \cdot \left( \sum_{n=1}^{\infty} \left(\frac{3}{4}\right)^n \right) - 3 \cdot \left( \sum_{n=1}^{\infty} \left(\frac{1}{2}\right)^n \right) = 2 \cdot (3) - 3 \cdot (1) = 6 - 3 = 3 \]
+The series converges to 3.
+
+\textit{Contrast with a Divergent Case (from lecture discussion):}
+Consider $\sum_{n=1}^{\infty} \frac{2 \cdot 3^n - 3 \cdot 5^n}{4^n}$.
+If we tried to split this as $2 \sum (\frac{3}{4})^n - 3 \sum (\frac{5}{4})^n$, the first part $\sum (\frac{3}{4})^n$ converges (sum 3), but the second part $\sum (\frac{5}{4})^n$ is a geometric series with $r=5/4 > 1$, which diverges. Since one part converges and one part diverges, the original series must diverge (by the Corollary above).
+Alternatively, and often more directly, we can apply the $n$-th Term Test to the original series. Let $a_n = \frac{2 \cdot 3^n - 3 \cdot 5^n}{4^n} = 2(\frac{3}{4})^n - 3(\frac{5}{4})^n$.
+As $n \to \infty$, $(\frac{3}{4})^n \to 0$ but $(\frac{5}{4})^n \to \infty$.
+So, $\lim_{n \to \infty} a_n = 2(0) - 3(\infty) = -\infty$. Since the limit is not 0, the series diverges by the $n$-th Term Test. This check should often be done first.
+\end{example}
+
+\section{The Integral Test}
+\label{sec:integral-test}
+
+We observed that $\sum 1/n$ (p=1) diverges, but we stated that $\sum 1/n^p$ converges for $p>1$ (like $p=2$). This difference in behavior, related to how quickly the terms approach zero, mirrors the behavior of improper integrals $\int^\infty 1/x^p dx$. The Integral Test formalizes this powerful connection.
+
+\begin{theorem}[The Integral Test]
+Let $f$ be a function defined on $[k, \infty)$ for some integer $k \ge 1$. Suppose $f$ satisfies the following three conditions:
+\begin{enumerate}
+    \item $f(x)$ is **continuous** on $[k, \infty)$.
+    \item $f(x)$ is **positive** on $[k, \infty)$ (i.e., $f(x) > 0$).
+    \item $f(x)$ is **decreasing** on $[k, \infty)$.
+\end{enumerate}
+Let $a_n = f(n)$ for integers $n \ge k$. Then the infinite series $\sum_{n=k}^{\infty} a_n$ and the improper integral $\int_k^{\infty} f(x) \dx$ either both converge or both diverge.
+\end{theorem}
+
+\begin{remark}
+\begin{itemize}
+    \item The starting index $k$ (often $k=1$) does not affect the convergence property itself, since convergence depends on the long-term behavior (the "tail"). Changing a finite number of terms doesn't change whether a series converges or diverges.
+    \item This test provides a powerful link between discrete sums (series) and continuous sums (integrals).
+    \item The test does **not** claim that the sum of the series equals the value of the integral when they converge. They generally have different values, but they share the same convergence fate.
+\end{itemize}
+\end{remark}
+
+\begin{proof}[Intuition and Geometric Argument]
+Let's assume $k=1$ for simplicity. We compare the sum $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty f(n)$ with the integral $\int_1^\infty f(x) dx$ using areas of rectangles.
+
+\begin{enumerate}
+    \item \textbf{Comparing Sum to Integral (Upper Bound for Integral):}
+    Consider the rectangles with base $[n, n+1]$ and height $f(n) = a_n$ for $n=1, 2, \dots, N$. Since $f$ is decreasing on $[n, n+1]$, the rectangle's area ($a_n \times 1 = a_n$) is an *overestimate* of the area under the curve $\int_n^{n+1} f(x) dx$. (See Figure 1: rectangles using left endpoints).
+    Summing these areas from $n=1$ to $N$:
+    \[ \int_1^{N+1} f(x) \dx = \sum_{n=1}^N \int_n^{n+1} f(x) \dx \le \sum_{n=1}^N a_n = S_N \]
+    Taking the limit as $N \to \infty$: If the series $\sum a_n$ converges to $S$, then $\int_1^{N+1} f(x) dx$ is bounded above by $S$. Since $f(x)>0$, the integral $\int_1^X f(x) dx$ is an increasing function of $X$. Being bounded above, the integral $\int_1^\infty f(x) dx$ must converge.
+    This shows: If $\sum a_n$ converges, then $\int_1^\infty f(x) dx$ converges.
+
+    \item \textbf{Comparing Integral to Sum (Upper Bound for Sum excluding $a_1$):}
+    Consider rectangles with base $[n, n+1]$ and height $f(n+1) = a_{n+1}$ for $n=1, 2, \dots, N-1$. Since $f$ is decreasing on $[n, n+1]$, the rectangle's area ($a_{n+1} \times 1 = a_{n+1}$) is an *underestimate* of the area under the curve $\int_n^{n+1} f(x) dx$. (See Figure 2: rectangles using right endpoints).
+    Summing these areas from $n=1$ to $N-1$:
+    \[ \sum_{n=1}^{N-1} a_{n+1} = a_2 + a_3 + \dots + a_N = S_N - a_1 \le \sum_{n=1}^{N-1} \int_n^{n+1} f(x) \dx = \int_1^N f(x) \dx \]
+    So, $S_N \le a_1 + \int_1^N f(x) \dx$.
+    Taking the limit as $N \to \infty$: If the integral $\int_1^\infty f(x) dx$ converges to $I$, then $S_N$ is bounded above by $a_1 + I$. Since the terms $a_n$ are positive, $S_N$ is a non-decreasing sequence. Being bounded above, $S_N$ must converge.
+    This shows: If $\int_1^\infty f(x) dx$ converges, then $\sum a_n$ converges.
+\end{enumerate}
+Combining (1) and (2): The series converges if and only if the integral converges. By contraposition, they also diverge together.
+\end{proof}
+
+\begin{example}[Original Example 6: p-Series Convergence Rigorously Proven]
+Let's use the Integral Test to rigorously establish the convergence criteria for the p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$.
+
+Case 1: $p \le 0$. Then $\lim_{n \to \infty} \frac{1}{n^p} \neq 0$. The series diverges by the $n$-th Term Test.
+
+Case 2: $p > 0$. Let $f(x) = \frac{1}{x^p}$ for $x \ge 1$. We check the conditions for the Integral Test:
+\begin{itemize}
+    \item $f(x)$ is continuous for $x \ge 1$. (True since $x^p \neq 0$)
+    \item $f(x) = 1/x^p > 0$ for $x \ge 1$. (True since $x>0$)
+    \item $f'(x) = -p x^{-p-1} = -\frac{p}{x^{p+1}}$. Since $p>0$ and $x \ge 1$, we have $f'(x) < 0$. So $f(x)$ is decreasing for $x \ge 1$. (True)
+\end{itemize}
+All conditions are met. The series $\sum_{n=1}^\infty \frac{1}{n^p}$ converges if and only if the improper integral $\int_1^{\infty} \frac{1}{x^p} \dx$ converges.
+
+We evaluate the integral:
+\[ \int_1^{\infty} \frac{1}{x^p} \dx = \lim_{b \to \infty} \int_1^b x^{-p} \dx \]
+If $p=1$:
+\[ \lim_{b \to \infty} [\ln x]_1^b = \lim_{b \to \infty} (\ln b - \ln 1) = \lim_{b \to \infty} \ln b = \infty \quad (\text{Diverges}) \]
+If $p \neq 1$:
+\[ \lim_{b \to \infty} \left[ \frac{x^{-p+1}}{-p+1} \right]_1^b = \lim_{b \to \infty} \frac{1}{1-p} (b^{1-p} - 1^{1-p}) = \frac{1}{1-p} \left( \lim_{b \to \infty} b^{1-p} - 1 \right) \]
+The behavior of $\lim_{b \to \infty} b^{1-p}$ depends on the exponent $1-p$:
+\begin{itemize}
+    \item If $1-p < 0 \iff p > 1$, the limit is $0$. The integral converges to $\frac{1}{1-p}(0-1) = \frac{1}{p-1}$.
+    \item If $1-p > 0 \iff 0 < p < 1$, the limit is $\infty$. The integral diverges.
+\end{itemize}
+Conclusion for the integral: It converges if $p > 1$ and diverges if $0 < p \le 1$.
+
+By the Integral Test, the p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$ shares the same fate: it converges if $p > 1$ and diverges if $0 < p \le 1$. Combining with Case 1, the p-series converges if $p>1$ and diverges if $p \le 1$.
+\end{example}
+
+\begin{remark}[Error Estimation from Integral Test]
+The inequalities established in the proof of the Integral Test also provide useful bounds for the remainder (tail) $R_N = \sum_{n=N+1}^\infty a_n$. For a function $f$ satisfying the test conditions:
+\[ \int_{N+1}^{\infty} f(x) \dx \le R_N \le \int_N^{\infty} f(x) \dx \]
+This inequality bounds the error $R_N = S - S_N$ when approximating the true sum $S$ by the $N$-th partial sum $S_N$. The error is trapped between the values of two related improper integrals.
+\end{remark}
+
+\section{Further Examples and Discussion}
+
+\begin{example}[Original Example 7: $\int dx / \cos x$ convergence revisited]
+During the lecture, the convergence of the improper integral $I = \int_0^{\pi/2} \frac{1}{\cos x} \dx$ was discussed. The point of concern is the upper limit $x = \pi/2$, as $\cos(\pi/2) = 0$, leading to a vertical asymptote for the integrand.
+
+We need to determine if this integral converges or diverges.
+
+*Method 1: Limit Comparison Test (for integrals)*
+As $x \to (\pi/2)^-$, $\cos x \to 0$. We want to compare its rate of convergence to 0 with a known function. Recall the fundamental limit $\lim_{y \to 0} \frac{\sin y}{y} = 1$. Let $y = \pi/2 - x$. As $x \to (\pi/2)^-$, $y \to 0^+$. Using the identity $\cos x = \cos(\pi/2 - y) = \sin y$, we have:
+\[ \cos x \approx \sin y \approx y = \pi/2 - x \quad \text{for } x \approx \pi/2 \]
+More formally, we compute the limit:
+\[ \lim_{x \to (\pi/2)^-} \frac{\cos x}{\pi/2 - x} = \lim_{y \to 0^+} \frac{\sin y}{y} = 1 \]
+Let $f(x) = 1/\cos x$ and $g(x) = 1/(\pi/2 - x)$. The limit of their ratio is:
+\[ \lim_{x \to (\pi/2)^-} \frac{f(x)}{g(x)} = \lim_{x \to (\pi/2)^-} \frac{1/\cos x}{1/(\pi/2 - x)} = \lim_{x \to (\pi/2)^-} \frac{\pi/2 - x}{\cos x} = \frac{1}{\lim_{x \to (\pi/2)^-} \frac{\cos x}{\pi/2 - x}} = \frac{1}{1} = 1 \]
+Since this limit is finite and positive (1), the integral $\int_0^{\pi/2} f(x) \dx$ behaves the same way as $\int_0^{\pi/2} g(x) \dx$. Let's analyze the latter:
+\[ \int_0^{\pi/2} \frac{1}{\pi/2 - x} \dx = \lim_{b \to (\pi/2)^-} \int_0^b \frac{1}{\pi/2 - x} \dx \]
+Let $u = \pi/2 - x$, so $du = -dx$.
+\[ = \lim_{b \to (\pi/2)^-} \int_{\pi/2}^{\pi/2 - b} \frac{-du}{u} = \lim_{b \to (\pi/2)^-} [\ln|u|]_{\pi/2 - b}^{\pi/2} \]
+\[ = \lim_{b \to (\pi/2)^-} (\ln(\pi/2) - \ln(\pi/2 - b)) \]
+As $b \to (\pi/2)^-$, $\pi/2 - b \to 0^+$, so $\ln(\pi/2 - b) \to -\infty$. The limit is $\ln(\pi/2) - (-\infty) = +\infty$.
+The integral $\int_0^{\pi/2} g(x) dx$ diverges.
+By the Limit Comparison Test, the original integral $\int_0^{\pi/2} \frac{1}{\cos x} \dx$ also **diverges**.
+
+*Method 2: Direct Antiderivative*
+The antiderivative of $\sec x = 1/\cos x$ is $\ln|\sec x + \tan x|$.
+\begin{align*} \int_0^{\pi/2} \frac{1}{\cos x} \dx &= \lim_{b \to (\pi/2)^-} \int_0^b \frac{1}{\cos x} \dx \\ &= \lim_{b \to (\pi/2)^-} [\ln|\sec x + \tan x|]_0^b \\ &= \lim_{b \to (\pi/2)^-} (\ln|\sec b + \tan b|) - (\ln|\sec 0 + \tan 0|) \\ &= \lim_{b \to (\pi/2)^-} (\ln|\sec b + \tan b|) - (\ln|1 + 0|) \\ &= \lim_{b \to (\pi/2)^-} (\ln|\sec b + \tan b|) - 0 \end{align*}
+As $b \to (\pi/2)^-$, $\cos b \to 0^+$, so $\sec b = 1/\cos b \to +\infty$. Also, $\sin b \to 1$, so $\tan b = \sin b / \cos b \to +\infty$.
+Thus, $\sec b + \tan b \to +\infty$.
+The limit is $\lim_{b \to (\pi/2)^-} (\ln(\text{approaching } +\infty)) = +\infty$.
+The integral diverges, confirming the result from Method 1.
+\end{example}
+
+\end{document}

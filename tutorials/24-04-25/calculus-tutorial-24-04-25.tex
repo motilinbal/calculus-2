@@ -1,0 +1,472 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+% Theorem Environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Proof Environment
+\newenvironment{proof_of}[1]{\noindent\textit{Proof of #1.}}{\hfill$\qed$\medskip}
+\renewenvironment{proof}{\noindent\textit{Proof.}}{\hfill$\qed$\medskip}
+
+% Custom environment for administrative notes
+\newenvironment{announcement}
+  {\medskip\par\noindent\begin{center}\rule{\linewidth}{0.4pt}\end{center}\smallskip\par\noindent\textbf{Administrative Notes:}\begin{itemize}}
+  {\end{itemize}\smallskip\par\noindent\begin{center}\rule{\linewidth}{0.4pt}\end{center}\medskip}
+
+% Math Operators
+\DeclareMathOperator{\Ln}{ln} % Using Ln to match transcript usage visually if needed, though \ln is standard
+
+\title{Lecture Notes: Improper Integrals and Introduction to Series}
+\author{Undergraduate Mathematics Educator}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{announcement}
+    \item Please remember to write clearly on assignments. I was also reminded to try and write larger on the board during lectures – please don't hesitate to mention it if you can't see!
+    \item We've covered some integration techniques previously. Today, we delve into improper integrals and begin our journey into infinite series. I feel that you are all quite strong with the material, but these topics introduce new conceptual layers, so let's approach them carefully.
+    \item Regarding homework: I heard some problems in the previous assignment might have been challenging or annoying. That's often part of the learning process! Feel free to bring questions about past homework to office hours or discussion sections. (Mention of specific instructors/TAs like Yansso, Cilinno, Yonatan Azran occurred in the original context, likely related to course staff).
+    \item A student asked about registering for this section while being enrolled in another. Generally, you should attend the section you are registered for, but please speak with me after class or during office hours to discuss your specific situation.
+    \item These notes cover material related to concepts discussed in introductory calculus courses (sometimes referred to as 'Hedva Aleph').
+    \item Reminder: A holiday is approaching. Please check the course schedule for any adjustments. (The specific holiday wasn't named).
+    \item Feel free to ask questions throughout the lecture, and certainly at the end.
+\end{announcement}
+
+\section{Improper Integrals}
+
+We often deal with definite integrals $\int_a^b f(x)\,dx$ where the interval $[a,b]$ is finite and the function $f(x)$ is well-behaved (e.g., continuous) on $[a,b]$. Improper integrals extend this concept to cases where:
+\begin{enumerate}
+    \item The interval of integration is infinite (e.g., $[a, \infty)$, $(-\infty, b]$, or $(-\infty, \infty)$).
+    \item The function $f(x)$ has an infinite discontinuity (a vertical asymptote) at one or more points within the interval $[a,b]$.
+\end{enumerate}
+Our main question is whether these integrals "settle down" to a finite value (converge) or grow without bound (diverge).
+
+\subsection{Integrals over Infinite Intervals}
+
+\begin{definition}[Improper Integral on $[a, \infty)$]
+If $f$ is continuous on $[a, \infty)$, we define
+\[ \int_a^\infty f(x)\,dx = \lim_{T \to \infty} \int_a^T f(x)\,dx \]
+If this limit exists and is finite, we say the integral \textbf{converges}. Otherwise, we say it \textbf{diverges}. Similar definitions apply for $\int_{-\infty}^b f(x)\,dx$ and $\int_{-\infty}^\infty f(x)\,dx$ (the latter requires splitting into two integrals).
+\end{definition}
+
+\begin{example}[Investigating Convergence with a Parameter] \label{ex:k_param}
+For which values of the parameter $k$ does the integral $\int_0^\infty x e^{-kx} dx$ converge, and what is its value when it converges?
+
+\textit{Solution Strategy:} The integrand $x e^{-kx}$ suggests integration by parts. Since the interval is infinite, we'll use the definition involving a limit.
+
+Let's first find the indefinite integral $\int x e^{-kx} dx$ using integration by parts: $\int u \, dv = uv - \int v \, du$.
+Choose:
+\begin{itemize}
+    \item $u = x \implies du = dx$
+    \item $dv = e^{-kx} dx$
+\end{itemize}
+To find $v$, we integrate $dv$: $v = \int e^{-kx} dx = -\frac{1}{k} e^{-kx}$ (assuming $k \neq 0$).
+
+Applying the formula:
+\begin{align*} \int x e^{-kx} dx &= x \left(-\frac{1}{k} e^{-kx}\right) - \int \left(-\frac{1}{k} e^{-kx}\right) dx \\ &= -\frac{x}{k} e^{-kx} + \frac{1}{k} \int e^{-kx} dx \\ &= -\frac{x}{k} e^{-kx} + \frac{1}{k} \left(-\frac{1}{k} e^{-kx}\right) + C \\ &= -\frac{x}{k} e^{-kx} - \frac{1}{k^2} e^{-kx} + C \\ &= -\frac{1}{k^2} e^{-kx} (kx + 1) + C \end{align*}
+Now, we evaluate the improper integral using the limit definition:
+\[ \int_0^\infty x e^{-kx} dx = \lim_{T \to \infty} \int_0^T x e^{-kx} dx = \lim_{T \to \infty} \left[ -\frac{1}{k^2} e^{-kx} (kx + 1) \right]_0^T \]
+\[ = \lim_{T \to \infty} \left( -\frac{1}{k^2} e^{-kT} (kT + 1) - \left(-\frac{1}{k^2} e^{0} (k(0) + 1)\right) \right) \]
+\[ = \lim_{T \to \infty} \left( -\frac{kT+1}{k^2 e^{kT}} \right) + \frac{1}{k^2} \]
+We need to analyze the limit $\lim_{T \to \infty} \frac{kT+1}{k^2 e^{kT}}$ based on the value of $k$.
+
+\textbf{Case 1: $k > 0$}
+The limit is of the form $\frac{\infty}{\infty}$. We can use L'Hôpital's Rule (differentiating with respect to $T$):
+\[ \lim_{T \to \infty} \frac{k}{k^2 (k e^{kT})} = \lim_{T \to \infty} \frac{1}{k^2 e^{kT}} = 0 \]
+So, for $k>0$, the integral is $0 + \frac{1}{k^2} = \frac{1}{k^2}$. The integral converges.
+
+\textbf{Case 2: $k = 0$}
+The original integral becomes $\int_0^\infty x \, dx$, which clearly diverges (limit is $\lim_{T\to\infty} [x^2/2]_0^T = \infty$). Also, our antiderivative wasn't valid for $k=0$.
+
+\textbf{Case 3: $k < 0$}
+Let $k = -p$ where $p > 0$. The term becomes $-\frac{-pT+1}{(-p)^2 e^{-pT}} = -\frac{1-pT}{p^2} e^{pT}$.
+As $T \to \infty$, $e^{pT} \to \infty$ and $1-pT \to -\infty$. The expression goes to $-(-\infty)(\infty) = \infty$.
+So, $\lim_{T \to \infty} \left( -\frac{kT+1}{k^2 e^{kT}} \right)$ diverges to $\infty$. The integral diverges.
+
+\textbf{Conclusion:} The integral $\int_0^\infty x e^{-kx} dx$ converges if and only if $k > 0$, in which case its value is $\frac{1}{k^2}$.
+\end{example}
+
+\begin{remark}
+The convergence of many improper integrals depends crucially on the behavior of the integrand as $x \to \infty$. Exponential decay (like $e^{-kx}$ for $k>0$) often leads to convergence, as it tends to zero "faster" than polynomials tend to infinity. The use of L'Hôpital's rule formally confirms this intuition.
+\end{remark}
+
+\subsection{Comparison Tests for Improper Integrals}
+
+Sometimes, finding an explicit antiderivative is difficult or impossible. In such cases, we can often determine convergence or divergence by comparing the integral to one whose behavior we already know.
+
+\begin{theorem}[Direct Comparison Test]
+Let $f$ and $g$ be continuous functions such that $0 \le f(x) \le g(x)$ for all $x \ge a$.
+\begin{enumerate}
+    \item If $\int_a^\infty g(x)\,dx$ converges, then $\int_a^\infty f(x)\,dx$ converges.
+    \item If $\int_a^\infty f(x)\,dx$ diverges, then $\int_a^\infty g(x)\,dx$ diverges.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Limit Comparison Test (LCT)]
+Let $f$ and $g$ be positive continuous functions for $x \ge a$. Suppose
+\[ L = \lim_{x \to \infty} \frac{f(x)}{g(x)} \]
+If $L$ is a finite positive number ($0 < L < \infty$), then $\int_a^\infty f(x)\,dx$ and $\int_a^\infty g(x)\,dx$ either both converge or both diverge.
+\end{theorem}
+
+A common family of integrals used for comparison is the \textbf{$p$-integrals}:
+\[ \int_1^\infty \frac{1}{x^p} dx \quad \text{converges if } p > 1 \text{ and diverges if } p \le 1 \]
+(For $\int_0^1 \frac{1}{x^p} dx$, it converges if $p < 1$ and diverges if $p \ge 1$.)
+
+\begin{example}[Integral with Oscillation] \label{ex:sin_integral}
+Determine if $\int_1^\infty \frac{\sin x}{x^{3/2}} dx$ converges or diverges.
+
+\textit{Challenge:} The integrand $\frac{\sin x}{x^{3/2}}$ changes sign infinitely often, making direct comparison difficult.
+
+\textit{Strategy: Absolute Convergence}
+We can investigate the convergence of the integral of the absolute value: $\int_1^\infty \left| \frac{\sin x}{x^{3/2}} \right| dx$.
+
+\begin{definition}[Absolute Convergence]
+An integral $\int_a^\infty f(x)\,dx$ is said to \textbf{converge absolutely} if $\int_a^\infty |f(x)|\,dx$ converges.
+\end{definition}
+
+\begin{theorem}
+If $\int_a^\infty |f(x)|\,dx$ converges, then $\int_a^\infty f(x)\,dx$ converges. (Absolute convergence implies convergence).
+\end{theorem}
+
+Let's apply this. We know $|\sin x| \le 1$ for all $x$. Since $x^{3/2} > 0$ for $x \ge 1$, we have:
+\[ 0 \le \left| \frac{\sin x}{x^{3/2}} \right| = \frac{|\sin x|}{x^{3/2}} \le \frac{1}{x^{3/2}} \]
+Now consider the integral $\int_1^\infty \frac{1}{x^{3/2}} dx$. This is a $p$-integral with $p = 3/2$. Since $p = 3/2 > 1$, this integral converges.
+
+By the Direct Comparison Test, since $0 \le \left| \frac{\sin x}{x^{3/2}} \right| \le \frac{1}{x^{3/2}}$ and $\int_1^\infty \frac{1}{x^{3/2}} dx$ converges, the integral $\int_1^\infty \left| \frac{\sin x}{x^{3/2}} \right| dx$ must also converge.
+
+Since the integral converges absolutely, the original integral $\int_1^\infty \frac{\sin x}{x^{3/2}} dx$ converges.
+\end{example}
+
+\begin{example}[Complex Integrand Comparison] \label{ex:complex_compare}
+Determine if $\int_2^\infty \frac{x^{2.5} + \sin^2 x + 3}{x^4 + 7x^2 + 8x + 2} dx$ converges or diverges.
+
+\textit{Observation:} Finding an antiderivative looks extremely difficult. Comparison seems like the best approach. The dominant term in the numerator for large $x$ is $x^{2.5}$, and in the denominator it's $x^4$. We expect the integrand to behave like $x^{2.5}/x^4 = 1/x^{1.5}$ for large $x$. Since $\int^\infty 1/x^{1.5} dx$ converges ($p=1.5>1$), we anticipate convergence.
+
+\textbf{Method 1: Limit Comparison Test}
+Let $f(x) = \frac{x^{2.5} + \sin^2 x + 3}{x^4 + 7x^2 + 8x + 2}$. Let $g(x) = \frac{1}{x^{1.5}}$. Both $f(x)$ and $g(x)$ are positive for $x \ge 2$.
+Let's compute the limit:
+\begin{align*} L = \lim_{x \to \infty} \frac{f(x)}{g(x)} &= \lim_{x \to \infty} \frac{\frac{x^{2.5} + \sin^2 x + 3}{x^4 + 7x^2 + 8x + 2}}{\frac{1}{x^{1.5}}} \\ &= \lim_{x \to \infty} \frac{x^{1.5} (x^{2.5} + \sin^2 x + 3)}{x^4 + 7x^2 + 8x + 2} \\ &= \lim_{x \to \infty} \frac{x^4 + x^{1.5}\sin^2 x + 3x^{1.5}}{x^4 + 7x^2 + 8x + 2} \end{align*}
+To evaluate this limit, divide the numerator and denominator by the highest power of $x$ in the denominator, which is $x^4$:
+\[ L = \lim_{x \to \infty} \frac{1 + \frac{\sin^2 x}{x^{2.5}} + \frac{3}{x^{2.5}}}{1 + \frac{7}{x^2} + \frac{8}{x^3} + \frac{2}{x^4}} \]
+As $x \to \infty$, terms like $\frac{\sin^2 x}{x^{2.5}}$ (bounded/$\infty$), $\frac{3}{x^{2.5}}$, $\frac{7}{x^2}$, etc., all go to 0.
+\[ L = \frac{1 + 0 + 0}{1 + 0 + 0 + 0} = 1 \]
+Since $L=1$ is a finite positive number ($0 < 1 < \infty$), and we know $\int_2^\infty g(x) dx = \int_2^\infty \frac{1}{x^{1.5}} dx$ converges ($p=1.5>1$), the Limit Comparison Test tells us that $\int_2^\infty f(x) dx$ also converges.
+
+\textbf{Method 2: Direct Comparison Test}
+Our intuition is that the integral converges. To use the Direct Comparison Test, we need to find a simpler function $h(x)$ such that $f(x) \le h(x)$ for $x \ge 2$, and $\int_2^\infty h(x) dx$ converges.
+
+Let $f(x) = \frac{x^{2.5} + \sin^2 x + 3}{x^4 + 7x^2 + 8x + 2}$.
+First, make the fraction larger by decreasing the denominator. Since $7x^2 + 8x + 2 > 0$ for $x \ge 2$:
+\[ f(x) < \frac{x^{2.5} + \sin^2 x + 3}{x^4} \]
+Next, make the fraction larger by increasing the numerator. Since $\sin^2 x \le 1$:
+\[ f(x) < \frac{x^{2.5} + 1 + 3}{x^4} = \frac{x^{2.5} + 4}{x^4} \]
+Now, we want to simplify this further. Can we bound $x^{2.5} + 4$ by a multiple of $x^{2.5}$? Let's compare $4$ and $x^{2.5}$ for $x \ge 2$.
+Since $x \ge 2$, $x^{2.5} \ge 2^{2.5} = \sqrt{32} > \sqrt{16} = 4$.
+Therefore, $4 < x^{2.5}$ for $x \ge 2$.
+This means $x^{2.5} + 4 < x^{2.5} + x^{2.5} = 2x^{2.5}$.
+So, we have:
+\[ f(x) < \frac{x^{2.5} + 4}{x^4} < \frac{2x^{2.5}}{x^4} = \frac{2}{x^{1.5}} \]
+Let $h(x) = \frac{2}{x^{1.5}}$. We have shown $0 < f(x) \le h(x)$ for $x \ge 2$.
+Now consider $\int_2^\infty h(x) dx = \int_2^\infty \frac{2}{x^{1.5}} dx = 2 \int_2^\infty \frac{1}{x^{1.5}} dx$.
+This is $2$ times a $p$-integral with $p=1.5 > 1$, so it converges.
+By the Direct Comparison Test, since $f(x) \le h(x)$ and $\int_2^\infty h(x) dx$ converges, the original integral $\int_2^\infty f(x) dx$ also converges.
+\end{example}
+
+\begin{remark}
+Both comparison tests confirmed convergence. The Limit Comparison Test often requires less algebraic manipulation for bounding, relying instead on understanding the asymptotic behavior of functions. The Direct Comparison Test requires careful inequalities but can sometimes be more straightforward if bounds are easy to find.
+\end{remark}
+
+
+\section{Introduction to Infinite Series}
+
+Just as improper integrals extend definite integrals to infinite intervals, infinite series extend the idea of finite sums to an infinite number of terms.
+
+\begin{definition}[Infinite Series]
+Given a sequence of numbers $\{a_n\}_{n=1}^\infty$, the \textbf{infinite series} (or simply \textbf{series}) is the formal sum:
+\[ \sum_{n=1}^\infty a_n = a_1 + a_2 + a_3 + \dots \]
+The sequence of \textbf{partial sums} $\{S_M\}_{M=1}^\infty$ is defined by $S_M = \sum_{n=1}^M a_n = a_1 + a_2 + \dots + a_M$.
+If the sequence of partial sums converges to a finite limit $L$, i.e., $\lim_{M\to\infty} S_M = L$, then we say the series $\sum_{n=1}^\infty a_n$ \textbf{converges} and its sum is $L$. Otherwise, we say the series \textbf{diverges}.
+\end{definition}
+
+\subsection{Basic Properties and Tests}
+
+\begin{theorem}[Test for Divergence] \label{thm:divergence_test}
+If the series $\sum_{n=1}^\infty a_n$ converges, then $\lim_{n\to\infty} a_n = 0$.
+Equivalently (and more usefully stated as a test):
+If $\lim_{n\to\infty} a_n \neq 0$ or if $\lim_{n\to\infty} a_n$ does not exist, then the series $\sum_{n=1}^\infty a_n$ diverges.
+\end{theorem}
+
+\begin{remark}
+This is a crucial first test. However, the converse is false! If $\lim_{n\to\infty} a_n = 0$, the series might converge or might diverge. The condition $\lim_{n\to\infty} a_n = 0$ is necessary for convergence, but not sufficient.
+\end{remark}
+
+\begin{proposition}[Convergence and the Tail]
+The convergence or divergence of a series $\sum a_n$ depends only on the behavior of its terms for large $n$ (its "tail"). That is, $\sum_{n=1}^\infty a_n$ converges if and only if $\sum_{n=N}^\infty a_n$ converges for any finite integer $N \ge 1$. Adding or removing a finite number of terms does not affect whether a series converges, although it does change the value of the sum if it converges.
+\end{proposition}
+
+\begin{definition}[Absolute and Conditional Convergence]
+\begin{enumerate}
+    \item A series $\sum a_n$ is \textbf{absolutely convergent} if the series of absolute values $\sum |a_n|$ converges.
+    \item A series $\sum a_n$ is \textbf{conditionally convergent} if it converges, but $\sum |a_n|$ diverges.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}
+Absolute convergence implies convergence. That is, if $\sum |a_n|$ converges, then $\sum a_n$ converges.
+\end{theorem}
+
+\begin{theorem}[Arithmetic of Convergent Series]
+Suppose $\sum a_n$ and $\sum b_n$ are convergent series, and $c$ is a constant. Then:
+\begin{enumerate}
+    \item $\sum (a_n + b_n) = \sum a_n + \sum b_n$ (converges)
+    \item $\sum (a_n - b_n) = \sum a_n - \sum b_n$ (converges)
+    \item $\sum (c a_n) = c \sum a_n$ (converges)
+\end{enumerate}
+Furthermore, if $\sum a_n$ converges and $\sum d_n$ diverges, then $\sum (a_n + d_n)$ diverges.
+\end{theorem}
+
+\begin{remark}
+We generally cannot conclude anything about the convergence of $\sum (d_n \pm e_n)$ if both $\sum d_n$ and $\sum e_n$ diverge. The result could converge or diverge depending on the specific series.
+\end{remark}
+
+\subsection{Important Examples}
+
+\begin{example}[The Harmonic Series] \label{ex:harmonic}
+The series $\sum_{n=1}^\infty \frac{1}{n} = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots$ is called the \textbf{harmonic series}. Does it converge?
+
+Note that $\lim_{n\to\infty} a_n = \lim_{n\to\infty} \frac{1}{n} = 0$. So, the Test for Divergence doesn't help.
+
+Let's group the terms cleverly:
+\[ S = 1 + \frac{1}{2} + \underbrace{\left(\frac{1}{3} + \frac{1}{4}\right)}_{> \frac{1}{4}+\frac{1}{4} = \frac{1}{2}} + \underbrace{\left(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\right)}_{> \frac{1}{8}+\frac{1}{8}+\frac{1}{8}+\frac{1}{8} = \frac{1}{2}} + \underbrace{\left(\frac{1}{9} + \dots + \frac{1}{16}\right)}_{> 8 \times \frac{1}{16} = \frac{1}{2}} + \dots \]
+The sum of terms in each subsequent block of size $2^k$ is greater than $1/2$. Since we can add infinitely many blocks, each contributing more than $1/2$ to the sum, the partial sums $S_M$ grow without bound.
+Therefore, the harmonic series diverges.
+\end{example}
+
+\begin{example}[The Alternating Harmonic Series] \label{ex:alt_harmonic}
+Consider the series $\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dots$. Does this converge?
+
+Let's examine the partial sums.
+Group terms in pairs:
+\[ S = \underbrace{\left(1 - \frac{1}{2}\right)}_{=1/2 > 0} + \underbrace{\left(\frac{1}{3} - \frac{1}{4}\right)}_{=1/12 > 0} + \underbrace{\left(\frac{1}{5} - \frac{1}{6}\right)}_{=1/30 > 0} + \dots \]
+Since we are adding positive terms, the partial sums $S_{2M}$ are increasing. Also, each term added is positive, so the full sequence of partial sums must be bounded below by 0 (actually by $1/2$ after the first pair).
+
+Alternatively, group terms differently:
+\[ S = 1 - \underbrace{\left(\frac{1}{2} - \frac{1}{3}\right)}_{=1/6 > 0} - \underbrace{\left(\frac{1}{4} - \frac{1}{5}\right)}_{=1/20 > 0} - \underbrace{\left(\frac{1}{6} - \frac{1}{7}\right)}_{=1/42 > 0} - \dots \]
+This shows that we start at 1 and subtract successive positive quantities. Therefore, all partial sums are less than 1.
+
+The sequence of partial sums is increasing (or at least the even ones are) and bounded above by 1. A monotonic bounded sequence must converge. (This aligns with the Alternating Series Test criteria, though we haven't formally stated it).
+Therefore, the alternating harmonic series converges. (It converges to $\ln 2$).
+
+Since $\sum |\frac{(-1)^{n+1}}{n}| = \sum \frac{1}{n}$ (the harmonic series) diverges, the alternating harmonic series is conditionally convergent.
+\end{example}
+
+\subsection{Telescoping Series}
+
+These are series where most terms cancel out in the partial sums, leaving only a few.
+
+\begin{example}[Basic Telescoping Series] \label{ex:telescope1}
+Find the sum of the series $\sum_{n=1}^\infty \left(\frac{1}{2n-1} - \frac{1}{2n+1}\right)$.
+
+Let's write out the $M$-th partial sum, $S_M$:
+\begin{align*} S_M &= \sum_{n=1}^M \left(\frac{1}{2n-1} - \frac{1}{2n+1}\right) \\ &= \left(\frac{1}{1} - \frac{1}{3}\right) && (n=1) \\ &+ \left(\frac{1}{3} - \frac{1}{5}\right) && (n=2) \\ &+ \left(\frac{1}{5} - \frac{1}{7}\right) && (n=3) \\ &+ \dots \\ &+ \left(\frac{1}{2(M-1)-1} - \frac{1}{2(M-1)+1}\right) && (n=M-1) \\ &+ \left(\frac{1}{2M-1} - \frac{1}{2M+1}\right) && (n=M) \end{align*}
+Notice the cancellation: the $-1/3$ cancels with the $+1/3$, the $-1/5$ cancels with the $+1/5$, and so on, up to the $-1/(2M-1)$ cancelling with the $+1/(2M-1)$.
+The terms remaining are the first part of the first term and the second part of the last term:
+\[ S_M = 1 - \frac{1}{2M+1} \]
+Now, we find the sum of the series by taking the limit:
+\[ \sum_{n=1}^\infty \left(\frac{1}{2n-1} - \frac{1}{2n+1}\right) = \lim_{M\to\infty} S_M = \lim_{M\to\infty} \left(1 - \frac{1}{2M+1}\right) = 1 - 0 = 1 \]
+The series converges to 1.
+\end{example}
+
+\begin{example}[Telescoping via Partial Fractions] \label{ex:telescope_pf}
+Find the sum of the series $\sum_{n=1}^\infty \frac{1}{n(n+1)}$.
+
+We use partial fractions to decompose the term:
+\[ \frac{1}{n(n+1)} = \frac{A}{n} + \frac{B}{n+1} \]
+Multiplying by $n(n+1)$ gives $1 = A(n+1) + Bn$.
+Setting $n=0 \implies 1 = A(1) + B(0) \implies A=1$.
+Setting $n=-1 \implies 1 = A(0) + B(-1) \implies B=-1$.
+So, $\frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1}$.
+
+The series becomes $\sum_{n=1}^\infty \left(\frac{1}{n} - \frac{1}{n+1}\right)$.
+The $M$-th partial sum is:
+\begin{align*} S_M &= \sum_{n=1}^M \left(\frac{1}{n} - \frac{1}{n+1}\right) \\ &= \left(1 - \frac{1}{2}\right) + \left(\frac{1}{2} - \frac{1}{3}\right) + \left(\frac{1}{3} - \frac{1}{4}\right) + \dots + \left(\frac{1}{M} - \frac{1}{M+1}\right) \\ &= 1 - \frac{1}{M+1} \end{align*}
+The sum is $\lim_{M\to\infty} S_M = \lim_{M\to\infty} \left(1 - \frac{1}{M+1}\right) = 1$.
+The series converges to 1.
+\end{example}
+
+\begin{example}[Telescoping with More Remaining Terms] \label{ex:telescope_n+2}
+Analyze the series $\sum_{n=1}^\infty \left(\frac{1}{n} - \frac{1}{n+2}\right)$.
+
+Let's write out the $M$-th partial sum ($M \ge 2$):
+\begin{align*} S_M &= \sum_{n=1}^M \left(\frac{1}{n} - \frac{1}{n+2}\right) \\ &= \left(1 - \frac{1}{3}\right) && (n=1) \\ &+ \left(\frac{1}{2} - \frac{1}{4}\right) && (n=2) \\ &+ \left(\frac{1}{3} - \frac{1}{5}\right) && (n=3) \\ &+ \left(\frac{1}{4} - \frac{1}{6}\right) && (n=4) \\ &+ \dots \\ &+ \left(\frac{1}{M-1} - \frac{1}{M+1}\right) && (n=M-1) \\ &+ \left(\frac{1}{M} - \frac{1}{M+2}\right) && (n=M) \end{align*}
+Let's track the cancellations:
+The $-1/3$ from $n=1$ cancels with the $+1/3$ from $n=3$.
+The $-1/4$ from $n=2$ cancels with the $+1/4$ from $n=4$.
+...
+The positive term $\frac{1}{k}$ cancels with the negative term $-\frac{1}{k}$ from the term where $n = k-2$.
+The terms that do *not* cancel are:
+\begin{itemize}
+    \item The positive parts from the first two terms: $1$ (from $n=1$) and $1/2$ (from $n=2$).
+    \item The negative parts from the last two terms: $-1/(M+1)$ (from $n=M-1$) and $-1/(M+2)$ (from $n=M$).
+\end{itemize}
+So, $S_M = 1 + \frac{1}{2} - \frac{1}{M+1} - \frac{1}{M+2}$.
+The sum is $\lim_{M\to\infty} S_M = \lim_{M\to\infty} \left(1 + \frac{1}{2} - \frac{1}{M+1} - \frac{1}{M+2}\right) = 1 + \frac{1}{2} - 0 - 0 = 1.5$.
+The series converges to 1.5.
+\end{example}
+
+\subsection{Geometric Series}
+
+A very important class of series.
+
+\begin{definition}
+A \textbf{geometric series} is a series of the form:
+\[ \sum_{n=0}^\infty ar^n = a + ar + ar^2 + ar^3 + \dots \quad (\text{if starting at } n=0) \]
+or
+\[ \sum_{n=1}^\infty ar^{n-1} = a + ar + ar^2 + ar^3 + \dots \quad (\text{if starting at } n=1) \]
+Here, $a$ is the first term and $r$ is the common ratio.
+\end{definition}
+
+\begin{theorem}[Convergence of Geometric Series]
+The geometric series $\sum_{n=0}^\infty ar^n$ (assume $a \neq 0$):
+\begin{enumerate}
+    \item Converges if $|r| < 1$, and its sum is $S = \frac{a}{1-r}$.
+    \item Diverges if $|r| \ge 1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{example}[Sum of Geometric Series] \label{ex:geo_sum}
+Find the sum of the series $\sum_{n=0}^\infty \frac{2^n + 3^n}{6^n}$.
+
+We can split this using the arithmetic properties, provided the individual series converge:
+\[ \sum_{n=0}^\infty \frac{2^n + 3^n}{6^n} = \sum_{n=0}^\infty \frac{2^n}{6^n} + \sum_{n=0}^\infty \frac{3^n}{6^n} = \sum_{n=0}^\infty \left(\frac{2}{6}\right)^n + \sum_{n=0}^\infty \left(\frac{3}{6}\right)^n \]
+\[ = \sum_{n=0}^\infty \left(\frac{1}{3}\right)^n + \sum_{n=0}^\infty \left(\frac{1}{2}\right)^n \]
+The first series is geometric with $a=1$ (since $(1/3)^0 = 1$) and $r=1/3$. Since $|1/3| < 1$, it converges. Its sum is $\frac{a}{1-r} = \frac{1}{1 - 1/3} = \frac{1}{2/3} = 1.5$.
+The second series is geometric with $a=1$ (since $(1/2)^0 = 1$) and $r=1/2$. Since $|1/2| < 1$, it converges. Its sum is $\frac{a}{1-r} = \frac{1}{1 - 1/2} = \frac{1}{1/2} = 2$.
+Since both individual series converge, the original series converges, and its sum is the sum of the individual sums:
+\[ \sum_{n=0}^\infty \frac{2^n + 3^n}{6^n} = 1.5 + 2 = 3.5 \]
+\end{example}
+
+\begin{example}[Geometric Series Manipulation] \label{ex:geo_manip}
+Find the sum of $\sum_{n=0}^\infty \frac{1}{2^{n+1}}$.
+
+We can rewrite the term to fit the standard geometric series form $ar^n$:
+\[ \frac{1}{2^{n+1}} = \frac{1}{2 \cdot 2^n} = \frac{1}{2} \left(\frac{1}{2}\right)^n \]
+So the series is $\sum_{n=0}^\infty \frac{1}{2} \left(\frac{1}{2}\right)^n$.
+This is a geometric series with first term $a = \frac{1}{2} (\frac{1}{2})^0 = \frac{1}{2}$ and common ratio $r = 1/2$.
+Since $|r| < 1$, the series converges. Its sum is:
+\[ S = \frac{a}{1-r} = \frac{1/2}{1 - 1/2} = \frac{1/2}{1/2} = 1 \]
+The series converges to 1.
+\end{example}
+
+\subsection{Questions on Series Convergence}
+
+Let's explore some properties based on convergence.
+
+\begin{proposition}
+If $\sum a_n$ and $\sum b_n$ both converge, does $\sum (a_n b_n)$ necessarily converge?
+
+\textit{Initial Intuition:} If $\sum a_n$ and $\sum b_n$ converge, then $\lim a_n = 0$ and $\lim b_n = 0$. This implies $\lim (a_n b_n) = 0$. While this necessary condition holds, it is not sufficient.
+
+\textit{Conclusion:} No, $\sum (a_n b_n)$ does not necessarily converge.
+
+\textit{Counterexample:} Let $a_n = b_n = \frac{(-1)^n}{\sqrt{n}}$.
+The series $\sum a_n = \sum \frac{(-1)^n}{\sqrt{n}}$ converges by the Alternating Series Test (terms decrease in magnitude to 0).
+Similarly, $\sum b_n$ converges.
+However, $a_n b_n = \frac{(-1)^n}{\sqrt{n}} \cdot \frac{(-1)^n}{\sqrt{n}} = \frac{(-1)^{2n}}{n} = \frac{1}{n}$.
+The series $\sum (a_n b_n) = \sum \frac{1}{n}$ is the harmonic series, which diverges.
+\end{proposition}
+
+\begin{proposition}
+If $\sum a_n$ and $\sum b_n$ both diverge, does $\sum (a_n b_n)$ necessarily diverge?
+
+\textit{Conclusion:} No, the behavior of $\sum (a_n b_n)$ is indeterminate.
+
+\textit{Example (Product Converges):} Let $a_n = b_n = \frac{1}{n}$. Both $\sum a_n$ and $\sum b_n$ diverge (harmonic series). But $\sum (a_n b_n) = \sum \frac{1}{n^2}$, which converges ($p=2>1$).
+
+\textit{Example (Product Diverges):} Let $a_n = b_n = 1$. Both $\sum a_n$ and $\sum b_n$ diverge (Test for Divergence: $\lim 1 = 1 \neq 0$). And $\sum (a_n b_n) = \sum 1$ also diverges.
+\end{proposition}
+
+\begin{proposition} \label{prop:exp_an}
+If $\sum a_n$ converges, does $\sum e^{-a_n}$ converge?
+
+\textit{Reasoning:}
+If $\sum a_n$ converges, then we must have $\lim_{n\to\infty} a_n = 0$.
+Consider the terms of the second series, $e^{-a_n}$.
+As $n \to \infty$, $a_n \to 0$, so $e^{-a_n} \to e^0 = 1$.
+Since the terms of the series $\sum e^{-a_n}$ do not approach 0 ($\lim_{n\to\infty} e^{-a_n} = 1 \neq 0$), the series $\sum e^{-a_n}$ diverges by the Test for Divergence (Theorem \ref{thm:divergence_test}).
+
+\textit{Conclusion:} No, $\sum e^{-a_n}$ diverges if $\sum a_n$ converges.
+\end{proposition}
+
+\section{Further Examples and Discussion}
+
+Let's revisit improper integrals with a couple more examples that came up.
+
+\begin{example}[Integral involving Logarithm] \label{ex:ln_integral}
+Determine if $\int_2^\infty \frac{1}{x \sqrt{\ln x}} dx$ converges or diverges.
+
+\textit{Strategy:} The presence of $\ln x$ and $1/x$ suggests the substitution $u = \ln x$.
+Let $u = \ln x$. Then $du = \frac{1}{x} dx$.
+We also need to change the limits of integration:
+When $x=2$, $u = \ln 2$.
+As $x \to \infty$, $u = \ln x \to \infty$.
+
+Substituting into the integral:
+\[ \int_2^\infty \frac{1}{x \sqrt{\ln x}} dx = \int_{\ln 2}^\infty \frac{1}{\sqrt{u}} \, du \]
+This is an improper integral of the form $\int_a^\infty \frac{1}{u^p} du$ with $a = \ln 2 > 0$ and $p = 1/2$.
+Since $p = 1/2 \le 1$, this integral diverges.
+
+Let's show this explicitly using the limit definition:
+\begin{align*} \int_{\ln 2}^\infty \frac{1}{\sqrt{u}} du &= \int_{\ln 2}^\infty u^{-1/2} du \\ &= \lim_{T \to \infty} \int_{\ln 2}^T u^{-1/2} du \\ &= \lim_{T \to \infty} \left[ \frac{u^{1/2}}{1/2} \right]_{\ln 2}^T \\ &= \lim_{T \to \infty} [2\sqrt{u}]_{\ln 2}^T \\ &= \lim_{T \to \infty} (2\sqrt{T} - 2\sqrt{\ln 2}) \end{align*}
+Since $\lim_{T \to \infty} 2\sqrt{T} = \infty$, the limit does not exist as a finite number.
+Therefore, the integral diverges.
+\end{example}
+
+\begin{example}[Integral with Trigonometric Function Discontinuity] \label{ex:cos_integral}
+Determine if $\int_0^{\pi/2} \frac{1}{\cos x} dx$ converges or diverges.
+
+\textit{Observation:} The interval $[0, \pi/2]$ is finite, but the integrand $f(x) = 1/\cos x$ has an infinite discontinuity at $x = \pi/2$, because $\cos(\pi/2) = 0$. This makes the integral improper.
+
+\textit{Strategy 1: Trigonometric Identity and Comparison}
+Recall the identity $\cos x = \sin(\pi/2 - x)$.
+So, the integral is $\int_0^{\pi/2} \frac{1}{\sin(\pi/2 - x)} dx$.
+Let $y = \pi/2 - x$. As $x \to (\pi/2)^-$, $y \to 0^+$.
+Near $y=0$, $\sin y \approx y$. So, the integrand behaves like $1/y = 1/(\pi/2 - x)$ near $x = \pi/2$.
+
+Let's use the Limit Comparison Test for improper integrals with a discontinuity.
+Let $f(x) = \frac{1}{\cos x} = \frac{1}{\sin(\pi/2 - x)}$ and $g(x) = \frac{1}{\pi/2 - x}$. Both are positive on $[0, \pi/2)$.
+We examine the limit as $x$ approaches the point of discontinuity:
+\[ L = \lim_{x \to (\pi/2)^-} \frac{f(x)}{g(x)} = \lim_{x \to (\pi/2)^-} \frac{1/\sin(\pi/2 - x)}{1/(\pi/2 - x)} = \lim_{x \to (\pi/2)^-} \frac{\pi/2 - x}{\sin(\pi/2 - x)} \]
+Let $y = \pi/2 - x$. As $x \to (\pi/2)^-$, $y \to 0^+$.
+\[ L = \lim_{y \to 0^+} \frac{y}{\sin y} = 1 \]
+Since $L=1$ is finite and positive, $\int_0^{\pi/2} f(x) dx$ and $\int_0^{\pi/2} g(x) dx$ either both converge or both diverge.
+
+Now analyze $\int_0^{\pi/2} g(x) dx = \int_0^{\pi/2} \frac{1}{\pi/2 - x} dx$.
+Use the substitution $t = \pi/2 - x$. Then $dt = -dx$.
+Limits: $x=0 \implies t=\pi/2$; $x \to (\pi/2)^- \implies t \to 0^+$.
+\[ \int_0^{\pi/2} \frac{1}{\pi/2 - x} dx = \int_{\pi/2}^0 \frac{1}{t} (-dt) = \int_0^{\pi/2} \frac{1}{t} dt \]
+This is an improper integral $\int_0^a \frac{1}{t^p} dt$ with $p=1$. Since $p \ge 1$, it diverges.
+Let's evaluate it:
+\[ \lim_{a \to 0^+} \int_a^{\pi/2} \frac{1}{t} dt = \lim_{a \to 0^+} [\ln|t|]_a^{\pi/2} = \lim_{a \to 0^+} (\ln(\pi/2) - \ln a) = \infty \]
+Since $\int_0^{\pi/2} g(x) dx$ diverges, and $L=1$, the original integral $\int_0^{\pi/2} \frac{1}{\cos x} dx$ also diverges by the Limit Comparison Test.
+\end{example}
+
+\begin{remark}
+Understanding the behavior of basic functions like $1/x^p$ near $x=0$ and $x=\infty$ is crucial for applying comparison tests effectively for both integrals and series (via the integral test, which we haven't covered yet but relates the two).
+\end{remark}
+
+\end{document}

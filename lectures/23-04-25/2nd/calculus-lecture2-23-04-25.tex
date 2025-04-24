@@ -1,0 +1,458 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+% Theorem Environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Math Operators and Shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\tendsto}{\to}
+
+\title{Introduction to Infinite Series}
+\author{Undergraduate Mathematics Educator} % Persona placeholder
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction: Why Study Infinite Series?}
+
+Welcome! Today we embark on a new chapter exploring the fascinating world of **infinite series**. You might wonder why we dedicate time to summing up infinitely many numbers. Isn't that impossible? Or perhaps just a mathematical curiosity?
+
+It turns out that infinite series are incredibly powerful tools with far-reaching applications, both within mathematics and in fields like physics, engineering, computer science, and economics. One key motivation comes from the desire to understand and work with complex functions.
+
+Imagine you encounter a function $f(x)$ whose integral is impossible to calculate using standard techniques, or perhaps a function whose behavior is very complicated. Wouldn't it be wonderful if we could approximate such a function using simpler building blocks? The simplest and most well-behaved functions we know are arguably **polynomials** – functions like $c_0 + c_1 x + c_2 x^2 + \dots + c_n x^n$. They are easy to differentiate, integrate, and evaluate.
+
+A central theme, which we will explore in depth in a later chapter on **Taylor Series**, is that many important functions (even complicated ones like $e^x$, $\sin(x)$, or $\ln(1+x)$) can often be represented, or at least approximated very well, by "infinite polynomials" – that is, by infinite series where each term is a power of $x$. For example, it turns out that we can express the exponential function $e$ (Euler's number) as:
+\[ e = 1 + \frac{1}{1!} + \frac{1}{2!} + \frac{1}{3!} + \dots = \sum_{n=0}^{\infty} \frac{1}{n!} \]
+This is an infinite sum! To make sense of this, and to harness the power of representing functions in this way, we first need to rigorously understand what it means to sum infinitely many terms. That's the goal of this chapter: to build the foundational concepts of infinite series and their convergence. We'll see how ideas from sequences, limits, and even integrals come together. Let's begin!
+
+\section{Defining Infinite Series and Convergence}
+
+At its heart, an infinite series is simply an attempt to add up the terms of an infinite sequence.
+
+\begin{definition}[Infinite Series]
+Let $\{a_n\}_{n=1}^{\infty}$ be an infinite sequence of real numbers. The formal expression
+\[ \sum_{n=1}^{\infty} a_n = a_1 + a_2 + a_3 + \dots \]
+is called an **infinite series**. The number $a_n$ is called the $n$-th **term** of the series.
+\end{definition}
+
+\begin{remark}
+Sometimes, it's convenient to start the index $n$ from $0$ (i.e., $\sum_{n=0}^{\infty} a_n = a_0 + a_1 + a_2 + \dots$) or some other integer. The starting index doesn't fundamentally change the theory, though it might affect the value of the sum. We'll usually start from $n=1$ unless otherwise specified.
+\end{remark}
+
+Now, the crucial question: what does it actually mean to *sum* infinitely many terms? We can't perform infinitely many additions directly. The key idea is to transform the problem into one involving limits, which we already understand from our study of sequences. We do this by considering the **partial sums**.
+
+\begin{definition}[Sequence of Partial Sums]
+Given the series $\sum_{n=1}^{\infty} a_n$, the $k$-th **partial sum**, denoted by $S_k$, is the sum of the first $k$ terms of the series:
+\[ S_k = \sum_{n=1}^{k} a_n = a_1 + a_2 + \dots + a_k \]
+The sequence $\{S_k\}_{k=1}^{\infty} = \{S_1, S_2, S_3, \dots\}$ is called the **sequence of partial sums** of the series $\sum a_n$.
+Note that:
+\begin{itemize}
+    \item $S_1 = a_1$
+    \item $S_2 = a_1 + a_2$
+    \item $S_3 = a_1 + a_2 + a_3$
+    \item \dots
+\end{itemize}
+\end{definition}
+
+The sequence of partial sums $\{S_k\}$ is just an ordinary infinite sequence. We know what it means for such a sequence to converge or diverge. This provides our definition for the convergence of the series itself.
+
+\begin{definition}[Convergence and Sum of a Series]
+Let $\sum_{n=1}^{\infty} a_n$ be an infinite series, and let $\{S_k\}_{k=1}^{\infty}$ be its sequence of partial sums, where $S_k = \sum_{n=1}^{k} a_n$.
+\begin{itemize}
+    \item If the sequence of partial sums $\{S_k\}$ converges to a finite limit $S$, i.e., $\lim_{k \to \infty} S_k = S$, then we say the series $\sum_{n=1}^{\infty} a_n$ **converges**, and its **sum** is $S$. We write:
+    \[ \sum_{n=1}^{\infty} a_n = S \]
+    \item If the sequence of partial sums $\{S_k\}$ diverges (i.e., the limit $\lim_{k \to \infty} S_k$ does not exist or is infinite), then we say the series $\sum_{n=1}^{\infty} a_n$ **diverges**. A divergent series does not have a finite sum.
+\end{itemize}
+\end{definition}
+
+This definition is fundamental. To determine if a series converges and find its sum, we need to:
+\begin{enumerate}
+    \item Find an expression for the $k$-th partial sum, $S_k$.
+    \item Evaluate the limit of this expression as $k \to \infty$.
+\end{enumerate}
+Often, step 1 is the most challenging part.
+
+\begin{definition}[Divergence to Infinity]
+If the sequence of partial sums $S_k$ tends to $\infty$ or $-\infty$ as $k \to \infty$, we say the series **diverges to infinity** (or **minus infinity**, respectively). We may write $\sum a_n = \infty$ or $\sum a_n = -\infty$ in these cases, although strictly speaking, the series still diverges (it doesn't have a finite sum).
+\end{definition}
+
+Let's solidify these concepts with some examples.
+
+\section{Fundamental Examples}
+
+\subsection{Telescoping Series}
+
+Sometimes, the partial sums simplify in a very convenient way, where intermediate terms cancel out.
+
+\begin{example}[A Telescoping Series] \label{ex:telescoping}
+Consider the series $\sum_{n=1}^{\infty} \frac{1}{n(n+1)}$. Let's find its $k$-th partial sum, $S_k$.
+
+First, notice that the term $a_n = \frac{1}{n(n+1)}$ can be decomposed using partial fractions. We look for constants $A$ and $B$ such that
+\[ \frac{1}{n(n+1)} = \frac{A}{n} + \frac{B}{n+1} \]
+Multiplying by $n(n+1)$ gives $1 = A(n+1) + Bn$.
+Setting $n=0$ gives $1 = A(1) \implies A=1$.
+Setting $n=-1$ gives $1 = B(-1) \implies B=-1$.
+Thus, we have the useful decomposition:
+\[ a_n = \frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1} \]
+Now, let's write out the $k$-th partial sum $S_k$:
+\begin{align*} S_k = \sum_{n=1}^{k} a_n &= \sum_{n=1}^{k} \left( \frac{1}{n} - \frac{1}{n+1} \right) \\ &= \left( \frac{1}{1} - \frac{1}{2} \right) + \left( \frac{1}{2} - \frac{1}{3} \right) + \left( \frac{1}{3} - \frac{1}{4} \right) + \dots + \left( \frac{1}{k} - \frac{1}{k+1} \right) \end{align*}
+Look at the magic! As Yehuda might point out, nearly all the terms cancel out. The $-\frac{1}{2}$ cancels with the $+\frac{1}{2}$, the $-\frac{1}{3}$ cancels with the $+\frac{1}{3}$, and so on, up until the $+\frac{1}{k}$ term. We are left with only the first part of the first term and the second part of the last term:
+\[ S_k = \frac{1}{1} - \frac{1}{k+1} = 1 - \frac{1}{k+1} \]
+Now we can easily find the sum of the series by taking the limit:
+\[ \sum_{n=1}^{\infty} \frac{1}{n(n+1)} = \lim_{k \to \infty} S_k = \lim_{k \to \infty} \left( 1 - \frac{1}{k+1} \right) = 1 - 0 = 1 \]
+Therefore, the series converges, and its sum is 1.
+
+This type of series, where the partial sums collapse due to cancellation, is called a **telescoping series**. You may encounter similar problems in your homework assignments.
+\end{example}
+
+\subsection{Geometric Series}
+
+Perhaps the most important type of series is the geometric series.
+
+\begin{definition}[Geometric Series]
+A series of the form
+\[ \sum_{n=0}^{\infty} a q^n = a + aq + aq^2 + aq^3 + \dots \]
+where $a$ and $q$ are fixed real numbers (and usually $a \neq 0$, otherwise the series is trivial), is called a **geometric series**. The number $q$ is called the **common ratio**.
+\end{definition}
+
+Why the name? Notice that the ratio of any term to the previous term is constant: $\frac{aq^{n+1}}{aq^n} = q$. This mirrors the definition of a geometric sequence.
+
+Let's find the sum of a geometric series. We need the $k$-th partial sum. Note that here we sum $k$ terms starting from $n=0$ up to $n=k-1$:
+\[ S_k = \sum_{n=0}^{k-1} a q^n = a + aq + aq^2 + \dots + aq^{k-1} \]
+If $q=1$, then $S_k = a + a + \dots + a = ka$. If $a \neq 0$, then $\lim_{k \to \infty} S_k = \lim_{k \to \infty} ka$, which diverges (to $\infty$ if $a>0$, to $-\infty$ if $a<0$). So, a geometric series with $q=1$ diverges (unless $a=0$).
+
+Now assume $q \neq 1$. We use a standard trick:
+\begin{align*} S_k &= a + aq + aq^2 + \dots + aq^{k-1} \\ q S_k &= aq + aq^2 + \dots + aq^{k-1} + aq^k \end{align*}
+Subtracting the second equation from the first, most terms cancel:
+\[ S_k - q S_k = a - aq^k \]
+\[ S_k (1 - q) = a(1 - q^k) \]
+Since $q \neq 1$, we can divide by $(1-q)$:
+\[ S_k = a \frac{1 - q^k}{1 - q} \]
+Now we need to find the limit of $S_k$ as $k \to \infty$. The behavior depends crucially on the value of $q^k$ as $k \to \infty$. We know from our study of sequences that:
+\begin{itemize}
+    \item If $|q| < 1$, then $\lim_{k \to \infty} q^k = 0$.
+    \item If $q = 1$, then $\lim_{k \to \infty} q^k = 1$. (We already handled this case: divergence).
+    \item If $q = -1$, then $q^k$ alternates between $1$ and $-1$, so the limit does not exist.
+    \item If $|q| > 1$, then $\lim_{k \to \infty} |q^k| = \infty$, so the limit does not exist.
+\end{itemize}
+
+Let's analyze the convergence of the series $\sum_{n=0}^{\infty} a q^n$ based on $S_k = a \frac{1 - q^k}{1 - q}$ (for $q \neq 1$):
+
+\begin{itemize}
+    \item **Case 1: $|q| < 1$ (Convergence)**
+    In this case, $\lim_{k \to \infty} q^k = 0$. Therefore,
+    \[ \lim_{k \to \infty} S_k = \lim_{k \to \infty} a \frac{1 - q^k}{1 - q} = a \frac{1 - 0}{1 - q} = \frac{a}{1 - q} \]
+    The series converges to $\frac{a}{1-q}$.
+
+    \item **Case 2: $q = 1$**
+    As shown earlier, the series diverges (if $a \neq 0$).
+
+    \item **Case 3: $q = -1$**
+    The partial sums are $S_k = a \frac{1 - (-1)^k}{1 - (-1)} = a \frac{1 - (-1)^k}{2}$.
+    If $k$ is even, $S_k = a \frac{1-1}{2} = 0$.
+    If $k$ is odd, $S_k = a \frac{1-(-1)}{2} = a$.
+    Since the sequence of partial sums $\{0, a, 0, a, \dots\}$ oscillates (if $a \neq 0$) and does not approach a single limit, the series diverges.
+
+    \item **Case 4: $|q| > 1$**
+    In this case, $|q^k| \to \infty$ as $k \to \infty$. Since the $q^k$ term does not approach a finite limit, the sequence $S_k = a \frac{1 - q^k}{1 - q}$ diverges.
+\end{itemize}
+
+We can summarize this crucial result:
+
+\begin{theorem}[Convergence of Geometric Series]
+The geometric series $\sum_{n=0}^{\infty} a q^n$
+\begin{itemize}
+    \item **converges** to the sum $S = \frac{a}{1 - q}$ if $|q| < 1$.
+    \item **diverges** if $|q| \ge 1$ (and $a \neq 0$).
+\end{itemize}
+\end{theorem}
+
+\begin{example}[A Convergent Geometric Series]
+Consider the series $\sum_{n=0}^{\infty} \left(\frac{1}{2}\right)^n$.
+This is a geometric series with $a=1$ and $q = \frac{1}{2}$. Since $|q| = \frac{1}{2} < 1$, the series converges. Its sum is:
+\[ S = \frac{a}{1 - q} = \frac{1}{1 - \frac{1}{2}} = \frac{1}{\frac{1}{2}} = 2 \]
+If you were to calculate the partial sums on a computer, $S_1=1, S_2=1.5, S_3=1.75, S_4=1.875, \dots$, you would see them getting closer and closer to 2.
+\end{example}
+
+\begin{remark}
+If the geometric series starts from $n=1$, i.e., $\sum_{n=1}^{\infty} a q^n = aq + aq^2 + \dots$, it still converges if $|q|<1$. Its sum is simply the sum starting from $n=0$ minus the first term ($a q^0 = a$), or you can think of it as a geometric series with first term $a' = aq$.
+\[ \sum_{n=1}^{\infty} a q^n = \frac{a}{1-q} - a = \frac{a - a(1-q)}{1-q} = \frac{aq}{1-q} \quad (\text{if } |q|<1) \]
+Always pay attention to the starting index!
+\end{remark}
+
+
+\subsection{Basic Divergent Series}
+
+Not all series converge, of course. Let's look at some fundamental examples of divergence.
+
+\begin{example}[Alternating Series $\sum (-1)^{n+1}$] \label{ex:alternating_one}
+Consider the series $\sum_{n=1}^{\infty} (-1)^{n+1} = 1 - 1 + 1 - 1 + 1 - \dots$.
+Let's examine its partial sums $S_k = \sum_{n=1}^{k} (-1)^{n+1}$:
+\begin{itemize}
+    \item If $k$ is even, say $k=2m$, then $S_{2m} = (1-1) + (1-1) + \dots + (1-1) = 0$.
+    \item If $k$ is odd, say $k=2m-1$, then $S_{2m-1} = S_{2m-2} + a_{2m-1} = 0 + (-1)^{(2m-1)+1} = (-1)^{2m} = 1$.
+\end{itemize}
+The sequence of partial sums is $\{1, 0, 1, 0, 1, 0, \dots\}$. Since this sequence oscillates between 1 and 0, it does not converge to a single limit. Therefore, the series $\sum_{n=1}^{\infty} (-1)^{n+1}$ **diverges**.
+
+(As Ozana might point out, we found two subsequences, $S_{2k} \to 0$ and $S_{2k-1} \to 1$, with different limits, confirming divergence based on what we learned about sequences.)
+
+\textit{Historical Note:} Interestingly, the great mathematician Leonhard Euler initially argued (using reasoning that wasn't based on our modern rigorous definition of convergence via partial sums) that this series should have the sum $\frac{1}{2}$. He formally treated it like a geometric series $\sum_{n=0}^\infty (-1)^n$ with $a=1, q=-1$, which our formula $\frac{a}{1-q}$ would give $\frac{1}{1-(-1)} = \frac{1}{2}$. This highlights the importance of precise definitions! In our framework, the series simply diverges.
+\end{example}
+
+\begin{example}[Series of Constants $\sum 1$]
+Consider the series $\sum_{n=1}^{\infty} 1 = 1 + 1 + 1 + \dots$.
+The $k$-th partial sum is $S_k = \sum_{n=1}^{k} 1 = \underbrace{1 + 1 + \dots + 1}_{k \text{ times}} = k$.
+The limit of the partial sums is $\lim_{k \to \infty} S_k = \lim_{k \to \infty} k = \infty$.
+Since the limit is infinite, the series **diverges** (specifically, it diverges to infinity).
+\end{example}
+
+\section{Properties of Convergent Series}
+
+Now that we have the basic definitions, let's explore some fundamental properties and tests for convergence.
+
+\subsection{The Necessary Condition for Convergence (The $n$-th Term Test)}
+
+Our first test is a simple check that can quickly identify many *divergent* series. It stems from the definition of convergence.
+
+\begin{theorem}[The $n$-th Term Test for Divergence]
+If the series $\sum_{n=1}^{\infty} a_n$ converges, then the sequence of its terms must converge to zero, i.e.,
+\[ \lim_{n \to \infty} a_n = 0 \]
+Equivalently, if $\lim_{n \to \infty} a_n \neq 0$ or if this limit does not exist, then the series $\sum_{n=1}^{\infty} a_n$ **diverges**.
+\end{theorem}
+
+\begin{proof}[Intuition]
+Suppose the series $\sum a_n = S$ converges. This means the partial sums $S_k = a_1 + \dots + a_k$ approach $S$ as $k \to \infty$. Similarly, $S_{k-1} = a_1 + \dots + a_{k-1}$ also approaches $S$. The $k$-th term is the difference between consecutive partial sums: $a_k = S_k - S_{k-1}$. As $k \to \infty$, both $S_k$ and $S_{k-1}$ approach $S$, so their difference must approach $S - S = 0$. Thus, $\lim_{k \to \infty} a_k = 0$. (A formal proof uses the definition of the limit).
+\end{proof}
+
+\begin{remark}
+This theorem is primarily used to show **divergence**. If you find that $\lim_{n \to \infty} a_n \neq 0$, you can immediately conclude the series diverges.
+\end{remark}
+
+\begin{example}[Application of the $n$-th Term Test]
+\begin{enumerate}
+    \item Consider $\sum_{n=1}^{\infty} \sin(n)$. We know that $\lim_{n \to \infty} \sin(n)$ does not exist (it oscillates). Since the limit of the terms is not 0, the series **diverges** by the $n$-th Term Test.
+    \item Consider $\sum_{n=1}^{\infty} n = 1+2+3+\dots$. Here $a_n = n$. Since $\lim_{n \to \infty} n = \infty \neq 0$, the series **diverges** by the $n$-th Term Test.
+    \item Consider $\sum_{n=1}^{\infty} \frac{n^2 + 1}{2n^2 + 3}$. Here $a_n = \frac{n^2+1}{2n^2+3}$.
+    \[ \lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{n^2(1 + 1/n^2)}{n^2(2 + 3/n^2)} = \frac{1+0}{2+0} = \frac{1}{2} \]
+    Since $\lim_{n \to \infty} a_n = \frac{1}{2} \neq 0$, the series **diverges**.
+\end{enumerate}
+\end{example}
+
+\textbf{Crucial Warning:} The converse of the $n$-th Term Test is \textbf{false}!
+If $\lim_{n \to \infty} a_n = 0$, this does \textbf{not} guarantee that the series $\sum a_n$ converges. The condition $a_n \to 0$ is necessary, but not sufficient.
+
+\begin{example}[The Harmonic Series - A Counterexample] \label{ex:harmonic}
+Consider the **harmonic series**:
+\[ \sum_{n=1}^{\infty} \frac{1}{n} = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots \]
+Here, $a_n = \frac{1}{n}$. Clearly, $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{1}{n} = 0$.
+So, the necessary condition is satisfied. However, it turns out that the harmonic series **diverges** (specifically, it diverges to infinity).
+
+We will prove the divergence of the harmonic series later, likely using the Integral Test. For now, accept it as a fact and remember it as the primary example showing that $a_n \to 0$ is not enough for convergence.
+\end{example}
+
+\begin{example}[Divergence Proof using Necessary Condition]
+Let's prove that if $\sum_{n=1}^{\infty} a_n$ converges, then $\sum_{n=1}^{\infty} (a_n + (-1)^n)$ must diverge.
+
+Let $b_n = a_n + (-1)^n$. We want to show that $\sum b_n$ diverges. We will use the $n$-th Term Test for Divergence. We need to check if $\lim_{n \to \infty} b_n = 0$.
+
+Since $\sum a_n$ converges, we know by the necessary condition that $\lim_{n \to \infty} a_n = 0$.
+Now consider the limit of $b_n$: $\lim_{n \to \infty} (a_n + (-1)^n)$.
+Since $\lim a_n = 0$, but $\lim (-1)^n$ does not exist (it oscillates between -1 and 1), the combined limit $\lim_{n \to \infty} b_n$ does not exist.
+
+Alternatively, as Amit might suggest, let's look at subsequences.
+Let $k \to \infty$.
+\begin{itemize}
+    \item Consider even indices: $b_{2k} = a_{2k} + (-1)^{2k} = a_{2k} + 1$. Since $a_n \to 0$, any subsequence also tends to 0, so $\lim_{k \to \infty} a_{2k} = 0$. Thus, $\lim_{k \to \infty} b_{2k} = 0 + 1 = 1$.
+    \item Consider odd indices: $b_{2k-1} = a_{2k-1} + (-1)^{2k-1} = a_{2k-1} - 1$. Similarly, $\lim_{k \to \infty} a_{2k-1} = 0$. Thus, $\lim_{k \to \infty} b_{2k-1} = 0 - 1 = -1$.
+\end{itemize}
+Since we found two subsequences of $\{b_n\}$ converging to different limits (1 and -1), the sequence $\{b_n\}$ itself does not converge. In particular, $\lim_{n \to \infty} b_n \neq 0$.
+
+Therefore, by the $n$-th Term Test for Divergence, the series $\sum_{n=1}^{\infty} b_n = \sum_{n=1}^{\infty} (a_n + (-1)^n)$ **diverges**.
+\end{example}
+
+
+\subsection{Absolute and Conditional Convergence}
+
+When dealing with series that have both positive and negative terms, it's useful to consider the convergence of the series formed by taking the absolute value of each term.
+
+\begin{definition}[Absolute Convergence]
+The series $\sum_{n=1}^{\infty} a_n$ is said to converge **absolutely** (or be **absolutely convergent**) if the series of absolute values, $\sum_{n=1}^{\infty} |a_n|$, converges.
+\end{definition}
+
+Absolute convergence is a stronger condition than simple convergence.
+
+\begin{theorem}[Absolute Convergence Implies Convergence]
+If a series $\sum_{n=1}^{\infty} a_n$ converges absolutely, then it converges.
+That is, if $\sum_{n=1}^{\infty} |a_n|$ converges, then $\sum_{n=1}^{\infty} a_n$ also converges.
+\end{theorem}
+
+\begin{proof}[Idea]
+The intuition is that if the sum of the magnitudes $|a_n|$ is finite, then the cancellations that might occur in the original series $\sum a_n$ (due to positive and negative terms) can only help convergence or keep the sum finite. The positive and negative parts of the series are "controlled" by the convergent series $\sum |a_n|$. (The formal proof often involves considering $a_n^+ = \max(a_n, 0)$ and $a_n^- = \max(-a_n, 0)$).
+\end{proof}
+
+The converse is not true. A series might converge, but not absolutely.
+
+\begin{definition}[Conditional Convergence]
+The series $\sum_{n=1}^{\infty} a_n$ is said to converge **conditionally** (or be **conditionally convergent**) if it converges, but it does not converge absolutely.
+That is, $\sum_{n=1}^{\infty} a_n$ converges, but $\sum_{n=1}^{\infty} |a_n|$ diverges.
+\end{definition}
+
+\begin{example}[Conditional Convergence] \label{ex:conditional}
+Consider the series $1 - 1 + \frac{1}{2} - \frac{1}{2} + \frac{1}{3} - \frac{1}{3} + \dots$.
+Let's analyze its convergence. Let $a_n$ be the $n$-th term.
+The sequence of terms is $\{1, -1, \frac{1}{2}, -\frac{1}{2}, \frac{1}{3}, -\frac{1}{3}, \dots \}$.
+Let's look at the partial sums $S_k$.
+\begin{itemize}
+    \item If $k$ is even, say $k=2m$, then $S_{2m} = (1-1) + (\frac{1}{2}-\frac{1}{2}) + \dots + (\frac{1}{m}-\frac{1}{m}) = 0$. So $\lim_{m \to \infty} S_{2m} = 0$.
+    \item If $k$ is odd, say $k=2m+1$, then $S_{2m+1} = S_{2m} + a_{2m+1}$. The $(2m+1)$-th term is $\frac{1}{m+1}$. So $S_{2m+1} = 0 + \frac{1}{m+1}$. As $k=2m+1 \to \infty$, we have $m \to \infty$, so $\lim_{m \to \infty} S_{2m+1} = \lim_{m \to \infty} \frac{1}{m+1} = 0$.
+    % Let's re-check the partial sum formula from the transcript for odd k.
+    % S1 = 1. Formula: 2/(1+1) = 1. Correct.
+    % S3 = 1-1+1/2 = 1/2. Formula: 2/(3+1) = 2/4 = 1/2. Correct.
+    % S5 = 1-1+1/2-1/2+1/3 = 1/3. Formula: 2/(5+1) = 2/6 = 1/3. Correct.
+    % The transcript used k in the formula, let's match that index for clarity. If $k$ is odd, $S_k = \frac{2}{k+1}$.
+    % As $k \to \infty$ (through odd values), $\lim_{k \to \infty, k \text{ odd}} S_k = \lim_{k \to \infty} \frac{2}{k+1} = 0$.
+\end{itemize}
+Since both the even and odd partial sums tend to 0, the sequence of partial sums $S_k$ converges to 0. Thus, the original series $\sum a_n$ **converges** (and its sum is 0).
+
+Now, let's consider the series of absolute values: $\sum |a_n|$.
+\[ \sum |a_n| = |1| + |-1| + |\frac{1}{2}| + |-\frac{1}{2}| + |\frac{1}{3}| + |-\frac{1}{3}| + \dots \]
+\[ = 1 + 1 + \frac{1}{2} + \frac{1}{2} + \frac{1}{3} + \frac{1}{3} + \dots \]
+\[ = (1 + \frac{1}{2} + \frac{1}{3} + \dots) + (1 + \frac{1}{2} + \frac{1}{3} + \dots) \]
+\[ = 2 \sum_{n=1}^{\infty} \frac{1}{n} \]
+This is twice the harmonic series! Since the harmonic series $\sum \frac{1}{n}$ diverges to infinity, the series $\sum |a_n|$ also diverges to infinity.
+
+Conclusion: The series converges, but the series of absolute values diverges. Therefore, the series $1 - 1 + \frac{1}{2} - \frac{1}{2} + \dots$ converges **conditionally**.
+\end{example}
+
+\subsection{Arithmetic of Series}
+
+Just like sequences, convergent series obey simple arithmetic rules. These rules follow directly from the corresponding limit laws for the sequences of partial sums.
+
+\begin{theorem}[Arithmetic of Convergent Series]
+Suppose $\sum_{n=1}^{\infty} a_n$ and $\sum_{n=1}^{\infty} b_n$ are convergent series with sums $A$ and $B$, respectively, and let $c$ be any real constant. Then:
+\begin{enumerate}
+    \item The series $\sum_{n=1}^{\infty} (a_n + b_n)$ converges, and its sum is $A + B$.
+    \[ \sum_{n=1}^{\infty} (a_n + b_n) = \sum_{n=1}^{\infty} a_n + \sum_{n=1}^{\infty} b_n = A + B \]
+    \item The series $\sum_{n=1}^{\infty} (a_n - b_n)$ converges, and its sum is $A - B$.
+    \[ \sum_{n=1}^{\infty} (a_n - b_n) = \sum_{n=1}^{\infty} a_n - \sum_{n=1}^{\infty} b_n = A - B \]
+    \item The series $\sum_{n=1}^{\infty} (c \cdot a_n)$ converges, and its sum is $c \cdot A$.
+    \[ \sum_{n=1}^{\infty} (c \cdot a_n) = c \sum_{n=1}^{\infty} a_n = c A \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Sketch]
+Let $S_k = \sum_{n=1}^k a_n$ and $T_k = \sum_{n=1}^k b_n$. We are given $\lim S_k = A$ and $\lim T_k = B$.
+1. The partial sum for $\sum (a_n + b_n)$ is $\sum_{n=1}^k (a_n + b_n) = (\sum_{n=1}^k a_n) + (\sum_{n=1}^k b_n) = S_k + T_k$. By the limit laws for sequences, $\lim (S_k + T_k) = \lim S_k + \lim T_k = A + B$.
+2. The partial sum for $\sum (a_n - b_n)$ is $S_k - T_k$. By limit laws, $\lim (S_k - T_k) = A - B$.
+3. The partial sum for $\sum (c a_n)$ is $\sum_{n=1}^k c a_n = c \sum_{n=1}^k a_n = c S_k$. By limit laws, $\lim (c S_k) = c \lim S_k = c A$.
+\end{proof}
+
+\begin{remark}[Important Caveat]
+These rules require the individual series $\sum a_n$ and $\sum b_n$ to be **convergent** before you can combine or split them. It is possible for $\sum (a_n + b_n)$ to converge even if $\sum a_n$ and $\sum b_n$ both diverge individually.
+
+For example, let $a_n = (-1)^n$ and $b_n = (-1)^{n+1}$. We saw in Example \ref{ex:alternating_one} that both $\sum a_n$ and $\sum b_n$ diverge. However, their sum is:
+\[ \sum_{n=1}^{\infty} (a_n + b_n) = \sum_{n=1}^{\infty} ((-1)^n + (-1)^{n+1}) = \sum_{n=1}^{\infty} ((-1)^n - (-1)^n) = \sum_{n=1}^{\infty} 0 = 0 \]
+The sum converges to 0. So, you cannot generally split a series $\sum(a_n+b_n)$ into $\sum a_n + \sum b_n$ unless you already know the individual series converge.
+\end{remark}
+
+\begin{example}[Using Arithmetic Rules]
+Calculate the sum of the series $\sum_{n=0}^{\infty} \frac{1 - 2 \cdot 3^n}{4^n}$.
+
+We can try to split this using the arithmetic rules:
+\[ \sum_{n=0}^{\infty} \frac{1 - 2 \cdot 3^n}{4^n} \stackrel{?}{=} \sum_{n=0}^{\infty} \frac{1}{4^n} - \sum_{n=0}^{\infty} \frac{2 \cdot 3^n}{4^n} \]
+\[ \stackrel{?}{=} \sum_{n=0}^{\infty} \left(\frac{1}{4}\right)^n - 2 \sum_{n=0}^{\infty} \left(\frac{3}{4}\right)^n \]
+Now, we need to justify this split. We look at the two resulting series:
+\begin{itemize}
+    \item $\sum_{n=0}^{\infty} (\frac{1}{4})^n$ is a geometric series with $a=1, q=1/4$. Since $|q|<1$, it converges to $\frac{1}{1-1/4} = \frac{1}{3/4} = \frac{4}{3}$.
+    \item $\sum_{n=0}^{\infty} (\frac{3}{4})^n$ is a geometric series with $a=1, q=3/4$. Since $|q|<1$, it converges to $\frac{1}{1-3/4} = \frac{1}{1/4} = 4$.
+\end{itemize}
+Since both individual series converge, our splitting step was justified! We can now calculate the sum:
+\[ \sum_{n=0}^{\infty} \frac{1 - 2 \cdot 3^n}{4^n} = \left( \sum_{n=0}^{\infty} \left(\frac{1}{4}\right)^n \right) - 2 \left( \sum_{n=0}^{\infty} \left(\frac{3}{4}\right)^n \right) = \frac{4}{3} - 2(4) = \frac{4}{3} - 8 = \frac{4 - 24}{3} = -\frac{20}{3} \]
+The calculation looks like hindsight – we split first and then checked convergence. Formally, you should verify the component series converge before applying the arithmetic rules.
+\end{example}
+
+\begin{example}[Divergence using Constant Multiple Rule]
+Does the series $\sum_{n=1}^{\infty} \frac{1}{2n}$ converge?
+We can write:
+\[ \sum_{n=1}^{\infty} \frac{1}{2n} = \sum_{n=1}^{\infty} \frac{1}{2} \cdot \frac{1}{n} \]
+This looks like $\sum c a_n$ with $c = 1/2$ and $a_n = 1/n$.
+We know the harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$ diverges (to infinity).
+The constant multiple rule (part 3 of the theorem) technically applies only if $\sum a_n$ converges. However, a related property holds: if $\sum a_n$ diverges to $\infty$ and $c > 0$, then $\sum c a_n$ also diverges to $\infty$.
+Let $S_k = \sum_{n=1}^k \frac{1}{n}$. We know $\lim_{k \to \infty} S_k = \infty$.
+The partial sum for our series is $T_k = \sum_{n=1}^k \frac{1}{2n} = \frac{1}{2} \sum_{n=1}^k \frac{1}{n} = \frac{1}{2} S_k$.
+Since $S_k \to \infty$, then $T_k = \frac{1}{2} S_k \to \infty$ as well.
+Thus, the series $\sum_{n=1}^{\infty} \frac{1}{2n}$ **diverges** (to infinity).
+\end{example}
+
+\begin{corollary}
+If $\sum (a_k + b_k)$ converges and $\sum a_k$ converges, then $\sum b_k$ must also converge.
+\begin{proof}
+We can write $b_k = (a_k + b_k) - a_k$. Let $C_k = a_k + b_k$. We are given that $\sum C_k$ converges and $\sum a_k$ converges. By the arithmetic rules (part 2), the series $\sum (C_k - a_k)$ must converge. But $\sum (C_k - a_k) = \sum b_k$. Therefore, $\sum b_k$ converges.
+\end{proof}
+This means you cannot have a situation where the sum converges and one part converges, but the other part diverges.
+\end{corollary}
+
+
+\section{Further Properties (A Brief Look)}
+
+We conclude with a brief mention of some more subtle properties of infinite series. We won't delve deeply into their proofs in this course, but they offer valuable conceptual insights.
+
+\begin{theorem}[Inserting Parentheses]
+If a series $\sum a_n$ converges to a sum $S$, then any series obtained by inserting parentheses (grouping consecutive terms) also converges to $S$.
+
+For example, if $a_1+a_2+a_3+a_4+\dots$ converges to $S$, then $(a_1+a_2) + (a_3+a_4) + \dots$ also converges to $S$.
+\end{theorem}
+
+\textbf{Warning:} The converse is false! Inserting parentheses can make a divergent series appear to converge. We saw this with $\sum (-1)^{n+1} = 1-1+1-1+\dots$, which diverges. However, grouping terms as $(1-1) + (1-1) + \dots = 0+0+\dots$ gives a series converging to 0. The theorem only works one way: parentheses preserve convergence, they don't create it from divergence.
+
+\begin{theorem}[Convergence Depends Only on the Tail]
+A series $\sum_{n=1}^{\infty} a_n$ converges if and only if its **tail** $\sum_{n=k+1}^{\infty} a_n = a_{k+1} + a_{k+2} + \dots$ converges for any (and thus all) $k \ge 1$.
+\end{theorem}
+
+This important theorem tells us that the convergence behavior of a series is determined by what happens "eventually," i.e., by its terms for large $n$. Changing, adding, or removing a finite number of terms at the beginning of a series does \textbf{not} affect whether the series converges or diverges (though it *will* change the value of the sum if it converges). The first few terms, or even the first million terms, don't dictate convergence; the "tail" does.
+
+\begin{definition}[Remainder Term]
+If a series $\sum_{n=1}^{\infty} a_n$ converges to a sum $S$, the $n$-th **remainder**, denoted $R_n$, is the difference between the total sum and the $n$-th partial sum:
+\[ R_n = S - S_n = S - \sum_{k=1}^{n} a_k = \sum_{k=n+1}^{\infty} a_k \]
+$R_n$ represents the "error" if we approximate the infinite sum $S$ by its $n$-th partial sum $S_n$. It's the sum of the terms in the tail starting from $a_{n+1}$.
+\end{definition}
+
+\begin{theorem}[Remainder Tends to Zero]
+If a series $\sum a_n$ converges, then its sequence of remainders $\{R_n\}$ converges to 0.
+\[ \lim_{n \to \infty} R_n = \lim_{n \to \infty} \left( S - S_n \right) = S - \lim_{n \to \infty} S_n = S - S = 0 \]
+\end{theorem}
+
+This makes intuitive sense: if the series converges, the sum of the terms far out in the tail must become negligible. This is closely related to the necessary condition ($a_n \to 0$).
+
+\section{Concluding Remarks}
+
+We have taken the first steps into the realm of infinite series, defining them rigorously through the concept of partial sums and limits. We've seen crucial examples like telescoping series and geometric series, and established fundamental properties like the necessary condition for convergence ($a_n \to 0$) and the distinction between absolute and conditional convergence. The arithmetic rules allow us to manipulate convergent series in predictable ways.
+
+Keep in mind the key ideas:
+\begin{itemize}
+    \item Convergence is defined via the limit of partial sums.
+    \item The geometric series formula $\frac{a}{1-q}$ (for $|q|<1$) is essential.
+    \item The condition $a_n \to 0$ is necessary but not sufficient for convergence (recall the harmonic series).
+    \item Absolute convergence implies convergence.
+\end{itemize}
+
+In upcoming lectures, we will develop more powerful tests (like the Integral Test, Comparison Tests, Ratio Test, Root Test) to determine the convergence or divergence of series where finding a simple formula for $S_k$ is difficult or impossible. This groundwork will be crucial as we move towards our goal of representing functions using Taylor series. We might even touch upon the connections to complex analysis in future courses for those interested in further mathematical adventures! Keep asking questions and exploring these fascinating infinite sums.
+
+\end{document}
