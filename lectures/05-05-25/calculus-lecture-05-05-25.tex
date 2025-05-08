@@ -1,0 +1,412 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry} % Standard margins
+\usepackage{amsmath, amssymb, amsthm, amsfonts} % AMS packages for math
+\usepackage{graphicx} % For potential figures (LaTeX logo used here)
+\usepackage{xcolor}   % For colored boxes
+\usepackage[utf8]{inputenc} % Input encoding for wider character support
+\usepackage[T1]{fontenc}    % Font encoding
+\usepackage[english]{babel} % Language support (hyphenation)
+\usepackage{environ} % <<<<<<<<<<<<<<<<<<<<<<< ADDED for custom environment
+\usepackage{hyperref} % For clickable links (TOC, references)
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Lecture Notes: Series and Taylor Expansions},
+    pdfpagemode=FullScreen,
+}
+
+% Font suggestion (Palatino) - uncomment if desired
+% \usepackage{mathpazo}
+% \linespread{1.05} % Adjust line spacing if using Palatino
+
+% --- Theorem Environments ---
+\theoremstyle{plain} % Default style: italic text
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition} % Definition style: upright text
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{question}[theorem]{Question}
+
+% Custom environment for proofs
+\renewcommand{\qedsymbol}{$\blacksquare$} % Use a black square for end-of-proof
+
+% --- Custom Environment for Announcements (using environ package) ---
+\NewEnviron{announcement}[1]{% Define environment that captures its body
+  \par\medskip\noindent
+  \begin{center}
+  \fbox{% Start fbox
+    \begin{minipage}{0.9\textwidth}% Start minipage
+      \color{blue!70!black}\textbf{\sffamily #1}\par\smallskip\color{black}% Typeset title
+      \normalfont\normalsize % Set font
+      \BODY % Insert the captured body of the environment here
+    \end{minipage}% End minipage
+  }% End fbox
+  \end{center}
+  \medskip\par
+}
+
+% --- Math Macros ---
+\newcommand{\N}{\mathbb{N}} % Natural numbers
+\newcommand{\R}{\mathbb{R}} % Real numbers
+\newcommand{\abs}[1]{\left|#1\right|} % Absolute value
+\newcommand{\dee}{\mathop{}\!\mathrm{d}} % Differential 'd' for integrals
+
+% --- Document Metadata ---
+\title{Lecture Notes: \\ Selected Topics in Infinite Series and Taylor Expansions}
+\author{Undergraduate Mathematics Educator \\ (Compiled from Lecture Transcript)}
+\date{\today}
+
+% --- Document Start ---
+\begin{document}
+\maketitle
+\begin{center}
+    \textit{These notes aim to supplement our lectures, covering key concepts in alternating series and the fundamentals of Taylor polynomial approximations. We will address some common questions and work through specific examples discussed in class, intended to aid your study and preparation for assignments.}
+\end{center}
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------------------------
+%   ADMINISTRATIVE SECTION
+%----------------------------------------------------------------------------------------
+\section*{Course Information and Announcements}
+
+\begin{announcement}{General Course Notes \& Logistics} % Start the environment
+\begin{itemize}
+    \item \textbf{Purpose of these Notes:} These notes cover some specific topics, possibly serving as a supplement or "completion of overall gaps" (reflecting the original lecture phrase's intent) from previous material or lectures.
+    \item \textbf{Calculators in Exams:} A point was raised regarding calculators in mathematics assessments. It's worth noting that unlike many other disciplines, advanced mathematics courses often prohibit calculators during exams. The emphasis is typically on understanding the underlying principles, analytical reasoning, and proof techniques rather than numerical computation. Specific examples were mentioned (like policies possibly at the University of Haifa), but the key takeaway is: \textbf{Always confirm the specific calculator policy for *this* course's exams and quizzes.} Do not assume calculators are permitted unless explicitly stated.
+\end{itemize}
+\end{announcement} % End the environment
+
+%----------------------------------------------------------------------------------------
+%   ALTERNATING SERIES SECTION
+%----------------------------------------------------------------------------------------
+\section{Alternating Series and the Leibniz Test}
+
+\subsection{Introduction and Motivation}
+Most of our convergence tests so far (Comparison, Limit Comparison, Integral Test, Ratio Test, Root Test) work best, or are stated most simply, for series with \textit{positive} terms. But what happens when terms can be negative? A particularly important and structured case is when the signs strictly alternate.
+
+\begin{definition}[Alternating Series]
+An \textbf{alternating series} is an infinite series whose terms alternate between positive and negative values. Such a series can be expressed in one of two standard forms:
+\begin{enumerate}
+    \item $\sum_{n=1}^{\infty} (-1)^{n-1} a_n = a_1 - a_2 + a_3 - a_4 + \dots$
+    \item $\sum_{n=1}^{\infty} (-1)^{n} a_n = -a_1 + a_2 - a_3 + a_4 - \dots$
+\end{enumerate}
+where in both cases, we assume $\boldsymbol{a_n > 0}$ for all $n$. The sequence $\{a_n\}$ represents the sequence of absolute values of the terms.
+\end{definition}
+
+\begin{remark}
+Sometimes, it's conceptually simpler (as mentioned in the lecture) to think of an alternating series directly as $a_1 - a_2 + a_3 - a_4 + \dots$ and then state conditions on the positive sequence $\{a_n\}$.
+\end{remark}
+
+\subsection{The Leibniz Test (Alternating Series Test)}
+There's a remarkably straightforward test, often attributed to Leibniz, that provides sufficient conditions for the convergence of such series.
+
+\begin{theorem}[Leibniz Test for Alternating Series]\label{thm:leibniz} % Label added
+An alternating series $\sum_{n=1}^{\infty} (-1)^{n-1} a_n$ (or $\sum_{n=1}^{\infty} (-1)^{n} a_n$) converges if all three of the following conditions hold:
+\begin{enumerate}
+    \item \textbf{Positivity:} $a_n > 0$ for all $n$.
+    \item \textbf{Decreasing Magnitude:} The sequence $\{a_n\}$ is eventually decreasing, i.e., $a_{n+1} \le a_n$ for all $n$ greater than some integer $N_0$. (Often, it's decreasing from the start, $n \ge 1$).
+    \item \textbf{Limit is Zero:} $\lim_{n \to \infty} a_n = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Intuition]
+Why does this work? Imagine the partial sums. $S_1 = a_1$. $S_2 = a_1 - a_2$. Since $a_2 \le a_1$, $S_2$ is less than or equal to $S_1$. $S_3 = S_2 + a_3$. Since $a_3 \le a_2$, $S_3$ increases from $S_2$ but doesn't go beyond $S_1$. $S_4 = S_3 - a_4$, decreasing from $S_3$ but staying above $S_2$. The partial sums oscillate back and forth. The decreasing condition ensures the oscillations are nested, and the limit condition ($\lim a_n = 0$) ensures the width of these oscillations shrinks to zero, trapping a unique limit $S$.
+If $\lim a_n \neq 0$, the series diverges by the Term Test for Divergence (since $\lim (-1)^{n-1}a_n$ would not be zero).
+\end{remark}
+
+\subsection{Absolute vs. Conditional Convergence}
+For series with potentially negative terms, especially alternating ones, convergence itself isn't the whole story. We distinguish between two "strengths" of convergence.
+
+\begin{definition}[Absolute and Conditional Convergence]\label{def:abs_cond_conv}
+Let $\sum b_n$ be any infinite series.
+\begin{itemize}
+    \item The series $\sum b_n$ converges \textbf{absolutely} if the series of absolute values, $\sum_{n=1}^{\infty} |b_n|$, converges.
+    \item The series $\sum b_n$ converges \textbf{conditionally} if $\sum b_n$ converges, but $\sum |b_n|$ diverges.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Absolute Convergence Implies Convergence]
+If a series converges absolutely, then it converges. That is, if $\sum |b_n|$ converges, then $\sum b_n$ must also converge.
+\end{theorem}
+
+\begin{remark}
+The converse is false. Conditional convergence provides the counterexamples. Alternating series are the primary source of conditionally convergent series in introductory calculus.
+\end{remark}
+
+\begin{example}[The Alternating Harmonic Series - Revisited]\label{ex:alt_harmonic_revisited}
+Let's re-examine the series $\sum_{n=1}^{\infty} (-1)^{n-1} \frac{1}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dots$.
+We identify $a_n = \frac{1}{n}$.
+\begin{enumerate}
+    \item $a_n = 1/n > 0$ for $n \ge 1$. (Condition 1: Positivity)
+    \item $a_{n+1} = \frac{1}{n+1} < \frac{1}{n} = a_n$ for all $n \ge 1$. (Condition 2: Decreasing)
+    \item $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{1}{n} = 0$. (Condition 3: Limit is Zero)
+\end{enumerate}
+All conditions of the Leibniz Test (Theorem \ref{thm:leibniz}) are met. Therefore, the series converges.
+
+Now, let's check for absolute convergence by examining $\sum |b_n| = \sum_{n=1}^{\infty} \abs{(-1)^{n-1} \frac{1}{n}} = \sum_{n=1}^{\infty} \frac{1}{n}$.
+This is the harmonic series. We know it diverges (it's a p-series with $p=1$).
+
+Since the original series converges, but the series of absolute values diverges, the alternating harmonic series converges \textbf{conditionally}. (As noted in the lecture, its sum happens to be $\ln 2$).
+\end{example}
+
+\begin{example}[A Trigonometric Series: Absolute Convergence Check]\label{ex:sin_n_sq_revisited}
+Consider the series $\sum_{n=1}^{\infty} \frac{\sin(n)}{n^2}$.
+The terms are not strictly alternating. It's often best to check absolute convergence first.
+Consider $\sum_{n=1}^{\infty} \abs{\frac{\sin(n)}{n^2}} = \sum_{n=1}^{\infty} \frac{|\sin(n)|}{n^2}$.
+We use the fact that $0 \le |\sin(n)| \le 1$ for all $n$. Thus:
+$$ 0 \le \frac{|\sin(n)|}{n^2} \le \frac{1}{n^2} $$
+The series $\sum_{n=1}^{\infty} \frac{1}{n^2}$ converges (it's a p-series with $p=2 > 1$).
+By the Direct Comparison Test, since the terms $\frac{|\sin(n)|}{n^2}$ are positive and bounded above by the terms of a convergent series, the series $\sum_{n=1}^{\infty} \frac{|\sin(n)|}{n^2}$ converges.
+
+Since the series of absolute values converges, the original series $\sum_{n=1}^{\infty} \frac{\sin(n)}{n^2}$ converges \textbf{absolutely}. (And therefore, it also converges).
+\end{example}
+
+\begin{example}[Another Conditionally Convergent Series]\label{ex:alt_odd_recip_revisited}
+Consider the series $1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \dots = \sum_{n=1}^{\infty} (-1)^{n-1} \frac{1}{2n-1}$.
+Let $a_n = \frac{1}{2n-1}$.
+\begin{enumerate}
+    \item $a_n = \frac{1}{2n-1} > 0$ for $n \ge 1$.
+    \item $a_{n+1} = \frac{1}{2(n+1)-1} = \frac{1}{2n+1} < \frac{1}{2n-1} = a_n$. So $\{a_n\}$ is decreasing.
+    \item $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{1}{2n-1} = 0$.
+\end{enumerate}
+By the Leibniz Test, the series converges.
+
+Check absolute convergence: $\sum_{n=1}^{\infty} \abs{(-1)^{n-1} \frac{1}{2n-1}} = \sum_{n=1}^{\infty} \frac{1}{2n-1}$.
+Let's use the Limit Comparison Test (LCT) with the divergent harmonic series $\sum b_n = \sum \frac{1}{n}$.
+$$ L = \lim_{n \to \infty} \frac{a_n}{b_n} = \lim_{n \to \infty} \frac{1/(2n-1)}{1/n} = \lim_{n \to \infty} \frac{n}{2n-1} = \lim_{n \to \infty} \frac{1}{2 - 1/n} = \frac{1}{2} $$
+Since $L = 1/2$ is finite and positive ($0 < L < \infty$), and $\sum \frac{1}{n}$ diverges, the LCT implies that $\sum \frac{1}{2n-1}$ also diverges.
+
+Since the original series converges, but the series of absolute values diverges, the series $\sum_{n=1}^{\infty} (-1)^{n-1} \frac{1}{2n-1}$ converges \textbf{conditionally}. (As noted in the lecture, its sum happens to be $\frac{\pi}{4}$).
+\end{example}
+
+\subsection{Riemann's Rearrangement Theorem (An Intuitive Peek)}
+Conditionally convergent series exhibit a truly startling behavior: the value of their sum depends entirely on the order in which the terms are added!
+
+\begin{theorem}[Riemann's Rearrangement Theorem - Informal Statement]
+If a series $\sum b_n$ converges conditionally, then for any real number $L$ (or even for $L=\pm\infty$), there exists a rearrangement of the terms of $\sum b_n$ (let's call the rearranged series $\sum b'_n$) such that $\sum b'_n$ converges to $L$.
+\end{theorem}
+
+\begin{remark}[Why?]
+This phenomenon arises because, for a conditionally convergent series, the sum of its positive terms \textit{alone} must diverge to $+\infty$, and the sum of its negative terms \textit{alone} must diverge to $-\infty$. This provides infinite "pools" of positive and negative values. To reach a target sum $L$, one can strategically pick positive terms until the partial sum exceeds $L$, then pick negative terms until it drops below $L$, then more positive terms, and so on. Since the individual terms must approach zero (otherwise the original series wouldn't have converged), these adjustments become increasingly fine-grained, allowing the rearranged sum to zero in on $L$. This remarkable property underscores why conditional convergence is considered "fragile" – it depends crucially on the specific ordering. Absolutely convergent series, in contrast, have sums that are independent of the order of summation.
+\end{remark}
+
+\subsection{Error Estimation for Alternating Series}
+One of the most convenient aspects of alternating series that satisfy the Leibniz conditions is the ability to easily estimate the error when truncating the series.
+
+\begin{theorem}[Alternating Series Estimation Theorem]\label{thm:alt_series_error}
+Let $S = \sum_{k=1}^{\infty} (-1)^{k-1} a_k$ be the sum of an alternating series satisfying the conditions of the Leibniz Test (Theorem \ref{thm:leibniz}: $a_k > 0$, $\{a_k\}$ eventually decreasing, $\lim_{k \to \infty} a_k = 0$). Let $S_n = \sum_{k=1}^{n} (-1)^{k-1} a_k$ be the $n$-th partial sum. Then the absolute error (or remainder) $R_n = S - S_n$ satisfies:
+$$ |R_n| = |S - S_n| \le a_{n+1} $$
+In words: the absolute error is no larger than the magnitude of the first term omitted.
+Furthermore, the sign of the error $S-S_n$ is the same as the sign of the first omitted term, $(-1)^n a_{n+1}$.
+\end{theorem}
+
+\begin{example}[Error Bound Illustration]
+Suppose we approximate the sum $S = 1 - \frac{1}{3} + \frac{1}{5} - \dots = \frac{\pi}{4}$ using the first $100$ terms ($S_{100}$). The first omitted term is $a_{101} = \frac{1}{2(101)-1} = \frac{1}{201}$. The theorem guarantees that the error $|S - S_{100}| \le \frac{1}{201}$.
+\end{example}
+
+\begin{remark}[Rate of Convergence]
+While the error bound is simple, it might not indicate rapid convergence. As mentioned in the lecture discussion, if we wanted to approximate the sum of the alternating harmonic series ($S = \ln 2$) with an error less than $10^{-6}$, we would need $|R_n| \le a_{n+1} < 10^{-6}$. This means $\frac{1}{n+1} < 10^{-6}$, which implies $n+1 > 10^6$, so we'd need over a million terms! Leibniz convergence can be quite slow.
+\end{remark}
+
+%----------------------------------------------------------------------------------------
+%   TAYLOR POLYNOMIALS SECTION
+%----------------------------------------------------------------------------------------
+\section{Taylor Polynomials: Approximating Functions}
+
+\subsection{Motivation: Why Polynomials?}
+Many fundamental functions we encounter, such as $e^x$, $\sin x$, $\cos x$, $\ln x$, are computationally complex. We can't evaluate them precisely using only basic arithmetic (addition, subtraction, multiplication, division). Polynomials, however, of the form
+$$ P(x) = c_0 + c_1 x + c_2 x^2 + \dots + c_m x^m $$
+are built entirely from these basic operations. This makes them ideal for computation, especially for computers. The central idea of Taylor approximation is to find a polynomial $P(x)$ that closely mimics the behavior of a more complex function $f(x)$ near a specific point $x=a$.
+
+\subsection{Higher-Order Derivatives}
+To capture the behavior of $f(x)$ near $x=a$, we need to match not just its value, but also its "local geometry" – its slope, its curvature, and how these are changing. This requires higher-order derivatives.
+
+\begin{definition}[Higher-Order Derivatives]\label{def:higher_deriv}
+Let $f$ be a function differentiable sufficiently many times.
+\begin{itemize}
+    \item $f'(x) = \frac{d}{dx}f(x)$ is the first derivative.
+    \item $f''(x) = \frac{d}{dx}f'(x)$ is the second derivative.
+    \item $f'''(x) = \frac{d}{dx}f''(x)$ is the third derivative.
+    \item In general, the $\boldsymbol{n^{th}}$ \textbf{derivative}, denoted $f^{(n)}(x)$ or $\frac{d^n f}{dx^n}$, is the result of differentiating $f(x)$ $n$ times consecutively.
+    \item By convention, the zeroth derivative is the function itself: $f^{(0)}(x) = f(x)$.
+\end{itemize}
+\end{definition}
+
+\begin{example}[Calculating Higher-Order Derivatives]\label{ex:higher_deriv_calc}
+Let $f(x) = x^3 e^x + x - 7e^x$. Find the derivatives $f^{(k)}(0)$ for $k=0, 1, 2, 3, 4$.
+It might be easier to group terms: $f(x) = (x^3-7)e^x + x$.
+\begin{enumerate}
+    \item $f^{(0)}(x) = f(x) = (x^3-7)e^x + x$
+          $\implies f^{(0)}(0) = (0-7)e^0 + 0 = -7$.
+    \item $f'(x) = [3x^2 \cdot e^x + (x^3-7) \cdot e^x] + 1 = (x^3+3x^2-7)e^x + 1$
+          $\implies f'(0) = (0+0-7)e^0 + 1 = -7 + 1 = -6$.
+    \item $f''(x) = [(3x^2+6x) \cdot e^x + (x^3+3x^2-7) \cdot e^x] + 0 = (x^3+6x^2+6x-7)e^x$
+          $\implies f''(0) = (0+0+0-7)e^0 = -7$.
+    \item $f'''(x) = [(3x^2+12x+6) \cdot e^x + (x^3+6x^2+6x-7) \cdot e^x] = (x^3+9x^2+18x-1)e^x$
+          $\implies f'''(0) = (0+0+0-1)e^0 = -1$.
+    \item $f^{(4)}(x) = [(3x^2+18x+18) \cdot e^x + (x^3+9x^2+18x-1) \cdot e^x] = (x^3+12x^2+36x+17)e^x$
+          $\implies f^{(4)}(0) = (0+0+0+17)e^0 = 17$.
+\end{enumerate}
+So, the first few derivatives at $x=0$ are $f(0)=-7, f'(0)=-6, f''(0)=-7, f'''(0)=-1, f^{(4)}(0)=17$.
+\end{example}
+
+
+\subsection{Definition of Taylor Polynomials}
+The Taylor polynomial is constructed specifically to match the function's value and derivatives at the center point.
+
+\begin{definition}[Taylor and Maclaurin Polynomials]\label{def:taylor_poly}
+Let $f$ be a function possessing derivatives up to order $n$ at a point $x=a$. The \textbf{Taylor polynomial of degree $\boldsymbol{n}$ for $\boldsymbol{f}$ centered at $\boldsymbol{a}$} (or \textit{about} $a$, or \textit{at} $a$) is denoted by $P_n(x;a)$ (or $T_n(x)$, or $P_n(x)$ if $a$ is understood) and defined as:
+\begin{align*}
+P_n(x;a) &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \dots + \frac{f^{(n)}(a)}{n!}(x-a)^n \\
+         &= \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k
+\end{align*}
+The special case where the center is $a=0$ is called the \textbf{Maclaurin polynomial of degree $\boldsymbol{n}$}:
+$$ P_n(x;0) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \dots + \frac{f^{(n)}(0)}{n!}x^n = \sum_{k=0}^{n} \frac{f^{(k)}(0)}{k!}x^k $$
+\end{definition}
+
+\begin{remark}
+The coefficients are $c_k = \frac{f^{(k)}(a)}{k!}$. The $k!$ in the denominator is crucial for matching the derivatives, as we'll see.
+\end{remark}
+
+\begin{example}[Maclaurin Polynomial for $e^x$ - Revisited]\label{ex:exp_maclaurin}
+Find the Maclaurin polynomial of degree $3$ for $f(x) = e^x$. (Here $a=0$).
+We need the derivatives of $f(x)=e^x$ at $a=0$. Since $f^{(k)}(x) = e^x$ for all $k$, we have $f^{(k)}(0) = e^0 = 1$ for all $k=0, 1, 2, 3$.
+Plugging into the Maclaurin formula ($a=0$):
+\begin{align*}
+P_3(x;0) &= \frac{f^{(0)}(0)}{0!}x^0 + \frac{f^{(1)}(0)}{1!}x^1 + \frac{f^{(2)}(0)}{2!}x^2 + \frac{f^{(3)}(0)}{3!}x^3 \\
+         &= \frac{1}{1} \cdot 1 + \frac{1}{1} \cdot x + \frac{1}{2} \cdot x^2 + \frac{1}{6} \cdot x^3 \\
+         &= 1 + x + \frac{1}{2}x^2 + \frac{1}{6}x^3
+\end{align*}
+This polynomial, $1 + x + \frac{x^2}{2} + \frac{x^3}{6}$, approximates $e^x$ for $x$ near $0$.
+\end{example}
+
+\subsection{The Key Property: Matching Derivatives at the Center}
+The definition of the Taylor polynomial isn't arbitrary; it's precisely engineered so that the polynomial and its first $n$ derivatives match the function's value and derivatives at the center point $x=a$.
+
+Let $P_n(x;a) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!} (x-a)^k$. Let's check its derivatives at $x=a$:
+\begin{itemize}
+    \item \textbf{Zeroth Derivative (Value):}
+    $P_n(a;a) = \frac{f^{(0)}(a)}{0!}(a-a)^0 + \frac{f^{(1)}(a)}{1!}(a-a)^1 + \dots = f(a) \cdot 1 + 0 + \dots = f(a)$.
+    Matches $f(a)$.
+    \item \textbf{First Derivative:}
+    $P_n'(x;a) = \frac{f'(a)}{1!} \cdot 1 + \frac{f''(a)}{2!} \cdot 2(x-a)^1 + \frac{f'''(a)}{3!} \cdot 3(x-a)^2 + \dots$
+    $P_n'(a;a) = f'(a) + 0 + 0 + \dots = f'(a)$.
+    Matches $f'(a)$.
+    \item \textbf{Second Derivative:}
+    $P_n''(x;a) = \frac{f''(a)}{2!} \cdot 2 \cdot 1 + \frac{f'''(a)}{3!} \cdot 3 \cdot 2 (x-a)^1 + \dots$
+    $P_n''(a;a) = \frac{f''(a)}{2} \cdot 2 + 0 + \dots = f''(a)$.
+    Matches $f''(a)$.
+    \item \textbf{$j$-th Derivative ($j \le n$):}
+    Differentiating $j$ times eliminates terms with $(x-a)^k$ where $k < j$. The term originally $\frac{f^{(j)}(a)}{j!}(x-a)^j$ becomes $\frac{f^{(j)}(a)}{j!} \cdot j!$ after $j$ derivatives. All subsequent terms still have a factor of $(x-a)$ and vanish when $x=a$.
+    $P_n^{(j)}(a;a) = f^{(j)}(a)$.
+    Matches $f^{(j)}(a)$.
+\end{itemize}
+This matching property is the essence of Taylor approximation: the polynomial shares the function's local characteristics (value, slope, curvature, etc.) at the point of expansion.
+
+\subsection{Intuitive Understanding of Taylor Approximations}
+We can visualize the Taylor polynomials as progressively better approximations near $x=a$:
+\begin{itemize}
+    \item $\boldsymbol{P_0(x;a) = f(a)}$: A constant approximation. It's just a horizontal line passing through $(a, f(a))$. It only matches the function's value at $a$. (Think: Knowing only position at time $a$).
+    \item $\boldsymbol{P_1(x;a) = f(a) + f'(a)(x-a)}$: This is the \textbf{tangent line} approximation. It matches the function's value $f(a)$ and slope $f'(a)$ at $x=a$. It's the best linear approximation near $a$. (Think: Knowing position and velocity at time $a$).
+    \item $\boldsymbol{P_2(x;a) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a)^2}$: A quadratic approximation (a parabola). It matches value, slope, and concavity ($f''(a)$) at $x=a$. It captures the "bending" of the function near $a$. (Think: Knowing position, velocity, and acceleration at time $a$).
+\end{itemize}
+Generally, as $n$ increases, $P_n(x;a)$ incorporates more local information about $f$ at $a$ and thus provides a better approximation to $f(x)$ in a neighborhood around $a$.
+
+\begin{question}[Student Query Clarification]\label{q:why_derivs}
+A student asked a very insightful question during the lecture: "If we need to calculate $f(a), f'(a), \dots, f^{(n)}(a)$ to find the Taylor polynomial $P_n(x;a)$, why do we need the polynomial? Haven't we already done the hard work?"
+\end{question}
+\begin{remark}[Educator's Response]\label{rem:why_derivs_ans}
+This is a great point! The utility comes from the fact that we often choose the center $\boldsymbol{a}$ to be a point where $f(x)$ and its derivatives are \textbf{easy to calculate exactly} (like $a=0$ for $\sin x$ or $e^x$, or $a=1$ for $\ln x$). Once we have these exact values $f^{(k)}(a)$, we construct the polynomial $P_n(x;a)$. This polynomial then gives us a way to \textbf{estimate} the value of $f(x)$ for $\boldsymbol{x}$ values \textbf{near $\boldsymbol{a}$}, where $f(x)$ itself might be difficult or impossible to calculate exactly using only arithmetic.
+
+For instance, calculating $e^{0.1}$ is hard without a calculator. But we know $f(x)=e^x$ has $f^{(k)}(0)=1$ for all $k$. We can easily find the Maclaurin polynomial $P_3(x;0) = 1+x+x^2/2+x^3/6$. We can then approximate $e^{0.1}$ by evaluating the polynomial:
+$P_3(0.1; 0) = 1 + 0.1 + (0.1)^2/2 + (0.1)^3/6 = 1 + 0.1 + 0.01/2 + 0.001/6 = 1 + 0.1 + 0.005 + 0.000166... \approx 1.105166...$
+This gives a good approximation of $e^{0.1} \approx 1.1051709...$ using only arithmetic. The accuracy generally improves as we increase the degree $n$ or stay closer to the center $a$. The formal study of the error involves Taylor's Theorem with Remainder.
+\end{remark}
+
+%----------------------------------------------------------------------------------------
+%   HOMEWORK-STYLE PROBLEMS SECTION
+%----------------------------------------------------------------------------------------
+\section{Selected Homework-Style Problems and Solutions}
+These problems reflect the type of reasoning discussed regarding convergence tests and limit criteria.
+
+\begin{proposition}[Homework Problem 1: Condition $\lim_{n\to\infty} n^2 a_n = \infty$]\label{prob:lim_n2an_inf}
+Suppose $a_n > 0$ for all $n$. If $\lim_{n\to\infty} n^2 a_n = \infty$, can we determine if the series $\sum_{n=1}^\infty a_n$ converges or diverges?
+\end{proposition}
+\begin{proof}[Solution]
+We \textbf{cannot determine} convergence or divergence from this condition alone. To show this, we must provide two examples: one where the condition holds and the series converges, and one where the condition holds and the series diverges.
+
+\begin{enumerate}
+    \item \textbf{Divergent Example:} Let $a_n = \frac{1}{n}$.
+        Clearly $a_n > 0$. We check the limit condition:
+        $$ \lim_{n\to\infty} n^2 a_n = \lim_{n\to\infty} n^2 \cdot \frac{1}{n} = \lim_{n\to\infty} n = \infty $$
+        The condition holds. However, the series $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \frac{1}{n}$ (the harmonic series) diverges.
+
+    \item \textbf{Convergent Example:} Let $a_n = \frac{1}{n^{1.5}}$.
+        Clearly $a_n > 0$. We check the limit condition:
+        $$ \lim_{n\to\infty} n^2 a_n = \lim_{n\to\infty} n^2 \cdot \frac{1}{n^{1.5}} = \lim_{n\to\infty} n^{0.5} = \lim_{n\to\infty} \sqrt{n} = \infty $$
+        The condition holds. The series $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \frac{1}{n^{1.5}}$ is a p-series with $p=1.5 > 1$, which converges.
+\end{enumerate}
+Since we found sequences satisfying the condition for which the series can either converge or diverge, the condition $\lim_{n\to\infty} n^2 a_n = \infty$ is insufficient to determine the convergence of $\sum a_n$.
+\end{proof}
+
+\begin{proposition}[Homework Problem 2: Condition $\lim_{n\to\infty} n^2 a_n = 0$]\label{prob:lim_n2an_zero}
+Suppose $a_n > 0$ for all $n$. If $\lim_{n\to\infty} n^2 a_n = 0$, does the series $\sum_{n=1}^\infty a_n$ converge or diverge?
+\end{proposition}
+\begin{proof}[Solution]
+In this case, the series $\sum_{n=1}^\infty a_n$ \textbf{must converge}. We can prove this using the Limit Comparison Test (LCT).
+
+Let $a_n$ be our sequence, and let $b_n = \frac{1}{n^2}$. We know that the series $\sum_{n=1}^\infty b_n = \sum_{n=1}^\infty \frac{1}{n^2}$ converges (p-series with $p=2 > 1$).
+Now, let's compute the limit of the ratio $\frac{a_n}{b_n}$:
+$$ L = \lim_{n\to\infty} \frac{a_n}{b_n} = \lim_{n\to\infty} \frac{a_n}{1/n^2} = \lim_{n\to\infty} n^2 a_n $$
+We are given that this limit is $0$. So, $L=0$.
+
+The LCT states that if $\sum b_n$ converges and $L=0$, then $\sum a_n$ must also converge.
+Therefore, the series $\sum_{n=1}^\infty a_n$ converges.
+\end{proof}
+\begin{remark}
+Intuitively, the condition $\lim_{n\to\infty} n^2 a_n = 0$ means that $a_n$ goes to zero faster than $1/n^2$. Since $\sum 1/n^2$ already converges, a series whose terms decay even faster must also converge.
+\end{remark}
+
+\begin{proposition}[Homework Problem 3: Root Test Application]\label{prob:root_test_ex}
+Determine the convergence or divergence of the series $\sum_{n=1}^{\infty} \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n^2}$.
+\end{proposition}
+\begin{proof}[Solution]
+Let the terms of the series be $a_n = \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n^2}$.
+Since the term involves an exponent containing $n$, the Root Test is a natural choice. We calculate the limit $L = \lim_{n\to\infty} \sqrt[n]{|a_n|}$.
+The base $\frac{n^2+3n+1}{n^2+1}$ is positive for $n \ge 1$, so $|a_n|=a_n$.
+\begin{align*}
+\sqrt[n]{a_n} &= \left[ \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n^2} \right]^{1/n} \\
+&= \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n^2/n} \\
+&= \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n}
+\end{align*}
+To evaluate the limit $L = \lim_{n\to\infty} \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n}$, we can rewrite the base:
+$$ \frac{n^2+3n+1}{n^2+1} = \frac{(n^2+1) + 3n}{n^2+1} = 1 + \frac{3n}{n^2+1} $$
+So we need to find $L = \lim_{n\to\infty} \left(1 + \frac{3n}{n^2+1}\right)^{-n}$.
+This limit has the indeterminate form $1^\infty$. We use the standard technique involving the definition of $e$. Let $y = (1 + \frac{3n}{n^2+1})^{-n}$. Then $\ln y = -n \ln(1 + \frac{3n}{n^2+1})$.
+As $n \to \infty$, $x_n = \frac{3n}{n^2+1} \to 0$. We use the limit property $\lim_{x\to 0} \frac{\ln(1+x)}{x} = 1$, or L'Hôpital's rule on $\lim_{n\to\infty} \ln y$.
+Alternatively, we recognize the form related to $e = \lim_{k\to\infty} (1+1/k)^k$.
+We can write:
+$$ \left(1 + \frac{3n}{n^2+1}\right)^{-n} = \left[ \left(1 + \frac{3n}{n^2+1}\right)^{\frac{n^2+1}{3n}} \right]^{\frac{3n}{n^2+1} \cdot (-n)} $$
+As $n \to \infty$, the inner part $\frac{3n}{n^2+1} \to 0$. Let $k = \frac{n^2+1}{3n}$. As $n \to \infty$, $k \to \infty$.
+The expression inside the square brackets approaches $\lim_{k\to\infty} (1 + 1/k)^k = e$.
+The exponent outside approaches:
+$$ \lim_{n\to\infty} \frac{3n}{n^2+1} \cdot (-n) = \lim_{n\to\infty} \frac{-3n^2}{n^2+1} = \lim_{n\to\infty} \frac{-3}{1+1/n^2} = -3 $$
+Therefore, the overall limit is $L = e^{-3}$.
+$$ L = e^{-3} = \frac{1}{e^3} $$
+Since $e \approx 2.718$, $e^3 > 1$, so $L = \frac{1}{e^3} < 1$.
+By the Root Test, since $L < 1$, the series $\sum_{n=1}^{\infty} \left(\frac{n^2+3n+1}{n^2+1}\right)^{-n^2}$ \textbf{converges}.
+\end{proof}
+
+% --- Document End ---
+\end{document}

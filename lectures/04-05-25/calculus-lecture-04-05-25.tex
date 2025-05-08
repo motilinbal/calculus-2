@@ -1,0 +1,450 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % For better font quality
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{mathtools} % For \coloneqq and other enhancements
+\usepackage{geometry}
+\usepackage{enumitem} % For customized lists
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{framed} % For framed boxes
+\usepackage{hyperref}
+
+% Page Geometry
+\geometry{
+  a4paper,
+  left=2.5cm,
+  right=2.5cm,
+  top=2.5cm,
+  bottom=2.5cm
+}
+
+% Hyperref Setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Lecture Notes: Series and Introduction to Taylor Polynomials},
+    pdfpagemode=FullScreen,
+}
+
+% Theorem-like Environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example} % Ensure examples are numbered within sections
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+
+% Custom environment for announcements using framed's shaded environment
+\definecolor{adminlightyellow}{rgb}{1, 1, 0.85} % Light yellow background
+\definecolor{framecolor}{rgb}{0.3,0.3,0.3} % A dark gray for the frame
+
+\newenvironment{announcement}{%
+  \def\FrameCommand{\fboxsep=\FrameSep \fcolorbox{framecolor}{adminlightyellow}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}%
+  \noindent\ignorespaces
+}{%
+  \endMakeFramed
+}
+
+
+% Title
+\title{Lecture Notes: \\
+Convergence of Series and an Introduction to Taylor Polynomials}
+\author{An Undergraduate Mathematics Educator}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\begin{center}
+    \textit{These notes aim to provide a clear and intuitive understanding of the topics covered, supplemented with rigorous definitions, theorems, and illustrative examples.}
+\end{center}
+\clearpage
+\tableofcontents
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%   ADMINISTRATIVE ANNOUNCEMENTS
+%----------------------------------------------------------------------------------------
+\begin{announcement}
+\section*{Course Announcements}
+\begin{itemize}
+    \item \textbf{Office Hours Update:} Please note that I will be unable to hold office hours immediately after today's lecture as I need to return to my office promptly. However, I will be available for consultation tomorrow. You are welcome to meet with me then, roughly after 12:00 PM, perhaps around 12:15 PM. Please feel free to reach out if you'd like to arrange a specific time.
+\end{itemize}
+\end{announcement}
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%   INFINITE SERIES
+%----------------------------------------------------------------------------------------
+\section{Infinite Series: The Leibniz Test for Alternating Series}
+
+\subsection{A Brief Recap: Understanding Convergence}
+
+We've been exploring the fascinating world of infinite series. Recall that an infinite series is an expression of the form
+\[ \sum_{n=1}^{\infty} a_n = a_1 + a_2 + a_3 + \dotsb \]
+To understand whether such a sum "makes sense" or converges to a finite value, we look at its sequence of \textbf{partial sums}, $S_k$:
+\[ S_k = \sum_{n=1}^{k} a_n = a_1 + a_2 + \dots + a_k \]
+If the sequence of partial sums $\{S_k\}_{k=1}^{\infty}$ converges to a limit $L$, i.e., $\lim_{k \to \infty} S_k = L$, then we say the series $\sum a_n$ \textbf{converges} to $L$. Otherwise, the series \textbf{diverges}.
+
+Calculating the limit of partial sums can often be very challenging. This is why we've developed various \textbf{convergence tests}. These tests don't always tell us *what* the sum is, but they can tell us *whether* the series converges or diverges. We've encountered several, such as the comparison tests and the necessary condition for convergence (if $\sum a_n$ converges, then $\lim_{n \to \infty} a_n = 0$).
+
+Today, we add another powerful tool to our arsenal, specifically designed for a common type of series.
+
+\subsection{The Leibniz Test for Alternating Series}
+
+Many series involve terms that alternate in sign. For example, $1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dotsb$. Such series are called \textbf{alternating series}.
+
+\begin{definition}[Alternating Series]
+An \textbf{alternating series} is a series whose terms alternate in sign. It can be written in the form
+\[ \sum_{n=1}^{\infty} (-1)^{n-1} a_n = a_1 - a_2 + a_3 - a_4 + \dotsb \]
+or
+\[ \sum_{n=1}^{\infty} (-1)^{n} a_n = -a_1 + a_2 - a_3 + a_4 + \dotsb \]
+where $a_n > 0$ for all $n$. (Sometimes $a_n \ge 0$ and the condition $a_n > 0$ holds for $n$ large enough).
+The common form we will use is $\sum (-1)^{n-1} a_n$ or $\sum (-1)^{n+1} a_n$, ensuring the first term is positive if $a_1$ is part of the sum.
+\end{definition}
+
+The Leibniz Test (also known as the Alternating Series Test) provides simple conditions for the convergence of such series.
+
+\begin{theorem}[The Leibniz Test for Alternating Series]
+An alternating series of the form $\sum_{n=1}^{\infty} (-1)^{n-1} a_n$ (or $\sum_{n=1}^{\infty} (-1)^{n} a_n$) converges if all three of the following conditions are met:
+\begin{enumerate}[label=(\roman*)]
+    \item $a_n > 0$ for all $n$ (or for $n$ sufficiently large).
+    \item The sequence $\{a_n\}$ is eventually monotonically decreasing, i.e., $a_{n+1} \le a_n$ for all $n$ greater than some integer $N$.
+    \item $\lim_{n \to \infty} a_n = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+The Leibniz Test is a powerful tool, but it only tells us about convergence. It does *not* tell us the sum of the series. Also, if the conditions are not met (e.g., if $\lim_{n \to \infty} a_n \neq 0$), the series might diverge. In particular, if $\lim_{n \to \infty} a_n \neq 0$, then the general term $ (-1)^{n-1} a_n $ does not tend to zero, so the series diverges by the Term Test (necessary condition for convergence).
+\end{remark}
+
+\subsection{Examples using the Leibniz Test}
+
+Let's see the Leibniz Test in action with a few examples.
+
+\begin{example}[The Alternating Harmonic Series]
+Consider the series $\sum_{n=1}^{\infty} (-1)^{n+1} \frac{1}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dotsb$.
+Here, $a_n = \frac{1}{n}$. Let's check the conditions for the Leibniz Test:
+\begin{enumerate}[label=(\roman*)]
+    \item $a_n = \frac{1}{n} > 0$ for all $n \ge 1$. (Condition met)
+    \item Is $\{a_n\}$ decreasing? We need to check if $a_{n+1} \le a_n$.
+    $a_{n+1} = \frac{1}{n+1}$ and $a_n = \frac{1}{n}$. Since $n+1 > n$, we have $\frac{1}{n+1} < \frac{1}{n}$. So, $a_{n+1} \le a_n$ for all $n \ge 1$. (Condition met)
+    \item $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{1}{n} = 0$. (Condition met)
+\end{enumerate}
+Since all three conditions are satisfied, the alternating harmonic series $\sum_{n=1}^{\infty} (-1)^{n+1} \frac{1}{n}$ converges by the Leibniz Test. (It is known to converge to $\ln 2$).
+\end{example}
+
+\begin{example}[A $p$-Series with Alternating Signs]
+For which values of $p$ does the series $1 - \frac{1}{2^p} + \frac{1}{3^p} - \frac{1}{4^p} + \dotsb = \sum_{n=1}^{\infty} (-1)^{n-1} \frac{1}{n^p}$ converge?
+Here, $a_n = \frac{1}{n^p}$. We need $a_n > 0$, which is true if $n^p$ is positive. For $n \ge 1$, this means we are interested in real $p$.
+
+Let's analyze based on $p$:
+
+\textbf{Case 1: $p \le 0$.}
+Let $p = -q$ where $q \ge 0$. Then $a_n = \frac{1}{n^{-q}} = n^q$.
+    \begin{itemize}
+        \item If $q > 0$ (i.e., $p < 0$), then $\lim_{n \to \infty} a_n = \lim_{n \to \infty} n^q = \infty$.
+        \item If $q = 0$ (i.e., $p = 0$), then $a_n = n^0 = 1$, so $\lim_{n \to \infty} a_n = 1$.
+    \end{itemize}
+    In both sub-cases ($p<0$ and $p=0$), $\lim_{n \to \infty} a_n \neq 0$.
+    Thus, the third condition of the Leibniz Test is not met. More fundamentally, the general term of the series, $(-1)^{n-1} a_n$, does not tend to zero. Therefore, by the Term Test (necessary condition for convergence), the series diverges if $p \le 0$.
+
+\textbf{Case 2: $p > 0$.}
+    \begin{enumerate}[label=(\roman*)]
+        \item $a_n = \frac{1}{n^p} > 0$ for all $n \ge 1$ since $p > 0$. (Condition met)
+        \item Is $\{a_n\}$ decreasing? Consider $f(x) = \frac{1}{x^p} = x^{-p}$. Then $f'(x) = -p x^{-p-1} = -\frac{p}{x^{p+1}}$.
+        Since $p > 0$ and $x \ge 1$, $f'(x) < 0$. Thus, $f(x)$ is decreasing for $x \ge 1$.
+        This implies that $a_n = f(n)$ is a decreasing sequence. So, $a_{n+1} \le a_n$. (Condition met)
+        \item $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \frac{1}{n^p} = 0$ since $p > 0$. (Condition met)
+    \end{enumerate}
+    Since all three conditions are met for $p > 0$, the series $\sum_{n=1}^{\infty} (-1)^{n-1} \frac{1}{n^p}$ converges by the Leibniz Test if $p > 0$.
+
+\textbf{Conclusion for this example:} The series converges if and only if $p > 0$.
+\end{example}
+
+\begin{example}[An Alternating Series with Trigonometric Terms]
+Consider the series $\sum_{n=1}^{\infty} (-1)^{n+1} \sin\left(\frac{2\pi}{n}\right)$.
+Let $a_n = \sin\left(\frac{2\pi}{n}\right)$. We check the Leibniz conditions:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Positivity of $a_n$:}
+    For $n=1$, $\frac{2\pi}{n} = 2\pi$, so $\sin(2\pi) = 0$.
+    For $n=2$, $\frac{2\pi}{n} = \pi$, so $\sin(\pi) = 0$.
+    For $n=3$, $\frac{2\pi}{n} = \frac{2\pi}{3}$. Since $0 < \frac{2\pi}{3} < \pi$, $\sin(\frac{2\pi}{3}) > 0$.
+    For $n=4$, $\frac{2\pi}{n} = \frac{\pi}{2}$, so $\sin(\frac{\pi}{2}) = 1 > 0$.
+    For $n > 4$, we have $0 < \frac{2\pi}{n} < \frac{\pi}{2}$. In the interval $(0, \pi/2)$, the sine function is positive.
+    So, $a_n = \sin\left(\frac{2\pi}{n}\right) \ge 0$ for $n \ge 1$, and $a_n > 0$ for $n \ge 3$. The conditions of the Leibniz test are often stated for $n$ sufficiently large, so this is acceptable. Let's consider the tail from $n=3$ or $n=4$.
+
+    \item \textbf{Monotonically decreasing $a_n$ (for $n$ large enough):}
+    We need to show that $a_{n+1} \le a_n$ for $n$ large enough. That is, $\sin\left(\frac{2\pi}{n+1}\right) \le \sin\left(\frac{2\pi}{n}\right)$.
+    For $n \ge 4$, we have $0 < \frac{2\pi}{n+1} < \frac{2\pi}{n} \le \frac{\pi}{2}$.
+    The function $\sin(x)$ is monotonically increasing on the interval $[0, \pi/2]$.
+    Since $\frac{2\pi}{n+1} < \frac{2\pi}{n}$ and both arguments are in the interval $(0, \pi/2]$ where $\sin(x)$ is increasing, we can apply $\sin$ to both sides preserving the inequality (after considering the order):
+    Because $\frac{2\pi}{n} > \frac{2\pi}{n+1}$, and $\sin(x)$ is increasing on $(0, \pi/2]$,
+    it follows that $\sin\left(\frac{2\pi}{n}\right) \ge \sin\left(\frac{2\pi}{n+1}\right)$ for $n \ge 4$.
+    So, the sequence $\{a_n\}$ is decreasing for $n \ge 4$. (Condition met for $n \ge 4$)
+
+    \item \textbf{Limit of $a_n$:}
+    As $n \to \infty$, $\frac{2\pi}{n} \to 0$.
+    Since $\sin(x)$ is continuous at $x=0$,
+    $\lim_{n \to \infty} a_n = \lim_{n \to \infty} \sin\left(\frac{2\pi}{n}\right) = \sin\left(\lim_{n \to \infty} \frac{2\pi}{n}\right) = \sin(0) = 0$. (Condition met)
+\end{enumerate}
+Since all three conditions are satisfied (for $n \ge 4$, which is sufficient for the tail of the series), the series $\sum_{n=1}^{\infty} (-1)^{n+1} \sin\left(\frac{2\pi}{n}\right)$ converges by the Leibniz Test.
+
+\textbf{Follow-up: Conditional vs. Absolute Convergence}
+Does the series converge absolutely? That is, does $\sum_{n=1}^{\infty} \left|(-1)^{n+1} \sin\left(\frac{2\pi}{n}\right)\right| = \sum_{n=1}^{\infty} \sin\left(\frac{2\pi}{n}\right)$ converge? (Assuming $n \ge 3$ so $\sin(2\pi/n)>0$).
+
+We can use the Limit Comparison Test. Let $b_n = \sin\left(\frac{2\pi}{n}\right)$ (for $n \ge 3$) and compare with $c_n = \frac{2\pi}{n}$.
+We know that $\lim_{x \to 0} \frac{\sin x}{x} = 1$.
+As $n \to \infty$, $\frac{2\pi}{n} \to 0$. So,
+\[ \lim_{n \to \infty} \frac{b_n}{c_n} = \lim_{n \to \infty} \frac{\sin\left(\frac{2\pi}{n}\right)}{\frac{2\pi}{n}} = 1. \]
+Since this limit is a finite positive number ($1 \neq 0, \infty$), the series $\sum b_n$ and $\sum c_n$ either both converge or both diverge.
+The series $\sum c_n = \sum \frac{2\pi}{n} = 2\pi \sum \frac{1}{n}$ is a multiple of the harmonic series, which diverges.
+Therefore, $\sum_{n=1}^{\infty} \sin\left(\frac{2\pi}{n}\right)$ also diverges.
+
+Since the original series $\sum (-1)^{n+1} \sin\left(\frac{2\pi}{n}\right)$ converges, but the series of absolute values $\sum \sin\left(\frac{2\pi}{n}\right)$ diverges, the original series converges \textbf{conditionally}.
+\end{example}
+
+\begin{remark}
+The convergence of a series depends on the behavior of its "tail." If the conditions of a test are met for $n \ge N$ for some integer $N$, that is sufficient to determine the convergence or divergence of the entire series, as the finite sum of the first $N-1$ terms does not affect convergence.
+\end{remark}
+
+%----------------------------------------------------------------------------------------
+%   TAYLOR POLYNOMIALS
+%----------------------------------------------------------------------------------------
+\section{An Introduction to Taylor Polynomials}
+
+\subsection{Motivation: Approximating Functions}
+
+Many functions in mathematics and science are complex. Calculating their values (e.g., $\sin(0.1)$, $e^{1.7}$) or performing operations like differentiation and integration can be difficult or even impossible in terms of elementary functions.
+For instance, the integral $\int e^{-x^2} dx$, crucial in probability (related to the Gaussian or normal distribution), does not have an elementary antiderivative. We often rely on tables or numerical methods, which are themselves based on approximations.
+
+The central idea we'll explore is: \textbf{Can we approximate complicated functions with simpler ones, at least locally (i.e., near a specific point)?}
+
+What are the "simplest" functions we know? Polynomials!
+A polynomial $P(x) = c_0 + c_1 x + c_2 x^2 + \dots + c_k x^k$ is wonderful because:
+\begin{itemize}
+    \item Its value at any point $x$ can be found using only addition and multiplication.
+    \item It's easy to differentiate: the derivative of a polynomial is another polynomial.
+    \item It's easy to integrate: the integral of a polynomial is another polynomial.
+\end{itemize}
+Our goal is to develop a systematic way to find a polynomial that "looks like" a given function $f(x)$ near a particular point $x=a$. This is the essence of Taylor polynomials.
+
+\subsection{A Brief Review of Higher-Order Derivatives}
+
+Before we construct these approximating polynomials, let's refresh our notation for derivatives.
+Let $f$ be a function.
+\begin{itemize}
+    \item $f^{(0)}(x) \coloneqq f(x)$ (the zeroth derivative is the function itself).
+    \item $f^{(1)}(x) \coloneqq f'(x)$ (the first derivative).
+    \item $f^{(2)}(x) \coloneqq f''(x)$ (the second derivative).
+    \item In general, $f^{(n)}(x)$ denotes the $n$-th derivative of $f$.
+\end{itemize}
+The derivatives can be defined recursively: $f^{(n+1)}(x) = \frac{d}{dx} \left( f^{(n)}(x) \right)$.
+
+It's important to remember that for $f^{(n)}(a)$ to exist, the function $f$ must be $(n-1)$-times differentiable in a neighborhood of $a$, and $f^{(n-1)}(x)$ must be differentiable at $a$. This also implies that $f, f', \dots, f^{(n-1)}$ are continuous in a neighborhood of $a$ (if $f^{(n)}$ exists throughout that neighborhood).
+
+\subsubsection{Examples of Higher-Order Derivatives}
+
+Let's practice finding some higher-order derivatives.
+
+\begin{example}[$f(x) = x^3$]
+\begin{align*}
+f^{(0)}(x) &= x^3 \\
+f^{(1)}(x) &= 3x^2 \\
+f^{(2)}(x) &= 6x \\
+f^{(3)}(x) &= 6 \\
+f^{(4)}(x) &= 0 \\
+f^{(n)}(x) &= 0 \quad \text{for } n \ge 4.
+\end{align*}
+\end{example}
+
+\begin{example}[$f(x) = x^N$ for a positive integer $N$]
+Let $k$ be the order of the derivative.
+\begin{align*}
+f^{(0)}(x) &= x^N \\
+f^{(1)}(x) &= N x^{N-1} \\
+f^{(2)}(x) &= N(N-1) x^{N-2} \\
+&\vdots \\
+f^{(k)}(x) &= N(N-1)\dotsb(N-k+1) x^{N-k} \quad \text{for } k \le N \\
+&= \frac{N!}{(N-k)!} x^{N-k} \quad \text{for } k \le N.
+\end{align*}
+In particular,
+\begin{itemize}
+    \item $f^{(N)}(x) = N(N-1)\dotsb(1) x^{N-N} = N! x^0 = N!$.
+    \item $f^{(k)}(x) = 0$ for $k > N$.
+\end{itemize}
+\end{example}
+
+\begin{example}[$f(x) = e^x$]
+This is a particularly simple one!
+\[ f^{(n)}(x) = e^x \quad \text{for all } n \ge 0. \]
+\end{example}
+
+\begin{example}[$f(x) = \sin x$]
+Let's list the first few derivatives:
+\begin{align*}
+f^{(0)}(x) &= \sin x \\
+f^{(1)}(x) &= \cos x \\
+f^{(2)}(x) &= -\sin x \\
+f^{(3)}(x) &= -\cos x \\
+f^{(4)}(x) &= \sin x \quad \text{(The pattern repeats every 4 derivatives!)}
+\end{align*}
+We can write general formulas:
+\begin{itemize}
+    \item For even derivatives, $n=2m$: $f^{(2m)}(x) = (-1)^m \sin x$.
+    (e.g., $m=0 \Rightarrow n=0: (-1)^0 \sin x = \sin x$; $m=1 \Rightarrow n=2: (-1)^1 \sin x = -\sin x$)
+    \item For odd derivatives, $n=2m+1$: $f^{(2m+1)}(x) = (-1)^m \cos x$.
+    (e.g., $m=0 \Rightarrow n=1: (-1)^0 \cos x = \cos x$; $m=1 \Rightarrow n=3: (-1)^1 \cos x = -\cos x$)
+\end{itemize}
+Alternatively, one can use $f^{(n)}(x) = \sin(x + n\pi/2)$.
+\end{example}
+
+\begin{example}[$f(x) = \cos x$ (For you to verify)]
+You can similarly find a pattern for the derivatives of $\cos x$:
+\begin{align*}
+f^{(0)}(x) &= \cos x \\
+f^{(1)}(x) &= -\sin x \\
+f^{(2)}(x) &= -\cos x \\
+f^{(3)}(x) &= \sin x \\
+f^{(4)}(x) &= \cos x
+\end{align*}
+The general formulas are:
+\begin{itemize}
+    \item For even derivatives, $n=2m$: $f^{(2m)}(x) = (-1)^m \cos x$.
+    \item For odd derivatives, $n=2m+1$: $f^{(2m+1)}(x) = (-1)^{m+1} \sin x$.
+\end{itemize}
+Alternatively, $f^{(n)}(x) = \cos(x + n\pi/2)$.
+\end{example}
+
+\subsection{Developing the Idea of Polynomial Approximation}
+
+Suppose we want to approximate a function $f(x)$ near a point $x=a$. We know the value $f(a)$. What's the simplest approximation for $f(x)$ when $x$ is close to $a$ (say $x = a+h$ for small $h$)?
+
+\textbf{Zeroth-Order Approximation (Constant Approximation):}
+The most basic approximation is simply $f(x) \approx f(a)$.
+Let $P_0(x) = f(a)$. This is a constant polynomial. It matches $f(x)$ at $x=a$, i.e., $P_0(a) = f(a)$.
+
+\textbf{First-Order Approximation (Linear Approximation):}
+Can we do better? We can try to match not only the value of $f$ at $a$, but also its slope (i.e., its first derivative).
+Recall the geometric interpretation of the derivative: $f'(a)$ is the slope of the tangent line to the graph of $y=f(x)$ at $x=a$.
+The equation of this tangent line is $L(x) = f(a) + f'(a)(x-a)$.
+This linear function $L(x)$ is our \textbf{first-order approximation}, or linear approximation, to $f(x)$ near $x=a$. Let's call it $P_1(x)$:
+\[ P_1(x) = f(a) + f'(a)(x-a) \]
+Notice two key properties of $P_1(x)$:
+\begin{enumerate}
+    \item $P_1(a) = f(a) + f'(a)(a-a) = f(a)$. (Matches the function's value at $a$)
+    \item $P_1'(x) = f'(a)$. So, $P_1'(a) = f'(a)$. (Matches the function's first derivative at $a$)
+\end{enumerate}
+If we let $x = a+h$, then $x-a = h$, and the approximation becomes $f(a+h) \approx f(a) + f'(a)h$. This is often useful when $h$ is small.
+
+\textbf{Second-Order Approximation (Quadratic Approximation):}
+To get an even better approximation, we might try to match the function's value, its first derivative, AND its second derivative at $x=a$. The second derivative, $f''(a)$, tells us about the concavity of $f$ at $a$.
+Let's look for a quadratic polynomial $P_2(x)$ of the form:
+\[ P_2(x) = A_0 + A_1(x-a) + A_2(x-a)^2 \]
+We want to choose $A_0, A_1, A_2$ such that:
+\begin{enumerate}
+    \item $P_2(a) = f(a)$
+    \item $P_2'(a) = f'(a)$
+    \item $P_2''(a) = f''(a)$
+\end{enumerate}
+Let's find the coefficients:
+\begin{enumerate}
+    \item $P_2(a) = A_0 + A_1(0) + A_2(0)^2 = A_0$. So, $A_0 = f(a)$.
+    \item $P_2'(x) = A_1 + 2A_2(x-a)$.
+          $P_2'(a) = A_1 + 2A_2(0) = A_1$. So, $A_1 = f'(a)$.
+    \item $P_2''(x) = 2A_2$.
+          $P_2''(a) = 2A_2$. So, $2A_2 = f''(a) \implies A_2 = \frac{f''(a)}{2}$.
+\end{enumerate}
+Substituting these coefficients back, we get the \textbf{second-order approximation}:
+\[ P_2(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a)^2 \]
+Notice the pattern: the coefficient of $(x-a)^k$ involves $f^{(k)}(a)$ and a factorial $k!$ (since $0!=1, 1!=1, 2!=2$).
+
+\subsection{The Taylor Polynomial: General Definition}
+
+This pattern leads us to the general definition of the Taylor polynomial.
+To get an $N$-th order approximation to $f(x)$ near $x=a$, we construct a polynomial $P_N(x)$ of degree at most $N$ such that $P_N(x)$ and its first $N$ derivatives match $f(x)$ and its first $N$ derivatives at $x=a$. That is:
+$P_N^{(k)}(a) = f^{(k)}(a)$ for $k = 0, 1, 2, \dots, N$.
+
+\begin{definition}[Taylor Polynomial]
+Let $f$ be a function that is $N$ times differentiable at $x=a$. The \textbf{Taylor polynomial of order $N$} for $f$ centered at (or around) $a$ is given by:
+\begin{align*}
+P_N(x) &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots + \frac{f^{(N)}(a)}{N!}(x-a)^N \\
+       &= \sum_{k=0}^{N} \frac{f^{(k)}(a)}{k!}(x-a)^k
+\end{align*}
+(Recall that $0! = 1$ and $f^{(0)}(a) = f(a)$.)
+\end{definition}
+
+\begin{definition}[Maclaurin Polynomial]
+A special case of the Taylor polynomial occurs when $a=0$. This is called the \textbf{Maclaurin polynomial of order $N$} for $f$:
+\[ P_N(x) = \sum_{k=0}^{N} \frac{f^{(k)}(0)}{k!}x^k = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \dots + \frac{f^{(N)}(0)}{N!}x^N \]
+\end{definition}
+
+The idea is that for $x$ close to $a$, $f(x) \approx P_N(x)$. Generally, higher order $N$ gives a better approximation over a wider interval around $a$.
+
+\subsection{Example: Approximating $f(x) = \sqrt{x}$}
+
+Let's find Taylor polynomial approximations for $f(x) = \sqrt{x}$ centered at $a=1$. We want to use these to approximate $f(1.21) = \sqrt{1.21}$.
+We need the derivatives of $f(x) = x^{1/2}$ evaluated at $a=1$:
+\begin{itemize}
+    \item $f(x) = x^{1/2} \quad \implies \quad f(1) = 1^{1/2} = 1$.
+    \item $f'(x) = \frac{1}{2}x^{-1/2} \quad \implies \quad f'(1) = \frac{1}{2}(1)^{-1/2} = \frac{1}{2}$.
+    \item $f''(x) = \frac{1}{2}\left(-\frac{1}{2}\right)x^{-3/2} = -\frac{1}{4}x^{-3/2} \quad \implies \quad f''(1) = -\frac{1}{4}(1)^{-3/2} = -\frac{1}{4}$.
+    \item $f'''(x) = -\frac{1}{4}\left(-\frac{3}{2}\right)x^{-5/2} = \frac{3}{8}x^{-5/2} \quad \implies \quad f'''(1) = \frac{3}{8}(1)^{-5/2} = \frac{3}{8}$.
+\end{itemize}
+Now, let's construct the polynomials and approximate $\sqrt{1.21}$ (where $x=1.21$, so $x-a = 1.21-1 = 0.21$).
+The actual value is $\sqrt{1.21} = 1.1$.
+
+\textbf{Zeroth-Order Taylor Polynomial ($P_0(x)$):}
+\[ P_0(x) = f(1) = 1 \]
+Approximation: $P_0(1.21) = 1$. (Error = $1.1 - 1 = 0.1$)
+
+\textbf{First-Order Taylor Polynomial ($P_1(x)$):}
+\begin{align*} P_1(x) &= f(1) + f'(1)(x-1) \\ &= 1 + \frac{1}{2}(x-1) \end{align*}
+Approximation:
+$P_1(1.21) = 1 + \frac{1}{2}(1.21-1) = 1 + \frac{1}{2}(0.21) = 1 + 0.105 = 1.105$.
+(Error = $1.1 - 1.105 = -0.005$)
+
+\textbf{Second-Order Taylor Polynomial ($P_2(x)$):}
+\begin{align*} P_2(x) &= f(1) + f'(1)(x-1) + \frac{f''(1)}{2!}(x-1)^2 \\ &= 1 + \frac{1}{2}(x-1) + \frac{-1/4}{2}(x-1)^2 \\ &= 1 + \frac{1}{2}(x-1) - \frac{1}{8}(x-1)^2 \end{align*}
+Approximation:
+\begin{align*} P_2(1.21) &= 1 + \frac{1}{2}(0.21) - \frac{1}{8}(0.21)^2 \\ &= 1.105 - \frac{1}{8}(0.0441) \\ &= 1.105 - 0.0055125 \\ &= 1.0994875 \end{align*}
+(Error = $1.1 - 1.0994875 \approx 0.0005125$)
+
+\textbf{Third-Order Taylor Polynomial ($P_3(x)$):}
+\begin{align*} P_3(x) &= P_2(x) + \frac{f'''(1)}{3!}(x-1)^3 \\ &= 1 + \frac{1}{2}(x-1) - \frac{1}{8}(x-1)^2 + \frac{3/8}{6}(x-1)^3 \\ &= 1 + \frac{1}{2}(x-1) - \frac{1}{8}(x-1)^2 + \frac{1}{16}(x-1)^3 \end{align*}
+Approximation:
+\begin{align*} P_3(1.21) &= 1.0994875 + \frac{1}{16}(0.21)^3 \\ &= 1.0994875 + \frac{1}{16}(0.009261) \\ &= 1.0994875 + 0.0005788125 \\ &= 1.1000663125 \end{align*}
+(Error = $1.1 - 1.1000663125 \approx -0.0000663$)
+
+As you can see, as we increase the order $N$ of the Taylor polynomial, the approximation $P_N(1.21)$ gets closer to the actual value of $\sqrt{1.21}=1.1$.
+
+\subsection{A Note on Visualizing Taylor Approximations}
+It is highly recommended to use a graphing tool (like Desmos, GeoGebra, or Mathematica/Matlab) to plot $f(x) = \sqrt{x}$ along with $P_0(x)$, $P_1(x)$, $P_2(x)$, and $P_3(x)$ centered at $a=1$. You will visually see how these polynomial approximations "hug" the curve of $\sqrt{x}$ more closely near $x=1$ as the order $N$ increases. This provides excellent intuition for why Taylor polynomials are so effective.
+
+For example, in Desmos, you could plot:
+\begin{itemize}
+    \item $y=\sqrt{x}$
+    \item $y=1$
+    \item $y=1 + 0.5(x-1)$
+    \item $y=1 + 0.5(x-1) - (1/8)(x-1)^2$
+    \item $y=1 + 0.5(x-1) - (1/8)(x-1)^2 + (1/16)(x-1)^3$
+\end{itemize}
+Focus on the behavior near $x=1$.
+
+This concludes our introduction to Taylor polynomials. We will explore them further, including how to estimate the error in these approximations.
+
+\end{document}
