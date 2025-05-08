@@ -1,0 +1,461 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % For potential diagrams later
+\usepackage{xcolor}   % For potential coloring
+
+% Define theorem styles
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Custom style for administrative notes
+\newtheoremstyle{adminstyle}
+  {\topsep}{\topsep} % Spacing above and below
+  {\normalfont}     % Body font (changed from italic for admin notes)
+  {}                % Indent amount
+  {\bfseries}       % Theorem head font
+  {.}               % Punctuation after theorem head
+  {.5em}            % Space after theorem head
+  {}                % Theorem head spec (can be left empty)
+\theoremstyle{adminstyle}
+\newtheorem{adminnote}{Administrative Note}
+
+% Math macros
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\lnn}{\ln n} % Consistent ln notation
+
+\title{Convergence Tests for Infinite Series}
+\author{Undergraduate Mathematics Educator} % Persona Placeholder
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% --- Administrative Notes Section ---
+\begin{adminnote}[Course Logistics]
+Good morning, everyone. A quick reminder: there is no fourth lecture session this week (Lesson 4 is cancelled). Also, a note to Yehuda Ozana (if you're catching up via notes): we missed you today! Hope everything is okay.
+\end{adminnote}
+
+% --- Main Mathematical Content ---
+
+\section{Recap: Infinite Series and the Convergence Problem}
+
+Let's begin by recalling the fundamental concept of an infinite series. Given a sequence of real numbers $(a_n)_{n=1}^\infty$, we are interested in the meaning of the expression:
+\[ \sum_{n=1}^{\infty} a_n = a_1 + a_2 + a_3 + \dotsb \]
+This represents an infinite sum, which isn't something we have direct experience with from basic arithmetic (where sums are always finite).
+
+To make this rigorous, we introduce the sequence of **partial sums** $(S_k)_{k=1}^\infty$, where the $k$-th partial sum is defined as the finite sum of the first $k$ terms:
+\[ S_k = \sum_{n=1}^{k} a_n = a_1 + a_2 + \dotsb + a_k \]
+The infinite series $\sum_{n=1}^{\infty} a_n$ is then *defined* as the limit of this sequence of partial sums:
+\[ \sum_{n=1}^{\infty} a_n := \lim_{k\to\infty} S_k \]
+\begin{itemize}
+    \item If the limit $\lim_{k\to\infty} S_k$ exists and is a finite real number $L$, we say the series **converges** to $L$, and we write $\sum_{n=1}^{\infty} a_n = L$.
+    \item If the limit $\lim_{k\to\infty} S_k$ does not exist, or if it is $\infty$ or $-\infty$, we say the series **diverges**.
+    \item We also allow for **convergence in the extended sense**: if $\lim_{k\to\infty} S_k = \infty$ (or $-\infty$), we sometimes say the series converges in the extended sense, or simply diverges to $\infty$ (or $-\infty$).
+\end{itemize}
+
+We encountered some basic examples previously. However, calculating the limit of partial sums directly is often difficult or impossible because finding a closed-form expression for $S_k$ can be very challenging.
+
+Consider, for instance, the series $\sum_{n=2}^{\infty} \frac{1}{n \ln n}$. How would we find its $k$-th partial sum $S_k = \sum_{n=2}^{k} \frac{1}{n \ln n}$? It's not at all obvious how to proceed. This motivates the need for **convergence tests**.
+
+Our goal today is to develop tools that allow us to determine *if* a series converges or diverges, without necessarily finding the exact value it converges to (if it does converge).
+
+\subsection{The Necessary Condition for Convergence (Test for Divergence)}
+
+Before diving into specific tests, let's recall a crucial preliminary result:
+
+\begin{theorem}[Necessary Condition for Convergence / Test for Divergence]
+If the series $\sum_{n=1}^{\infty} a_n$ converges (to a finite value), then the terms of the sequence must approach zero, i.e., $\lim_{n\to\infty} a_n = 0$.
+\end{theorem}
+
+\begin{remark}
+The contrapositive of this theorem is extremely useful as a **Test for Divergence**: If $\lim_{n\to\infty} a_n \neq 0$ or if the limit does not exist, then the series $\sum_{n=1}^{\infty} a_n$ must diverge.
+\end{remark}
+
+\begin{remark}[Important Warning]
+The necessary condition is **not sufficient**. Just because $\lim_{n\to\infty} a_n = 0$ does **not** guarantee that the series $\sum a_n$ converges. The classic counterexample is the harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$. Here, $a_n = \frac{1}{n} \to 0$, but as we will confirm later, the series diverges.
+\end{remark}
+
+\section{Tests for Series with Non-negative Terms}
+
+Many of the tests we'll develop apply specifically (or most easily) to series where all terms are non-negative, $a_n \ge 0$. Let's see why these series have a particularly nice property.
+
+\begin{proposition}
+Let $\sum_{n=1}^{\infty} a_n$ be a series with $a_n \ge 0$ for all $n$. Let $S_k = \sum_{n=1}^{k} a_n$ be its sequence of partial sums. Then $(S_k)$ is a monotonically increasing sequence (in the weak sense, i.e., $S_{k+1} \ge S_k$ for all $k$).
+\end{proposition}
+\begin{proof}
+We have $S_{k+1} = S_k + a_{k+1}$. Since $a_{k+1} \ge 0$, it follows immediately that $S_{k+1} \ge S_k$.
+\end{proof}
+
+\begin{corollary}
+A series $\sum a_n$ with non-negative terms ($a_n \ge 0$) either:
+\begin{enumerate}
+    \item Converges to a finite value (if its sequence of partial sums $S_k$ is bounded above).
+    \item Diverges to $+\infty$ (if its sequence of partial sums $S_k$ is unbounded).
+\end{enumerate}
+There are no other possibilities (like oscillation) for such series.
+\end{corollary}
+\begin{proof}
+This follows directly from the Monotone Convergence Theorem for sequences: a monotonically increasing sequence converges if and only if it is bounded above. If it is not bounded above, it diverges to $+\infty$.
+\end{proof}
+
+This property simplifies the study of non-negative series. Our main task becomes determining whether the partial sums are bounded. The following tests help us do this, often by comparing the series to one whose behavior we already know.
+
+\section{The Comparison Test}
+
+This test is perhaps the most intuitive. It formalizes the idea that if a series has terms that are "smaller" than those of a known convergent series, it should also converge. Conversely, if its terms are "larger" than those of a known divergent series, it should also diverge.
+
+\begin{theorem}[The Comparison Test]
+Let $\sum a_n$ and $\sum b_n$ be two series. Assume that for some integer $N$, we have $0 \le a_n \le b_n$ for all $n \ge N$.
+\begin{enumerate}
+    \item If $\sum b_n$ converges, then $\sum a_n$ converges.
+    \item If $\sum a_n$ diverges, then $\sum b_n$ diverges.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Proof Idea]
+The proof relies on the properties of monotonic sequences discussed above.
+Let $S_k = \sum_{n=N}^k a_n$ and $T_k = \sum_{n=N}^k b_n$ be the partial sums starting from $N$.
+1. If $\sum b_n$ converges, its tail $\sum_{n=N}^\infty b_n$ also converges to some finite value $T$. Since $b_n \ge 0$, the partial sums $T_k$ are increasing and bounded above by $T$. Since $0 \le a_n \le b_n$, we have $0 \le S_k \le T_k \le T$. Thus, $(S_k)$ is an increasing sequence bounded above, so it converges. This means the tail $\sum_{n=N}^\infty a_n$ converges, and therefore the original series $\sum a_n$ converges.
+2. If $\sum a_n$ diverges, since $a_n \ge 0$, its partial sums $S_k$ must be unbounded, i.e., $S_k \to \infty$. Since $b_n \ge a_n$, we have $T_k \ge S_k$. As $S_k \to \infty$, $T_k$ must also go to $\infty$. Thus $\sum b_n$ diverges.
+\end{remark}
+
+\begin{remark}[Starting Index]
+Notice that the condition $0 \le a_n \le b_n$ only needs to hold from some index $N$ onwards. Convergence or divergence depends only on the "tail" of the series; the first finite number of terms do not affect whether the series converges, only the value it converges to.
+\end{remark}
+
+To use the Comparison Test effectively, we need a collection of "known" series to compare against. The p-series (which we'll fully analyze later using the Integral Test) are fundamental benchmarks. For now, we'll use the divergence of the harmonic series $\sum \frac{1}{n}$ and state (without proof yet) the convergence of $\sum \frac{1}{n^2}$.
+
+\begin{example}[Original Example A: p-series with $p < 1$] \label{ex:p_series_alpha_lt_1}
+Consider the series $\sum_{n=1}^{\infty} \frac{1}{n^\alpha}$ where $\alpha < 1$.
+We want to compare this to the harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$.
+Since $\alpha < 1$, for $n \ge 1$, we have $n^\alpha \le n^1 = n$.
+Taking reciprocals reverses the inequality (since both sides are positive):
+\[ \frac{1}{n^\alpha} \ge \frac{1}{n} \]
+We know (or will soon prove rigorously) that the harmonic series $\sum_{n=1}^{\infty} \frac{1}{n}$ diverges.
+Since $a_n = \frac{1}{n}$ diverges and $b_n = \frac{1}{n^\alpha} \ge a_n \ge 0$, by the Comparison Test (part 2), the series $\sum_{n=1}^{\infty} \frac{1}{n^\alpha}$ also **diverges** for $\alpha < 1$.
+(This also covers the case $\alpha \le 0$, where the terms $n^{|\alpha|}$ don't even go to zero, causing divergence by the Test for Divergence.)
+\end{example}
+
+\begin{example}[Original Example B] \label{ex:one_over_n2_plus_1}
+Determine the convergence of $\sum_{n=1}^{\infty} \frac{1}{n^2 + 1}$.
+We suspect this behaves like $\sum \frac{1}{n^2}$. Let's try to compare.
+For $n \ge 1$, we have $n^2 + 1 > n^2$. Taking reciprocals gives:
+\[ 0 < \frac{1}{n^2 + 1} < \frac{1}{n^2} \]
+Let $a_n = \frac{1}{n^2+1}$ and $b_n = \frac{1}{n^2}$. We are given (and will prove later) that the series $\sum_{n=1}^{\infty} b_n = \sum_{n=1}^{\infty} \frac{1}{n^2}$ converges.
+Since $0 \le a_n \le b_n$ and $\sum b_n$ converges, by the Comparison Test (part 1), the series $\sum_{n=1}^{\infty} \frac{1}{n^2 + 1}$ also **converges**.
+\end{example}
+
+\begin{example}[Original Example C] \label{ex:one_over_n_minus_lnn}
+Check the convergence of the series $\sum_{n=1}^{\infty} \frac{1}{n - \ln n}$.
+First, we need to ensure the terms are well-defined and non-negative. The denominator is $n - \ln n$.
+For $n=1$, the term is $\frac{1}{1 - \ln 1} = \frac{1}{1-0} = 1$.
+Is $n - \ln n > 0$ for $n \ge 1$? Let's consider the function $f(x) = x - \ln x$ for $x \ge 1$.
+Its derivative is $f'(x) = 1 - \frac{1}{x}$. For $x \ge 1$, $0 < \frac{1}{x} \le 1$, so $f'(x) = 1 - \frac{1}{x} \ge 0$.
+This means $f(x)$ is monotonically increasing on $[1, \infty)$.
+The minimum value occurs at $x=1$, where $f(1) = 1 - \ln 1 = 1$.
+Thus, for all $n \ge 1$, $n - \ln n = f(n) \ge f(1) = 1 > 0$.
+The terms $a_n = \frac{1}{n - \ln n}$ are therefore positive for all $n \ge 1$.
+
+Now, let's try to compare. It seems like $\ln n$ grows slower than $n$, so $n - \ln n$ should be somewhat similar to $n$. Let's compare with $\sum \frac{1}{n}$.
+We want to know the relationship between $\frac{1}{n - \ln n}$ and $\frac{1}{n}$.
+This comparison holds:
+\[ \frac{1}{n - \ln n} \ge \frac{1}{n} \]
+if and only if (since denominators are positive) $n \ge n - \ln n$, which simplifies to $\ln n \ge 0$. This is true for all $n \ge 1$.
+
+So, we have $a_n = \frac{1}{n - \ln n}$ and let $b_n = \frac{1}{n}$. We've shown $a_n \ge b_n \ge 0$ for all $n \ge 1$.
+Since the harmonic series $\sum_{n=1}^{\infty} b_n = \sum_{n=1}^{\infty} \frac{1}{n}$ diverges, by the Comparison Test (part 2, switching roles of a and b, or thinking as $b_n \le a_n$ and $\sum b_n$ diverges), the series $\sum_{n=1}^{\infty} \frac{1}{n - \ln n}$ also **diverges**.
+
+(Intuition check: $n - \ln n$ is slightly smaller than $n$, so its reciprocal $\frac{1}{n - \ln n}$ is slightly larger than $\frac{1}{n}$. Since $\sum \frac{1}{n}$ already diverges, adding slightly larger terms should still result in divergence.)
+\end{example}
+
+\begin{example}[Original Example D] \label{ex:n2_ln_sqrt_n_plus_1}
+Check the convergence of $\sum_{n=1}^{\infty} \frac{1}{n^2 \ln(\sqrt{n} + 1)}$.
+The terms are clearly positive for $n \ge 1$, since $n^2 > 0$ and $\sqrt{n}+1 > 1$, making $\ln(\sqrt{n}+1) > \ln(1) = 0$.
+Let's try to compare this with $\sum \frac{1}{n^2}$. We need to compare $a_n = \frac{1}{n^2 \ln(\sqrt{n} + 1)}$ and $b_n = \frac{1}{n^2}$.
+Is $a_n \le b_n$? This holds if $n^2 \ln(\sqrt{n} + 1) \ge n^2$, which simplifies to $\ln(\sqrt{n} + 1) \ge 1$.
+This occurs when $\sqrt{n} + 1 \ge e$, or $\sqrt{n} \ge e-1 \approx 1.718$, which means $n \ge (e-1)^2 \approx 2.95$.
+So, the inequality $0 < a_n \le b_n$ holds for all integers $n \ge 3$. (The speaker mentioned $n \ge 7$, perhaps due to a quick estimation or a slightly different comparison factor in mind, but $n \ge 3$ is sufficient).
+
+Let $N=3$. We have $0 < a_n \le b_n = \frac{1}{n^2}$ for all $n \ge 3$.
+We know that the series $\sum_{n=1}^{\infty} \frac{1}{n^2}$ converges. This implies its tail, $\sum_{n=3}^{\infty} \frac{1}{n^2}$, also converges.
+By the Comparison Test (part 1), since $0 < a_n \le b_n$ for $n \ge 3$ and $\sum_{n=3}^{\infty} b_n$ converges, the tail $\sum_{n=3}^{\infty} a_n = \sum_{n=3}^{\infty} \frac{1}{n^2 \ln(\sqrt{n} + 1)}$ must also converge.
+Since the tail of the series converges, the full series (starting from $n=1$) must also **converge**. (The first few terms $a_1, a_2$ are just finite numbers and don't affect the convergence property).
+\end{example}
+
+\section{The Limit Comparison Test}
+
+Sometimes, setting up the strict inequality $a_n \le b_n$ for the Comparison Test can be tricky. The Limit Comparison Test (LCT) often provides an easier way by looking at the asymptotic behavior of the terms. It essentially says that if the terms of two positive series behave similarly in the limit (differ by a constant factor), then they share the same convergence fate.
+
+\begin{theorem}[The Limit Comparison Test (LCT)]
+Let $\sum a_n$ and $\sum b_n$ be two series with strictly positive terms ($a_n > 0, b_n > 0$ for sufficiently large $n$). Suppose the following limit exists and is finite and positive:
+\[ L = \lim_{n\to\infty} \frac{a_n}{b_n}, \quad \text{where } 0 < L < \infty \]
+Then the two series $\sum a_n$ and $\sum b_n$ either both converge or both diverge.
+\end{theorem}
+
+\begin{remark}[Intuition]
+If $\frac{a_n}{b_n} \to L$ where $0 < L < \infty$, it means that for large $n$, $a_n$ is approximately $L \cdot b_n$. Since $L$ is just a positive constant, $\sum a_n$ should behave like $\sum (L \cdot b_n) = L \sum b_n$. We know that multiplying by a non-zero constant doesn't affect convergence, so $\sum a_n$ and $\sum b_n$ should converge or diverge together.
+\end{remark}
+
+\begin{remark}[Usage]
+The LCT is often easier to apply than the Comparison Test. The strategy is:
+1. Identify the dominant terms in $a_n$ as $n \to \infty$.
+2. Form a simpler series $\sum b_n$ based on these dominant terms, whose convergence is known (or easier to determine).
+3. Calculate $L = \lim_{n\to\infty} \frac{a_n}{b_n}$.
+4. If $0 < L < \infty$, conclude that $\sum a_n$ behaves the same as $\sum b_n$.
+\end{remark}
+
+\begin{example}[Original Example E] \label{ex:n_over_n2_plus_1}
+Determine the convergence of $\sum_{n=1}^{\infty} \frac{n}{n^2 + 1}$.
+Let $a_n = \frac{n}{n^2 + 1}$. For large $n$, the $+1$ in the denominator is insignificant compared to $n^2$. So, $a_n$ looks like $\frac{n}{n^2} = \frac{1}{n}$.
+Let's choose $b_n = \frac{1}{n}$. Both $a_n$ and $b_n$ are positive for $n \ge 1$.
+Now, compute the limit of the ratio:
+\[ L = \lim_{n\to\infty} \frac{a_n}{b_n} = \lim_{n\to\infty} \frac{n/(n^2 + 1)}{1/n} = \lim_{n\to\infty} \frac{n^2}{n^2 + 1} \]
+Divide numerator and denominator by $n^2$:
+\[ L = \lim_{n\to\infty} \frac{1}{1 + 1/n^2} = \frac{1}{1 + 0} = 1 \]
+Since $L=1$ and $0 < 1 < \infty$, the LCT applies.
+We know that the comparison series $\sum b_n = \sum_{n=1}^{\infty} \frac{1}{n}$ (the harmonic series) diverges.
+Therefore, the original series $\sum_{n=1}^{\infty} \frac{n}{n^2 + 1}$ also **diverges**.
+\end{example}
+
+\begin{example}[Original Example F] \label{ex:sin_2pi_over_n2}
+Check the convergence of $\sum_{n=1}^{\infty} \sin\left(\frac{2\pi}{n^2}\right)$.
+Let $a_n = \sin\left(\frac{2\pi}{n^2}\right)$.
+First, check for non-negativity.
+For $n=1$, $a_1 = \sin(2\pi) = 0$.
+For $n \ge 2$, we have $n^2 \ge 4$, so $0 < \frac{2\pi}{n^2} \le \frac{2\pi}{4} = \frac{\pi}{2}$.
+The angle $\theta_n = \frac{2\pi}{n^2}$ lies in the interval $(0, \pi/2]$. In this interval (the first quadrant), $\sin(\theta_n) > 0$.
+Thus, $a_n \ge 0$ for all $n \ge 1$.
+
+Now, consider the behavior as $n \to \infty$. The argument $\frac{2\pi}{n^2} \to 0$.
+We know the fundamental trigonometric limit: $\lim_{x\to 0} \frac{\sin x}{x} = 1$.
+This suggests that for small arguments $\theta$, $\sin \theta \approx \theta$.
+So, we expect $a_n = \sin\left(\frac{2\pi}{n^2}\right)$ to behave like $b_n = \frac{2\pi}{n^2}$.
+Let's use the LCT with $b_n = \frac{2\pi}{n^2}$ (note $b_n > 0$ for all $n$).
+\[ L = \lim_{n\to\infty} \frac{a_n}{b_n} = \lim_{n\to\infty} \frac{\sin(2\pi/n^2)}{2\pi/n^2} \]
+Let $x_n = 2\pi/n^2$. As $n \to \infty$, $x_n \to 0$. The limit becomes:
+\[ L = \lim_{x_n\to 0} \frac{\sin x_n}{x_n} = 1 \]
+Since $L=1$ and $0 < 1 < \infty$, the LCT applies.
+Now consider the comparison series $\sum b_n = \sum_{n=1}^{\infty} \frac{2\pi}{n^2} = 2\pi \sum_{n=1}^{\infty} \frac{1}{n^2}$.
+Since $\sum \frac{1}{n^2}$ is a convergent p-series (p=2 > 1), $\sum b_n$ converges.
+Therefore, the original series $\sum_{n=1}^{\infty} \sin\left(\frac{2\pi}{n^2}\right)$ also **converges**.
+\end{example}
+
+\section{The Root Test}
+
+The Root Test is particularly useful when the terms $a_n$ involve $n$-th powers.
+
+\begin{theorem}[Cauchy's Root Test]
+Let $\sum a_n$ be a series. Define
+\[ C = \limsup_{n\to\infty} \sqrt[n]{|a_n|} \]
+(Recall that $\limsup$ is the limit superior, the largest possible limit point of the sequence $\sqrt[n]{|a_n|}$. If the regular limit $\lim_{n\to\infty} \sqrt[n]{|a_n|}$ exists, then $C$ is equal to this limit.)
+\begin{enumerate}
+    \item If $C < 1$, the series $\sum a_n$ converges absolutely (and thus converges).
+    \item If $C > 1$ (including $C = \infty$), the series $\sum a_n$ diverges.
+    \item If $C = 1$, the test is inconclusive. The series might converge or diverge.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Intuition]
+If $C < 1$, then for large $n$, $\sqrt[n]{|a_n|}$ is close to $C$, meaning $|a_n|$ is roughly $C^n$. Since $C<1$, $\sum C^n$ is a convergent geometric series. The Root Test essentially compares $\sum |a_n|$ to a geometric series. If $C > 1$, then $|a_n|$ is roughly $C^n$ with $C>1$. In this case, the terms $|a_n|$ do not approach 0, so the series diverges by the Test for Divergence.
+\end{remark}
+
+\begin{example}[Original Example G] \label{ex:root_test_ln_k}
+Consider the series $\sum_{k=2}^{\infty} \left(\frac{1}{\ln k}\right)^k$.
+Let $a_k = \left(\frac{1}{\ln k}\right)^k$. For $k \ge 2$, $\ln k > 0$, so $a_k > 0$. We can ignore the absolute value.
+Apply the Root Test. We need to compute $C = \lim_{k\to\infty} \sqrt[k]{a_k}$ (since the limit will exist, limsup = lim).
+\[ C = \lim_{k\to\infty} \sqrt[k]{\left(\frac{1}{\ln k}\right)^k} = \lim_{k\to\infty} \frac{1}{\ln k} \]
+As $k \to \infty$, $\ln k \to \infty$, so the limit is $C = 0$.
+Since $C = 0 < 1$, by the Root Test, the series $\sum_{k=2}^{\infty} \left(\frac{1}{\ln k}\right)^k$ **converges**.
+\end{example}
+
+\begin{example}[Original Example H] \label{ex:root_test_k_over_2k_plus_1}
+Consider the series $\sum_{k=1}^{\infty} \left(\frac{k}{2k+1}\right)^k$.
+Let $a_k = \left(\frac{k}{2k+1}\right)^k$. Terms are positive.
+Apply the Root Test.
+\[ C = \lim_{k\to\infty} \sqrt[k]{a_k} = \lim_{k\to\infty} \sqrt[k]{\left(\frac{k}{2k+1}\right)^k} = \lim_{k\to\infty} \frac{k}{2k+1} \]
+To evaluate the limit, divide numerator and denominator by $k$:
+\[ C = \lim_{k\to\infty} \frac{1}{2 + 1/k} = \frac{1}{2 + 0} = \frac{1}{2} \]
+Since $C = \frac{1}{2} < 1$, by the Root Test, the series $\sum_{k=1}^{\infty} \left(\frac{k}{2k+1}\right)^k$ **converges**.
+\end{example}
+
+\section{The Ratio Test}
+
+The Ratio Test is another powerful test, often useful when terms involve factorials or exponentials. It compares the series to a geometric series by looking at the ratio of consecutive terms.
+
+\begin{theorem}[D'Alembert's Ratio Test]
+Let $\sum a_n$ be a series with $a_n \neq 0$ for sufficiently large $n$. Define
+\[ L = \lim_{n\to\infty} \abs{\frac{a_{n+1}}{a_n}} \]
+(Assume this limit exists or is $\infty$).
+\begin{enumerate}
+    \item If $L < 1$, the series $\sum a_n$ converges absolutely (and thus converges).
+    \item If $L > 1$ (including $L = \infty$), the series $\sum a_n$ diverges.
+    \item If $L = 1$, the test is inconclusive. The series might converge or diverge.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Intuition]
+If $L < 1$, then for large $n$, $|a_{n+1}| \approx L |a_n|$. This suggests the terms decrease roughly like a geometric series with ratio $L < 1$, which converges. If $L > 1$, the terms $|a_n|$ are roughly increasing in magnitude (like $L^n$) and thus cannot approach 0, leading to divergence.
+\end{remark}
+
+\begin{example}[Original Example I] \label{ex:ratio_test_alpha_n_over_fact}
+Check the convergence of $\sum_{n=0}^{\infty} \frac{\alpha^n}{n!}$ for any real number $\alpha$.
+Let $a_n = \frac{\alpha^n}{n!}$. If $\alpha=0$, the series is just $1+0+0+\dots$, which converges to 1. Assume $\alpha \neq 0$.
+Apply the Ratio Test. Consider the ratio:
+\[ \abs{\frac{a_{n+1}}{a_n}} = \abs{\frac{\alpha^{n+1}/(n+1)!}{\alpha^n/n!}} = \abs{\frac{\alpha^{n+1}}{\alpha^n} \cdot \frac{n!}{(n+1)!}} \]
+Recall that $(n+1)! = (n+1) \cdot n!$. So,
+\[ \abs{\frac{a_{n+1}}{a_n}} = \abs{\alpha \cdot \frac{n!}{(n+1)n!}} = \abs{\alpha} \cdot \frac{1}{n+1} \]
+Now compute the limit:
+\[ L = \lim_{n\to\infty} \abs{\frac{a_{n+1}}{a_n}} = \lim_{n\to\infty} \frac{|\alpha|}{n+1} = 0 \]
+Since $L = 0 < 1$, by the Ratio Test, the series $\sum_{n=0}^{\infty} \frac{\alpha^n}{n!}$ **converges absolutely** for all real numbers $\alpha$. (This is the Taylor series for $e^\alpha$).
+\end{example}
+
+\begin{example}[Original Example J] \label{ex:ratio_test_k_over_10_k}
+Check the convergence of $\sum_{k=1}^{\infty} \frac{k}{10^k}$.
+Let $a_k = \frac{k}{10^k}$. Terms are positive.
+Apply the Ratio Test.
+\[ \frac{a_{k+1}}{a_k} = \frac{(k+1)/10^{k+1}}{k/10^k} = \frac{k+1}{10^{k+1}} \cdot \frac{10^k}{k} = \frac{k+1}{k} \cdot \frac{10^k}{10^{k+1}} = \frac{k+1}{k} \cdot \frac{1}{10} \]
+Now compute the limit:
+\[ L = \lim_{k\to\infty} \frac{a_{k+1}}{a_k} = \lim_{k\to\infty} \left(\frac{k+1}{k}\right) \frac{1}{10} \]
+Since $\lim_{k\to\infty} \frac{k+1}{k} = \lim_{k\to\infty} (1 + \frac{1}{k}) = 1$, we have
+\[ L = 1 \cdot \frac{1}{10} = \frac{1}{10} \]
+Since $L = \frac{1}{10} < 1$, by the Ratio Test, the series $\sum_{k=1}^{\infty} \frac{k}{10^k}$ **converges absolutely**.
+\end{example}
+
+\section{The Integral Test}
+
+This test provides a beautiful connection between infinite series and improper integrals. It's particularly useful for series whose terms $a_n$ can be naturally extended to a function $f(x)$ that is relatively easy to integrate.
+
+\begin{theorem}[The Integral Test]
+Let $f(x)$ be a function satisfying the following conditions for some integer $N$:
+\begin{enumerate}
+    \item $f(x)$ is continuous on $[N, \infty)$.
+    \item $f(x)$ is positive on $[N, \infty)$.
+    \item $f(x)$ is decreasing on $[N, \infty)$.
+\end{enumerate}
+Let $a_n = f(n)$ for $n \ge N$. Then the infinite series $\sum_{n=N}^{\infty} a_n$ and the improper integral $\int_N^\infty f(x) dx$ either both converge or both diverge.
+\end{theorem}
+
+\begin{remark}[Proof Sketch Idea]
+The idea is to compare the sum of the series terms with the area under the curve $y=f(x)$.
+Consider the interval $[n, n+1]$. Since $f$ is decreasing, for $x \in [n, n+1]$, we have $f(n+1) \le f(x) \le f(n)$.
+Integrating over $[n, n+1]$ (width is 1):
+\[ f(n+1) \cdot 1 \le \int_n^{n+1} f(x) dx \le f(n) \cdot 1 \]
+Summing these inequalities from $n=N$ to $M-1$:
+\[ \sum_{n=N}^{M-1} f(n+1) \le \sum_{n=N}^{M-1} \int_n^{n+1} f(x) dx \le \sum_{n=N}^{M-1} f(n) \]
+This relates the partial sums to the integral:
+\[ \sum_{n=N+1}^{M} a_n \le \int_N^M f(x) dx \le \sum_{n=N}^{M-1} a_n \]
+These inequalities show that the sequence of partial sums $\sum_{n=N}^M a_n$ is bounded if and only if the integral $\int_N^M f(x) dx$ is bounded as $M \to \infty$. Since $a_n \ge 0$, the series converges if and only if its partial sums are bounded. Likewise, the integral converges if and only if it's bounded (as $f(x) \ge 0$). Thus, the series and the integral share the same convergence behavior.
+\begin{center}
+    % Placeholder for a potential future diagram illustrating the comparison
+    % \includegraphics[width=0.6\textwidth]{integral_test_diagram}
+    (Imagine a diagram showing rectangles with heights $f(n)$ lying above and below the curve $y=f(x)$.)
+\end{center}
+\end{remark}
+
+\begin{example}[Original Example K] \label{ex:integral_test_n_lnn_sqrt}
+Determine the convergence of $\sum_{n=2}^{\infty} \frac{1}{n \sqrt{\ln n}}$.
+Let $f(x) = \frac{1}{x \sqrt{\ln x}}$ for $x \ge 2$.
+1.  **Continuity:** $f(x)$ is continuous for $x \ge 2$, since $x > 0$ and $\ln x > \ln 1 = 0$.
+2.  **Positivity:** For $x \ge 2$, $x > 0$ and $\ln x > 0$, so $\sqrt{\ln x} > 0$. Thus $f(x) > 0$.
+3.  **Decreasing:** We need to check if $f'(x) < 0$. Let's analyze the denominator $g(x) = x \sqrt{\ln x}$. $g'(x) = 1 \cdot \sqrt{\ln x} + x \cdot \frac{1}{2\sqrt{\ln x}} \cdot \frac{1}{x} = \sqrt{\ln x} + \frac{1}{2\sqrt{\ln x}}$. This is clearly positive for $x \ge 2$. Since the denominator $g(x)$ is positive and increasing, the function $f(x) = 1/g(x)$ is decreasing. (Alternatively, one could compute $f'(x)$ directly, but showing the denominator increases is simpler here).
+
+All conditions for the Integral Test are met with $N=2$. Now we examine the integral:
+\[ \int_2^\infty \frac{1}{x \sqrt{\ln x}} dx \]
+Use the substitution $u = \ln x$, so $du = \frac{1}{x} dx$. The limits change: as $x \to 2$, $u \to \ln 2$; as $x \to \infty$, $u \to \infty$.
+\[ \int_{\ln 2}^\infty \frac{1}{\sqrt{u}} du = \int_{\ln 2}^\infty u^{-1/2} du \]
+This is an improper integral of the form $\int_a^\infty \frac{1}{u^p} du$ with $p = 1/2$. Since $p = 1/2 \le 1$, this integral diverges.
+By the Integral Test, since the integral diverges, the series $\sum_{n=2}^{\infty} \frac{1}{n \sqrt{\ln n}}$ also **diverges**.
+\end{example}
+
+\begin{example}[Original Example L: p-Series Analysis] \label{ex:integral_test_p_series}
+Let's determine the convergence of the p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$ for different values of $p$.
+
+Case 1: $p > 0$.
+Let $f(x) = \frac{1}{x^p}$ for $x \ge 1$.
+1.  **Continuity:** $f(x)$ is continuous on $[1, \infty)$.
+2.  **Positivity:** $f(x) > 0$ on $[1, \infty)$.
+3.  **Decreasing:** $f'(x) = -p x^{-p-1} = -\frac{p}{x^{p+1}}$. Since $p>0$ and $x \ge 1$, $f'(x) < 0$, so $f(x)$ is decreasing.
+
+The conditions for the Integral Test are met (with $N=1$). We examine the integral:
+\[ \int_1^\infty \frac{1}{x^p} dx = \int_1^\infty x^{-p} dx \]
+We know from calculus that this integral:
+\begin{itemize}
+    \item **Converges** if $p > 1$.
+    \item **Diverges** if $0 < p \le 1$.
+\end{itemize}
+Therefore, by the Integral Test:
+\begin{itemize}
+    \item The p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$ **converges** if $p > 1$.
+    \item The p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$ **diverges** if $0 < p \le 1$.
+\end{itemize}
+This confirms the convergence of $\sum \frac{1}{n^2}$ (since $p=2>1$) and the divergence of the harmonic series $\sum \frac{1}{n}$ (since $p=1$).
+
+Case 2: $p \le 0$.
+Let $p = -q$ where $q \ge 0$. Then $a_n = \frac{1}{n^p} = n^q$.
+If $p=0$, $a_n = n^0 = 1$. $\lim_{n\to\infty} a_n = 1 \neq 0$.
+If $p < 0$ (so $q > 0$), $a_n = n^q$. $\lim_{n\to\infty} a_n = \infty \neq 0$.
+In both subcases ($p=0$ and $p<0$), the terms $a_n$ do not approach 0.
+Therefore, by the Test for Divergence, the series $\sum_{n=1}^{\infty} \frac{1}{n^p}$ **diverges** if $p \le 0$.
+\end{example}
+
+\begin{theorem}[Summary: Convergence of p-Series]
+The p-series $\sum_{n=1}^{\infty} \frac{1}{n^p}$
+\begin{itemize}
+    \item Converges if $p > 1$.
+    \item Diverges if $p \le 1$.
+\end{itemize}
+\end{theorem}
+This is a fundamental result used frequently in comparison tests.
+
+% --- Administrative Notes: Homework Help ---
+\begin{adminnote}[Homework Clarification: Problem 3.1]
+There was a question about homework problem 3.1, concerning the convergence of series formed by $\max(a_n, b_n)$ and $\min(a_n, b_n)$, given that $\sum a_n$ and $\sum b_n$ are convergent series of positive terms.
+
+Let's outline the idea using the Comparison Test.
+We are given $a_n > 0$, $b_n > 0$, $\sum a_n$ converges, and $\sum b_n$ converges.
+
+1.  **For the Maximum:**
+    We know that $\max(a_n, b_n)$ is either $a_n$ or $b_n$. In either case, since $a_n$ and $b_n$ are positive, we have:
+    \[ 0 < \max(a_n, b_n) \le a_n + b_n \]
+    Consider the series $\sum (a_n + b_n)$. Since $\sum a_n$ and $\sum b_n$ converge, their sum $\sum (a_n + b_n)$ also converges.
+    By the Comparison Test, since $0 < \max(a_n, b_n) \le a_n + b_n$ and $\sum (a_n + b_n)$ converges, the series $\sum \max(a_n, b_n)$ must also converge.
+
+2.  **For the Minimum:**
+    We know that $\min(a_n, b_n)$ is either $a_n$ or $b_n$. Thus, we have:
+    \[ 0 < \min(a_n, b_n) \le a_n \]
+    Also,
+    \[ 0 < \min(a_n, b_n) \le b_n \]
+    We can use either inequality for comparison. Let's use the first one.
+    Since $0 < \min(a_n, b_n) \le a_n$ and we are given that $\sum a_n$ converges, by the Comparison Test, the series $\sum \min(a_n, b_n)$ must also converge.
+
+The positivity of the terms is crucial here for applying the Comparison Test and ensuring the monotonicity of partial sums for the underlying convergence theory.
+\end{adminnote}
+
+\begin{remark}[Choosing a Test]
+Which test should you use? There's no single answer, and practice is key. However, here are some rules of thumb:
+\begin{itemize}
+    \item **Test for Divergence:** Always check first: does $a_n \to 0$? If not, you're done (diverges).
+    \item **Geometric Series / p-Series:** If the series *is* one of these, state the result directly.
+    \item **Comparison / Limit Comparison Test:** Useful if $a_n$ looks like a simpler form (like a p-series or geometric) for large $n$. LCT is often easier algebraically. Requires finding a suitable series $\sum b_n$ to compare with. Best for rational functions of $n$ or similar algebraic forms.
+    \item **Ratio Test:** Good for terms involving factorials ($n!$) or exponentials ($c^n$). Often inconclusive for rational functions where LCT works well.
+    \item **Root Test:** Good for terms involving $n$-th powers ($( \dots )^n$).
+    \item **Integral Test:** Useful if $a_n = f(n)$ where $f(x)$ is positive, decreasing, and relatively easy to integrate. The primary tool for proving the p-series result.
+    \item **Alternating Series Test:** (We haven't covered this yet) For series with alternating signs.
+\end{itemize}
+Sometimes, more than one test might work. Choose the one that seems most straightforward for the given series. Don't be afraid to try a test and find it inconclusive ($L=1$ or $C=1$); just move on and try another approach.
+\end{remark}
+
+\end{document}

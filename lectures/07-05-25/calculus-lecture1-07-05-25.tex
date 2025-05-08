@@ -1,0 +1,355 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Taylor Polynomials Lecture Notes},
+    pdfpagemode=FullScreen,
+    }
+
+\urlstyle{same}
+
+% Theorem Styles
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Math Operators
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{Lecture Notes: Taylor Polynomials and Maclaurin Expansions}
+\author{Undergraduate Mathematics Department} % Placeholder author
+\date{\today} % Or specific date if known
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    These notes cover the fundamentals of Taylor polynomials, focusing on their definition, calculation, properties, and application in approximating functions. We explore the special case of Maclaurin polynomials (Taylor expansions around $a=0$) and derive the expansions for several elementary functions. The concept of the remainder term is introduced as the difference between the function and its Taylor approximation. All mathematical examples presented in the original lecture material are faithfully included and elaborated upon.
+\end{abstract}
+
+\tableofcontents
+
+% --- Administrative Section (Placeholder) ---
+% \section*{Announcements}
+% \begin{itemize}
+%     \item Homework 3 is due next Tuesday at the beginning of class.
+%     \item Office hours this week are shifted: Wednesday 2-3 PM instead of Thursday.
+%     \item The midterm exam is scheduled for [Date] in [Location]. More details to follow.
+% \end{itemize}
+% \hrulefill % Separator
+
+\section{Introduction: Approximating Functions with Polynomials}
+
+Many functions encountered in mathematics, science, and engineering can be quite complex. Evaluating them precisely, differentiating, or integrating them might be difficult or even impossible in closed form. A powerful strategy in such cases is to approximate the complex function locally by a simpler function, typically a polynomial. Polynomials are exceptionally well-behaved: they are easy to evaluate, differentiate, and integrate.
+
+The core idea is to find a polynomial that "matches" the behavior of a given function $f(x)$ near a specific point $x=a$ as closely as possible. What does "matching behavior" mean? It means the polynomial should have the same value as the function at $x=a$, the same slope (first derivative), the same concavity (second derivative), and so on, up to a certain order. This leads us to the concept of Taylor polynomials.
+
+\section{Taylor Polynomials}
+
+\subsection{Definition}
+
+Let $f$ be a function that is differentiable $n$ times at a point $x=a$. The Taylor polynomial of order $n$ for $f$ centered at $a$ is the unique polynomial of degree at most $n$ that shares the same value and the same first $n$ derivatives as $f$ at the point $x=a$.
+
+\begin{definition}[Taylor Polynomial]
+Let $f$ be a function such that its first $n$ derivatives $f', f'', \dots, f^{(n)}$ exist at $x=a$. The \textbf{Taylor polynomial of order $n$} for $f$ centered at $a$, denoted by $P_n(x; a)$ or simply $P_n(x)$ when $a$ is understood, is given by:
+\begin{equation}
+P_n(x; a) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots + \frac{f^{(n)}(a)}{n!}(x-a)^n
+\end{equation}
+This can be written more compactly using summation notation:
+\begin{equation} \label{eq:taylor_poly_def}
+P_n(x; a) = \sum_{k=0}^n \frac{f^{(k)}(a)}{k!}(x-a)^k
+\end{equation}
+where $f^{(0)}(a) = f(a)$ and $0! = 1$.
+\end{definition}
+
+\begin{remark}
+The term $\frac{f^{(k)}(a)}{k!}(x-a)^k$ ensures that the $k$-th derivative of $P_n(x; a)$ evaluated at $x=a$ matches $f^{(k)}(a)$. When we differentiate $(x-a)^j$ $k$ times and evaluate at $x=a$, the result is $k!$ if $j=k$ and $0$ if $j \neq k$. This property guarantees the matching of derivatives.
+\end{remark}
+
+The fundamental hope is that as the order $n$ increases, the Taylor polynomial $P_n(x; a)$ becomes a better approximation of $f(x)$ for values of $x$ near $a$.
+
+\subsection{Example: Approximating \texorpdfstring{$\sqrt{x}$}{sqrt(x)} near \texorpdfstring{$a=1$}{a=1}}
+
+Let's illustrate this with a concrete computational example, preserving the steps from the lecture.
+We want to approximate $f(x) = \sqrt{x}$ near the point $a=1$. We will compute the Taylor polynomials $P_0, P_1, P_2, P_3$ centered at $a=1$ and use them to estimate $\sqrt{1.21}$. We know the true value is $\sqrt{1.21} = 1.1$. Let's see how close our approximations get.
+
+First, we need the derivatives of $f(x) = x^{1/2}$ evaluated at $a=1$:
+\begin{itemize}
+    \item $f(x) = x^{1/2} \implies f(1) = 1$
+    \item $f'(x) = \frac{1}{2}x^{-1/2} \implies f'(1) = \frac{1}{2}$
+    \item $f''(x) = -\frac{1}{4}x^{-3/2} \implies f''(1) = -\frac{1}{4}$
+    \item $f'''(x) = \frac{3}{8}x^{-5/2} \implies f'''(1) = \frac{3}{8}$
+\end{itemize}
+Notice that $a=1$ is a convenient point for these calculations.
+
+Now, let's construct the polynomials:
+\begin{itemize}
+    \item \textbf{Order 0 (Constant Approximation):}
+      \[ P_0(x; 1) = f(1) = 1 \]
+      The approximation for $\sqrt{1.21}$ is $P_0(1.21) = 1$. (Not very close).
+
+    \item \textbf{Order 1 (Linear/Tangent Line Approximation):}
+      \[ P_1(x; 1) = f(1) + f'(1)(x-1) = 1 + \frac{1}{2}(x-1) \]
+      The approximation for $\sqrt{1.21}$ is:
+      \[ P_1(1.21) = 1 + \frac{1}{2}(1.21 - 1) = 1 + \frac{1}{2}(0.21) = 1 + 0.105 = 1.105 \]
+      This is much closer to $1.1$. Geometrically, $P_1(x; 1)$ is the tangent line to $f(x)=\sqrt{x}$ at $x=1$. Since $\sqrt{x}$ is concave down ($f''(1) < 0$), the tangent line lies above the curve, so we expect the approximation $1.105$ to be slightly larger than the true value $1.1$.
+
+    \item \textbf{Order 2 (Quadratic Approximation):}
+      \[ P_2(x; 1) = P_1(x; 1) + \frac{f''(1)}{2!}(x-1)^2 = 1 + \frac{1}{2}(x-1) + \frac{-1/4}{2}(x-1)^2 \]
+      \[ P_2(x; 1) = 1 + \frac{1}{2}(x-1) - \frac{1}{8}(x-1)^2 \]
+      The approximation for $\sqrt{1.21}$ is:
+      \[ P_2(1.21) = P_1(1.21) - \frac{1}{8}(1.21 - 1)^2 = 1.105 - \frac{1}{8}(0.21)^2 \]
+      \[ P_2(1.21) = 1.105 - \frac{1}{8}(0.0441) = 1.105 - 0.0055125 = 1.0994875 \]
+      This approximation is even closer to $1.1$. The quadratic term provides a correction that pulls the approximation down from the tangent line, closer to the actual curve.
+
+    \item \textbf{Order 3 (Cubic Approximation):}
+      \[ P_3(x; 1) = P_2(x; 1) + \frac{f'''(1)}{3!}(x-1)^3 = P_2(x; 1) + \frac{3/8}{6}(x-1)^3 \]
+      \[ P_3(x; 1) = 1 + \frac{1}{2}(x-1) - \frac{1}{8}(x-1)^2 + \frac{1}{16}(x-1)^3 \]
+      The approximation for $\sqrt{1.21}$ is:
+      \[ P_3(1.21) = P_2(1.21) + \frac{1}{16}(1.21 - 1)^3 = 1.0994875 + \frac{1}{16}(0.21)^3 \]
+      \[ P_3(1.21) = 1.0994875 + \frac{1}{16}(0.009261) = 1.0994875 + 0.0005788125 \approx 1.0994875 + 0.0005788 = 1.1000663125 \]
+      This is remarkably close to $1.1$.
+\end{itemize}
+
+\begin{remark}[Visual Intuition and Convergence]
+As demonstrated in tools like Desmos, if you plot $f(x)=\sqrt{x}$ and its Taylor polynomials $P_1(x), P_2(x), P_3(x)$ centered at $a=1$, you can visually see how each successive polynomial "hugs" the curve more closely near $x=1$. The higher the order $n$, the better the approximation tends to be in a neighborhood around $a$.
+
+However, this improved approximation is local. If we tried to use these same polynomials (centered at $a=1$) to approximate $\sqrt{7}$, the results would likely be poor. The accuracy of a Taylor polynomial generally decreases as we move further away from the center of expansion $a$. The polynomials capture the local behavior determined by the derivatives at $a$.
+\end{remark}
+
+\subsection{General Properties}
+
+1.  **Dependence on Center:** The Taylor polynomial $P_n(x; a)$ critically depends on the center of expansion $a$. Changing $a$ results in a completely different polynomial (unless $f$ itself is a polynomial, see below).
+
+2.  **Recursive Structure:** Taylor polynomials can be built recursively:
+    \[ P_n(x; a) = P_{n-1}(x; a) + \frac{f^{(n)}(a)}{n!}(x-a)^n \]
+    where $P_0(x; a) = f(a)$.
+
+3.  **Taylor Expansion of a Polynomial:** A fascinating property arises when the function $f(x)$ is itself a polynomial.
+    \begin{proposition}
+    If $f(x)$ is a polynomial of degree $m$, then for any expansion point $a$ and any order $n \ge m$, the Taylor polynomial $P_n(x; a)$ is exactly equal to $f(x)$ itself. That is, $P_n(x; a) = f(x)$ for all $x$ when $n \ge m$.
+    \end{proposition}
+    \begin{proof}[Sketch]
+    If $n \ge m$, all derivatives $f^{(k)}(x)$ for $k > m$ are identically zero. Thus, the Taylor series terms for $k > m$ vanish. The sum up to $k=m$ reconstructs the original polynomial, possibly in a different algebraic form centered around $a$, but algebraically equivalent to $f(x)$.
+    \end{proof}
+
+    \begin{example}[Expanding a Polynomial]
+    Let's verify this with the example $f(x) = 2x^2 - 9x + 11$. This is a polynomial of degree $m=2$. Let's find its Taylor polynomials centered at $a=-2$ up to order $n=2$.
+    \begin{itemize}
+        \item $f(x) = 2x^2 - 9x + 11 \implies f(-2) = 2(4) - 9(-2) + 11 = 8 + 18 + 11 = 37$
+        \item $f'(x) = 4x - 9 \implies f'(-2) = 4(-2) - 9 = -8 - 9 = -17$
+        \item $f''(x) = 4 \implies f''(-2) = 4$
+        \item $f'''(x) = 0 \implies f'''(-2) = 0$, and all higher derivatives are also zero.
+    \end{itemize}
+    The Taylor polynomials are:
+    \begin{itemize}
+        \item $P_0(x; -2) = f(-2) = 37$
+        \item $P_1(x; -2) = f(-2) + f'(-2)(x - (-2)) = 37 - 17(x+2) = 37 - 17x - 34 = 3 - 17x$
+        \item $P_2(x; -2) = P_1(x; -2) + \frac{f''(-2)}{2!}(x+2)^2 = (3 - 17x) + \frac{4}{2}(x+2)^2$
+          \[ P_2(x; -2) = 3 - 17x + 2(x^2 + 4x + 4) = 3 - 17x + 2x^2 + 8x + 8 \]
+          \[ P_2(x; -2) = 2x^2 - 9x + 11 \]
+    \end{itemize}
+    As expected, $P_2(x; -2)$ is exactly the original polynomial $f(x)$. Furthermore, since $f^{(k)}(-2) = 0$ for all $k \ge 3$, we have $P_n(x; -2) = P_2(x; -2) = f(x)$ for all $n \ge 2$.
+
+    The lecture notes mentioned that if we had chosen a different center $a$, the polynomials $P_0$ and $P_1$ would have been different, but $P_2$ (and higher orders) would still simplify back to the original $f(x)$. This illustrates that while the intermediate low-order approximations depend on $a$, the exact recovery property for polynomials holds regardless of the center, provided the order $n$ is high enough ($n \ge m$).
+    \end{example}
+
+4.  **Linearity:** Taylor polynomial generation is a linear operation.
+    \begin{proposition}[Linearity]
+    Let $f$ and $g$ be functions with Taylor polynomials $P_n(f; x, a)$ and $P_n(g; x, a)$ of order $n$ centered at $a$. Let $c$ be a constant. Then:
+    \begin{itemize}
+        \item The Taylor polynomial of $f+g$ is the sum of the Taylor polynomials:
+          \[ P_n(f+g; x, a) = P_n(f; x, a) + P_n(g; x, a) \]
+        \item The Taylor polynomial of $c \cdot f$ is $c$ times the Taylor polynomial of $f$:
+          \[ P_n(c \cdot f; x, a) = c \cdot P_n(f; x, a) \]
+    \end{itemize}
+    \end{proposition}
+    \begin{proof}[Sketch]
+    This follows directly from the linearity of differentiation: $(f+g)^{(k)} = f^{(k)} + g^{(k)}$ and $(c \cdot f)^{(k)} = c \cdot f^{(k)}$. Applying the definition \eqref{eq:taylor_poly_def} yields the result.
+    \end{proof}
+
+    \begin{example}[Using Linearity]
+    Consider $f(x) = e^{x+1}$ and find its Maclaurin polynomial of order 2 ($a=0$).
+    We can write $f(x) = e \cdot e^x$. We know the Maclaurin expansion for $e^x$ begins $P_n(e^x; x, 0) = 1 + x + \frac{x^2}{2!} + \dots$.
+    Using the constant multiple rule with $c=e$, the Maclaurin polynomial of order 2 for $f(x)$ is:
+    \[ P_2(e^{x+1}; x, 0) = e \cdot P_2(e^x; x, 0) = e \left( 1 + x + \frac{x^2}{2!} \right) = e + ex + \frac{e}{2}x^2 \]
+    This matches the result obtained by direct differentiation in the lecture.
+
+    The lecture also touched upon a potential rule for $f(\alpha x)$ or $f(x+c)$. While rules exist, they can be subtle. For $g(x) = f(\alpha x)$ expanded around $a=0$, if $P_n(f; u, 0) = \sum a_k u^k$, then $P_n(g; x, 0) = \sum a_k (\alpha x)^k$. However, substitutions involving shifts like $f(x+c)$ or powers like $f(x^p)$ require more care, especially regarding the order of the resulting polynomial, as noted in the lecture discussion about substituting $x^7$.
+    \end{example}
+
+\section{Maclaurin Polynomials: Taylor Polynomials at \texorpdfstring{$a=0$}{a=0}}
+
+A very important special case arises when the Taylor polynomial is centered at $a=0$.
+
+\begin{definition}[Maclaurin Polynomial]
+The Taylor polynomial of order $n$ for $f$ centered at $a=0$ is called the \textbf{Maclaurin polynomial of order $n$} for $f$. It is given by:
+\begin{equation} \label{eq:maclaurin_poly_def}
+P_n(x; 0) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \dots + \frac{f^{(n)}(0)}{n!}x^n = \sum_{k=0}^n \frac{f^{(k)}(0)}{k!}x^k
+\end{equation}
+\end{definition}
+
+Maclaurin polynomials are often computationally simpler because evaluating derivatives at $0$ can lead to significant simplifications. Let's derive the Maclaurin polynomials for several fundamental functions, as done in the lecture.
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$e^x$}{exp(x)}}
+Let $f(x) = e^x$. All derivatives are $f^{(k)}(x) = e^x$.
+Evaluating at $a=0$, we have $f^{(k)}(0) = e^0 = 1$ for all $k \ge 0$.
+Substituting into the Maclaurin formula \eqref{eq:maclaurin_poly_def}:
+\[ P_n(e^x; x, 0) = \sum_{k=0}^n \frac{1}{k!}x^k = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots + \frac{x^n}{n!} \]
+This is a fundamental result. As noted in the lecture, setting $x=1$ gives the partial sums of the series for $e$: $1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \dots$.
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\sin x$}{sin(x)}}
+Let $f(x) = \sin x$. We need the derivatives at $a=0$.
+\begin{itemize}
+    \item $f(x) = \sin x \implies f(0) = 0$
+    \item $f'(x) = \cos x \implies f'(0) = 1$
+    \item $f''(x) = -\sin x \implies f''(0) = 0$
+    \item $f'''(x) = -\cos x \implies f'''(0) = -1$
+    \item $f^{(4)}(x) = \sin x \implies f^{(4)}(0) = 0$
+\end{itemize}
+The pattern of derivatives at 0 repeats every four steps: $0, 1, 0, -1, 0, 1, 0, -1, \dots$.
+Notice that $f^{(k)}(0) = 0$ whenever $k$ is even. Therefore, the Maclaurin polynomial for $\sin x$ will only contain odd powers of $x$.
+The coefficients for the odd powers $x^{2k+1}$ come from $f^{(2k+1)}(0)$.
+For $k=0$: $f^{(1)}(0)=1$. Term is $\frac{1}{1!}x^1 = x$.
+For $k=1$: $f^{(3)}(0)=-1$. Term is $\frac{-1}{3!}x^3 = -\frac{x^3}{6}$.
+For $k=2$: $f^{(5)}(0)=1$. Term is $\frac{1}{5!}x^5 = \frac{x^5}{120}$.
+The general pattern for the coefficient of $x^{2k+1}$ involves $\frac{(-1)^k}{(2k+1)!}$.
+
+The Maclaurin polynomial of order $n$ is:
+\[ P_n(\sin x; x, 0) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \dots + (-1)^k \frac{x^{2k+1}}{(2k+1)!} \]
+where the sum continues as long as $2k+1 \le n$. This can be written formally as:
+\[ P_n(\sin x; x, 0) = \sum_{k=0}^{\lfloor (n-1)/2 \rfloor} \frac{(-1)^k}{(2k+1)!}x^{2k+1} \]
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\cos x$}{cos(x)}}
+Let $f(x) = \cos x$. The derivatives at $a=0$ are:
+\begin{itemize}
+    \item $f(x) = \cos x \implies f(0) = 1$
+    \item $f'(x) = -\sin x \implies f'(0) = 0$
+    \item $f''(x) = -\cos x \implies f''(0) = -1$
+    \item $f'''(x) = \sin x \implies f'''(0) = 0$
+    \item $f^{(4)}(x) = \cos x \implies f^{(4)}(0) = 1$
+\end{itemize}
+The pattern of derivatives at 0 repeats every four steps: $1, 0, -1, 0, 1, 0, -1, 0, \dots$.
+Notice that $f^{(k)}(0) = 0$ whenever $k$ is odd. Therefore, the Maclaurin polynomial for $\cos x$ will only contain even powers of $x$.
+The coefficients for the even powers $x^{2k}$ come from $f^{(2k)}(0)$.
+For $k=0$: $f^{(0)}(0)=1$. Term is $\frac{1}{0!}x^0 = 1$.
+For $k=1$: $f^{(2)}(0)=-1$. Term is $\frac{-1}{2!}x^2 = -\frac{x^2}{2}$.
+For $k=2$: $f^{(4)}(0)=1$. Term is $\frac{1}{4!}x^4 = \frac{x^4}{24}$.
+The general pattern for the coefficient of $x^{2k}$ involves $\frac{(-1)^k}{(2k)!}$.
+
+The Maclaurin polynomial of order $n$ is:
+\[ P_n(\cos x; x, 0) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \dots + (-1)^k \frac{x^{2k}}{(2k)!} \]
+where the sum continues as long as $2k \le n$. This can be written formally as:
+\[ P_n(\cos x; x, 0) = \sum_{k=0}^{\lfloor n/2 \rfloor} \frac{(-1)^k}{(2k)!}x^{2k} \]
+
+\begin{remark}[Even and Odd Functions]
+As observed in the lecture, $\sin x$ is an odd function ($\sin(-x) = -\sin x$), and its Maclaurin polynomial contains only odd powers of $x$. Similarly, $\cos x$ is an even function ($\cos(-x) = \cos x$), and its Maclaurin polynomial contains only even powers of $x$. This is a general property: the Maclaurin polynomial of an odd function contains only odd powers, and that of an even function contains only even powers. This can serve as a useful check.
+\end{remark}
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\frac{1}{1-x}$}{1/(1-x)}}
+Let $f(x) = \frac{1}{1-x} = (1-x)^{-1}$. Let's find the pattern for derivatives at $a=0$.
+\begin{itemize}
+    \item $f(x) = (1-x)^{-1} \implies f(0) = 1$
+    \item $f'(x) = (-1)(1-x)^{-2}(-1) = (1-x)^{-2} \implies f'(0) = 1$
+    \item $f''(x) = (-2)(1-x)^{-3}(-1) = 2(1-x)^{-3} \implies f''(0) = 2 = 2!$
+    \item $f'''(x) = 2(-3)(1-x)^{-4}(-1) = 6(1-x)^{-4} \implies f'''(0) = 6 = 3!$
+    \item $f^{(4)}(x) = 6(-4)(1-x)^{-5}(-1) = 24(1-x)^{-5} \implies f^{(4)}(0) = 24 = 4!$
+\end{itemize}
+By induction (as noted, formal proof not required here, but recognizing the pattern is key), we can see that $f^{(k)}(x) = k!(1-x)^{-(k+1)}$.
+Therefore, $f^{(k)}(0) = k!(1-0)^{-(k+1)} = k!$.
+Substituting into the Maclaurin formula:
+\[ P_n\left(\frac{1}{1-x}; x, 0\right) = \sum_{k=0}^n \frac{f^{(k)}(0)}{k!}x^k = \sum_{k=0}^n \frac{k!}{k!}x^k = \sum_{k=0}^n x^k \]
+\[ P_n\left(\frac{1}{1-x}; x, 0\right) = 1 + x + x^2 + x^3 + \dots + x^n \]
+This is the partial sum of a geometric series. As discussed in the lecture, we already know that the infinite geometric series $1+x+x^2+\dots$ converges to $\frac{1}{1-x}$ if and only if $|x|<1$. The Maclaurin polynomials are precisely the partial sums of this series.
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\ln(1-x)$}{ln(1-x)}}
+Let $f(x) = \ln(1-x)$.
+\begin{itemize}
+    \item $f(x) = \ln(1-x) \implies f(0) = \ln(1) = 0$
+    \item $f'(x) = \frac{1}{1-x}(-1) = \frac{-1}{1-x}$. Let $g(x) = \frac{1}{1-x}$. Then $f'(x) = -g(x)$.
+\end{itemize}
+Since differentiation is linear, $f^{(k)}(x) = -g^{(k-1)}(x)$ for $k \ge 1$.
+We know from the previous example that $g^{(j)}(0) = j!$.
+Therefore, for $k \ge 1$, $f^{(k)}(0) = -g^{(k-1)}(0) = -(k-1)!$.
+Note that $f(0)=0$, so the sum starts effectively from $k=1$.
+Substituting into the Maclaurin formula:
+\[ P_n(\ln(1-x); x, 0) = f(0) + \sum_{k=1}^n \frac{f^{(k)}(0)}{k!}x^k = 0 + \sum_{k=1}^n \frac{-(k-1)!}{k!}x^k \]
+Since $k! = k \cdot (k-1)!$, we have $\frac{(k-1)!}{k!} = \frac{1}{k}$.
+\[ P_n(\ln(1-x); x, 0) = \sum_{k=1}^n -\frac{1}{k}x^k = -x - \frac{x^2}{2} - \frac{x^3}{3} - \dots - \frac{x^n}{n} \]
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\ln(1+x)$}{ln(1+x)}}
+Let $f(x) = \ln(1+x)$. We can calculate derivatives directly as shown in the lecture:
+\begin{itemize}
+    \item $f(x) = \ln(1+x) \implies f(0) = \ln(1) = 0$
+    \item $f'(x) = (1+x)^{-1} \implies f'(0) = 1$
+    \item $f''(x) = (-1)(1+x)^{-2} \implies f''(0) = -1$
+    \item $f'''(x) = (-1)(-2)(1+x)^{-3} = 2(1+x)^{-3} \implies f'''(0) = 2 = 2!$
+    \item $f^{(4)}(x) = 2(-3)(1+x)^{-4} = -6(1+x)^{-4} \implies f^{(4)}(0) = -6 = -3!$
+    \item $f^{(k)}(x) = (-1)^{k-1} (k-1)! (1+x)^{-k}$ for $k \ge 1$.
+\end{itemize}
+So, for $k \ge 1$, $f^{(k)}(0) = (-1)^{k-1} (k-1)!$.
+Note that $f(0)=0$, so the sum starts effectively from $k=1$.
+Substituting into the Maclaurin formula:
+\[ P_n(\ln(1+x); x, 0) = f(0) + \sum_{k=1}^n \frac{f^{(k)}(0)}{k!}x^k = 0 + \sum_{k=1}^n \frac{(-1)^{k-1}(k-1)!}{k!}x^k \]
+\[ P_n(\ln(1+x); x, 0) = \sum_{k=1}^n \frac{(-1)^{k-1}}{k}x^k = x - \frac{x^2}{2} + \frac{x^3}{3} - \frac{x^4}{4} + \dots + (-1)^{n-1}\frac{x^n}{n} \]
+Note: $(-1)^{k-1}$ is the same as $(-1)^{k+1}$.
+
+Alternatively, as mentioned in the lecture, we could note that $\ln(1+x)$ is related to $\ln(1-u)$ by substituting $u = -x$. If $P_n(\ln(1-u); u, 0) = \sum_{k=1}^n -\frac{u^k}{k}$, then substituting $u=-x$ gives $P_n(\ln(1+x); x, 0) = \sum_{k=1}^n -\frac{(-x)^k}{k} = \sum_{k=1}^n -\frac{(-1)^k x^k}{k} = \sum_{k=1}^n \frac{(-1)^{k+1}}{k} x^k$, matching the result.
+
+\subsection{Maclaurin Polynomial for \texorpdfstring{$\ln\left(\frac{1+x}{1-x}\right)$}{ln((1+x)/(1-x))}}
+Let $f(x) = \ln\left(\frac{1+x}{1-x}\right)$. Instead of differentiating directly, we use properties of logarithms and linearity, as demonstrated in the lecture.
+\[ f(x) = \ln(1+x) - \ln(1-x) \]
+Using the linearity property, the Maclaurin polynomial for $f(x)$ is the difference of the Maclaurin polynomials we just found:
+\[ P_n(f; x, 0) = P_n(\ln(1+x); x, 0) - P_n(\ln(1-x); x, 0) \]
+\[ P_n(f; x, 0) = \left( \sum_{k=1}^n \frac{(-1)^{k-1}}{k}x^k \right) - \left( \sum_{k=1}^n -\frac{1}{k}x^k \right) \]
+\[ P_n(f; x, 0) = \sum_{k=1}^n \left( \frac{(-1)^{k-1}}{k} - \frac{-1}{k} \right) x^k = \sum_{k=1}^n \frac{(-1)^{k-1} + 1}{k} x^k \]
+Let's examine the coefficient $\frac{(-1)^{k-1} + 1}{k}$:
+\begin{itemize}
+    \item If $k$ is even, $k-1$ is odd, so $(-1)^{k-1} = -1$. The coefficient is $\frac{-1+1}{k} = 0$.
+    \item If $k$ is odd, $k-1$ is even, so $(-1)^{k-1} = 1$. The coefficient is $\frac{1+1}{k} = \frac{2}{k}$.
+\end{itemize}
+Thus, only the terms with odd powers of $x$ survive, and their coefficients are $\frac{2}{k}$.
+\[ P_n\left(\ln\left(\frac{1+x}{1-x}\right); x, 0\right) = 2x + \frac{2x^3}{3} + \frac{2x^5}{5} + \dots + \frac{2x^{2k+1}}{2k+1} \]
+where the sum continues as long as the odd power $2k+1 \le n$. Formally:
+\[ P_n\left(\ln\left(\frac{1+x}{1-x}\right); x, 0\right) = \sum_{k=0}^{\lfloor (n-1)/2 \rfloor} \frac{2}{2k+1}x^{2k+1} \]
+
+\section{The Remainder Term}
+
+We've seen that Taylor polynomials approximate a function $f(x)$ near a point $a$. But how good is this approximation? The difference between the function and its Taylor polynomial is called the remainder.
+
+\begin{definition}[Taylor Remainder]
+Let $f$ have derivatives up to order $n$ at $a$, and let $P_n(x; a)$ be the Taylor polynomial of order $n$ for $f$ centered at $a$. The \textbf{remainder term of order $n$}, denoted by $R_n(x; a)$ or simply $R_n(x)$, is defined as:
+\begin{equation}
+R_n(x; a) = f(x) - P_n(x; a)
+\end{equation}
+This means we can write the function exactly as:
+\begin{equation}
+f(x) = P_n(x; a) + R_n(x; a)
+\end{equation}
+This equation is sometimes called the \textbf{Taylor expansion with remainder}. If $a=0$, it's the Maclaurin expansion with remainder.
+\end{definition}
+
+Understanding the remainder $R_n(x)$ is crucial for determining the accuracy of the Taylor approximation. If we can find bounds on $|R_n(x)|$, we can quantify the maximum possible error when using $P_n(x)$ to approximate $f(x)$ over a certain interval.
+
+The lecture mentioned that we haven't yet discussed how to find or bound the remainder term $R_n(x)$. A common and useful form for the remainder is the \textbf{Lagrange form of the remainder}, which expresses $R_n(x)$ in terms of the $(n+1)$-th derivative of $f$. We will explore this in detail later in the course. For now, we simply acknowledge its existence as the error term in the approximation.
+
+\begin{remark}
+In the example where $f(x)$ was a polynomial of degree $m$, and we calculated $P_n(x; a)$ for $n \ge m$, we found $P_n(x; a) = f(x)$. In this case, the remainder $R_n(x; a) = f(x) - P_n(x; a) = 0$ for all $x$. This makes sense: the best polynomial approximation of order $n \ge m$ for a polynomial of degree $m$ is the polynomial itself, with zero error.
+\end{remark}
+
+\end{document}
